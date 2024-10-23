@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_HidingIn_FILE /Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/HidingIn)
+set(__QT_DEPLOY_TARGET_HidingIn_TYPE EXECUTABLE)

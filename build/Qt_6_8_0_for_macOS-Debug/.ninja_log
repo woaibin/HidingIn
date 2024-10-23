@@ -1,0 +1,23 @@
+# ninja log v6
+4	120	1729171313574785420	HidingIn_autogen/timestamp	54e67958f6412a1f
+45	66	1729174334181878307	/Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/qrc_resources.cpp	5e8d9d15bf9e7bb7
+4	120	1729171313574785420	/Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/HidingIn_autogen/timestamp	54e67958f6412a1f
+4	120	1729171313574785420	/Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/HidingIn_autogen/mocs_compilation.cpp	54e67958f6412a1f
+45	66	1729174334181878307	qrc_resources.cpp	5e8d9d15bf9e7bb7
+4	120	1729171313574785420	HidingIn_autogen/mocs_compilation.cpp	54e67958f6412a1f
+66	188	1729174334182526672	CMakeFiles/HidingIn.dir/qrc_resources.cpp.o	9e81eca13a786025
+136	1890	1729171313597712133	CMakeFiles/HidingIn.dir/main.cpp.o	8caecae87d2342f7
+188	324	1729174334304703933	HidingIn	e12e8d183b01f4bb
+136	179	1729171313597519425	CMakeFiles/HidingIn.dir/HidingIn_autogen/mocs_compilation.cpp.o	81867b557825f46d
+25	324	1729441872336653000	HidingIn_autogen/timestamp	54e67958f6412a1f
+25	324	1729441872336653000	HidingIn_autogen/mocs_compilation.cpp	54e67958f6412a1f
+25	324	1729441872336653000	/Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/HidingIn_autogen/timestamp	54e67958f6412a1f
+25	324	1729441872336653000	/Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/HidingIn_autogen/mocs_compilation.cpp	54e67958f6412a1f
+324	341	1729441872361998283	qrc_resources.cpp	5e8d9d15bf9e7bb7
+324	341	1729441872361998283	/Users/binxiaokang/Desktop/HidingIn/build/Qt_6_8_0_for_macOS-Debug/qrc_resources.cpp	5e8d9d15bf9e7bb7
+341	448	1729441872363258870	CMakeFiles/HidingIn.dir/qrc_resources.cpp.o	1bfae71c027f8612
+341	1324	1729441872363156828	CMakeFiles/HidingIn.dir/DesktopCapture/macos/MacosCapture.mm.o	681e2fde6bab8114
+341	1363	1729441872362858410	CMakeFiles/HidingIn.dir/HidingIn_autogen/mocs_compilation.cpp.o	d3d520c32eb354af
+341	1982	1729441872363366828	CMakeFiles/HidingIn.dir/RenderWidget/QMetalGraphicsItem.mm.o	fda3d61bf43af7a6
+341	2218	1729441872363042203	CMakeFiles/HidingIn.dir/main.cpp.o	7766dbe6684011f1
+2218	2348	1729441874240262064	HidingIn	ee228ee745d073bb
