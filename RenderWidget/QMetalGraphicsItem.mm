@@ -55,6 +55,14 @@ void QMetalGraphicsItem::onBeforeRenderPassRecording() {
 
     QSGRendererInterface *rif = window()->rendererInterface();
 
+    if(!textureFetcher){
+        return;
+    }
+    auto latestTexture = (id<MTLTexture>)textureFetcher();
+    if(!latestTexture){
+        return;
+    }
+    qDebug() << "rendering item: " << idName;
     window()->beginExternalCommands();
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>) rif->getResource(
             window(), QSGRendererInterface::CommandEncoderResource);
@@ -79,7 +87,6 @@ void QMetalGraphicsItem::onBeforeRenderPassRecording() {
     [encoder setViewport: vp];
 
     [encoder setVertexBuffer:static_cast<id <MTLBuffer>>(vertexBuffer) offset:0 atIndex:0];
-    auto latestTexture = (id<MTLTexture>)textureFetcher();
     [encoder setFragmentTexture:latestTexture atIndex: 0];
     [encoder setRenderPipelineState: (id<MTLRenderPipelineState>)pipelineState];
     [encoder drawPrimitives: MTLPrimitiveTypeTriangleStrip vertexStart: 0 vertexCount: 4];

@@ -1,21 +1,17 @@
 // CapturedApp.qml
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import CustomItems 1.0
 
 Item {
     id: capturedAppPage
     width: 1200
     height: 800
 
-    Rectangle {
+    MetalGraphicsItem {
         anchors.fill: parent
-        color: "transparent"
-
-        Text {
-            text: "This is the Second Page"
-            font.pixelSize: 24
-            anchors.centerIn: parent
-        }
+        id: appCaptureItem
+        objectName: "appCapture"
     }
 
     Button {

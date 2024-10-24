@@ -440,10 +440,12 @@ MacOSCaptureSCKit::~MacOSCaptureSCKit() {
 }
 
 bool MacOSCaptureSCKit::startCapture() {
+    captureStatus = CaptureStatus::Start;
     return impl->startCapture();
 }
 
 void MacOSCaptureSCKit::stopCapture() {
+    captureStatus = CaptureStatus::Stop;
     impl->stopCapture();
 }
 
@@ -454,5 +456,6 @@ void *MacOSCaptureSCKit::getLatestCaptureFrame() {
 }
 
 bool MacOSCaptureSCKit::startCaptureWithApplicationName(std::string applicationName) {
+    captureStatus = CaptureStatus::Start;
     return impl->startCaptureWithApplicationName(applicationName);
 }

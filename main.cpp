@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
 
 #ifdef __APPLE__
     MacOSCaptureSCKit screenCapture;
+    MacOSCaptureSCKit appCapture;
 #endif
 
     // Set the environment variable
@@ -102,14 +103,35 @@ int main(int argc, char *argv[]) {
     }
 
     // Find the MetalGraphicsItem instance by object name or hierarchy
-    QObject *item = rootObject->findChild<QObject*>("metalGraphicsItemName");
-    if (item) {
-        QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(item);
+    QObject *transparentBgCaptureItem = rootObject->findChild<QObject*>("transparentBgCapture");
+    if (transparentBgCaptureItem) {
+        QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(transparentBgCaptureItem);
+        metalItem->setIdName("bgCap");
         if (metalItem) {
             // Call the method on the instance
             metalItem->setTextureFetcher([&]() -> void* {
                 // Return your MTLTexture here
-                return screenCapture.getLatestCaptureFrame();
+                if(screenCapture.getCaptureStatus() == CaptureStatus::Start){
+                    return screenCapture.getLatestCaptureFrame();
+                }else{
+                    return nullptr;
+                }
+            });
+        }
+    }
+    QObject *appCaptureItem = rootObject->findChild<QObject*>("appCapture");
+    if (appCaptureItem) {
+        QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
+        metalItem->setIdName("appCap");
+        if (metalItem) {
+            // Call the method on the instance
+            metalItem->setTextureFetcher([&]() -> void* {
+                // Return your MTLTexture here
+                if(appCapture.getCaptureStatus() == CaptureStatus::Start){
+                    return appCapture.getLatestCaptureFrame();
+                }else{
+                    return nullptr;
+                }
             });
         }
     }
@@ -120,7 +142,7 @@ int main(int argc, char *argv[]) {
         QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
             screenCapture.stopCapture();
-            screenCapture.startCaptureWithApplicationName(appName.toStdString());
+            appCapture.startCaptureWithApplicationName(appName.toStdString());
         });
 
     } else {

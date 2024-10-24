@@ -33,6 +33,9 @@ public slots:
     void handleWindowChanged(QQuickWindow *win);
     // Slot called before rendering starts
     void onBeforeRendering();
+    void setIdName(std::string name){
+        idName = name;
+    }
     // Slot called before each render pass is recorded
     void onBeforeRenderPassRecording();
 
@@ -45,6 +48,7 @@ private:
     void* pipelineState = nullptr;
     void* commandQueue = nullptr;
     bool m_initialized = false;
+    std::string idName = "";
 };
 
 #endif // QMETALGRAPHICSITEM_H

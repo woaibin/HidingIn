@@ -17,7 +17,7 @@ Item {
     // }
     MetalGraphicsItem {
         anchors.fill: parent
-        id: metalGraphicsItem
-        objectName: "metalGraphicsItemName"
+        id: backgroundCaptureItem
+        objectName: "transparentBgCapture"
     }
 }

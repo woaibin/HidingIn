@@ -9,7 +9,7 @@ Item {
 
     // Your existing ApplicationWindow-like structure (without ApplicationWindow)
     FullScreenBackground {
-        z: -1
+        z: -100
     }
 
     CustomizeTitleBar {
