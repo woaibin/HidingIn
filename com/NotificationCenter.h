@@ -29,6 +29,10 @@ struct WindowSubMsg : public SubMsg{
     int yPos;
     int width;
     int height;
+    int capturedAppX;
+    int capturedAppY;
+    int capturedAppWidth;
+    int capturedAppHeight;
     float scalingFactor;
     std::atomic_bool needResizeForRender = false;
 };

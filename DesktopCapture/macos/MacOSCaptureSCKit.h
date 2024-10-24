@@ -11,6 +11,8 @@ public:
     // Start capturing the screen content
     bool startCapture();
 
+    bool startCaptureWithApplicationName(std::string applicationName);
+
     // Stop capturing the screen content
     void stopCapture();
 

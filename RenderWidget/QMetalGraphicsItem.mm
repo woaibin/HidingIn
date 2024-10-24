@@ -79,9 +79,7 @@ void QMetalGraphicsItem::onBeforeRenderPassRecording() {
     [encoder setViewport: vp];
 
     [encoder setVertexBuffer:static_cast<id <MTLBuffer>>(vertexBuffer) offset:0 atIndex:0];
-    //std::cerr << "latest texture start..." << std::endl;
     auto latestTexture = (id<MTLTexture>)textureFetcher();
-    //std::cerr << "latest texture end..." << std::endl;
     [encoder setFragmentTexture:latestTexture atIndex: 0];
     [encoder setRenderPipelineState: (id<MTLRenderPipelineState>)pipelineState];
     [encoder drawPrimitives: MTLPrimitiveTypeTriangleStrip vertexStart: 0 vertexCount: 4];

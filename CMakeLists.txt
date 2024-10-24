@@ -21,7 +21,9 @@ set(SOURCE "" com/NotificationCenter.h main.cpp
         DesktopCapture/macos/MacOSAppSnapShot.mm
         DataModel/WindowAbstractListModelMacOS.mm
         DataModel/SnapShotImageProvider.cpp
-        DataModel/SnapShotImageProvider.h)
+        DataModel/SnapShotImageProvider.h
+        Handler/AppItemClickHandler.cpp
+        Handler/AppItemClickHandler.h)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)

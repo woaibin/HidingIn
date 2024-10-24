@@ -5,7 +5,6 @@
 #include <QQuickWindow>
 #include <QSGSimpleTextureNode>
 #include <thread>
-
 // Declare the QMetalGraphicsItem class
 class QMetalGraphicsItem : public QQuickItem
 {

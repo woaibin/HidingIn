@@ -52,11 +52,23 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 10
                 model: windowListModel  // The ListModel is defined below
+                objectName: "appItems"
+
+                signal appItemDoubleClicked(appName: string)  // Custom signal to emit on double-click
 
                 delegate: Item {
                     width: 1000  // Set both width and height to make it a square
                     height: 300
                     clip: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton
+                        onDoubleClicked: {
+                            stackView.push(capturedAppLoader)
+                            appListView.appItemDoubleClicked(appName)  // Emit the signal to the C++ side
+                        }
+                    }
 
                     Rectangle {
                         width: parent.width

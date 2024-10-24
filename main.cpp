@@ -6,17 +6,18 @@
 #ifdef __APPLE__
 //#include "DesktopCapture/macos/MacosCapture.h"
 #include "DesktopCapture/macos/MacOSCaptureSCKit.h"
-#include "com/NotificationCenter.h"
 #include "platform/macos/MacUtils.h"
-#include <QProcessEnvironment>
 #endif
+#include <QProcessEnvironment>
+#include <utility>
+#include "com/NotificationCenter.h"
+#include "Handler/AppItemClickHandler.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
 #ifdef __APPLE__
     MacOSCaptureSCKit screenCapture;
-    //MacosCapture screenCapture;
 #endif
 
     // Set the environment variable
@@ -41,6 +42,8 @@ int main(int argc, char *argv[]) {
 
     // Set up the QML engine
     QQmlApplicationEngine engine;
+
+    AppItemClickHandler handler;  // Create an instance of the handler
     // Register QMetalGraphicsItem with QML under the module name "CustomItems"
     auto ret = qmlRegisterType<QMetalGraphicsItem>("CustomItems", 1, 0, "MetalGraphicsItem");
 
@@ -111,6 +114,18 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // find out all app items:
+    auto appItem = rootObject->findChild<QObject*>("appItems");
+    if (appItem) {
+        QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
+        handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
+            screenCapture.stopCapture();
+            screenCapture.startCaptureWithApplicationName(appName.toStdString());
+        });
+
+    } else {
+        qWarning() << "Rectangle object not found!";
+    }
     // Connect to the engine's object creation signal
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
