@@ -35,17 +35,8 @@ public:
         m_appItemDbClickHandler = handleFunc;
     }
 
-    void initRemoteInputController(int pid){
-        remoteInputController = std::make_shared<RemoteInputController>(pid);
-    }
-
-// QObject interface
-public:
-    bool eventFilter(QObject *watched, QEvent *event) override;
-
 private:
     AppItemDBClickHandler m_appItemDbClickHandler;
-    std::shared_ptr<RemoteInputController> remoteInputController;
 };
 
 

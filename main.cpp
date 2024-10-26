@@ -78,8 +78,6 @@ int main(int argc, char *argv[]) {
 
     AppGeneralEventHandler handler;  // Create an instance of the handler
 
-    app.installEventFilter(&handler);
-
     // Register QMetalGraphicsItem with QML under the module name "CustomItems"
     auto ret = qmlRegisterType<QMetalGraphicsItem>("CustomItems", 1, 0, "MetalGraphicsItem");
 
@@ -180,14 +178,12 @@ int main(int argc, char *argv[]) {
             screenCapture.stopCapture();
             appCapture.startCaptureWithApplicationName(appName.toStdString());
             auto currentWindow = getCurrentWindow();
-
             auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
 #ifdef __APPLE__
             void *nativeWindow = (void*)currentWindow->winId();
             stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
 #endif
             ignoreMouseInputForAllWindows();
-            handler.initRemoteInputController(windowInfo->appPid);
         });
 
     } else {
