@@ -11,7 +11,39 @@
 #include <QProcessEnvironment>
 #include <utility>
 #include "com/NotificationCenter.h"
-#include "Handler/AppItemClickHandler.h"
+#include "Handler/AppGeneralEventHandler.h"
+
+// Function to make all windows ignore mouse input
+void ignoreMouseInputForAllWindows() {
+    // Get the list of all top-level windows
+    const QList<QWindow *> windows = QGuiApplication::topLevelWindows();
+
+    // Iterate through each window and set it to ignore mouse events
+    for (QWindow *window : windows) {
+        if (window) {
+            // Set the window to ignore mouse events
+            window->setFlags(window->flags() | Qt::WindowTransparentForInput);
+            // Optional: you can print the window title or some info for debugging
+            qDebug() << "Ignoring mouse input for window:" << window->title();
+        }
+    }
+}
+
+// Function to get the current application window
+QQuickWindow* getCurrentWindow() {
+    // Get the list of top-level windows
+    const QList<QWindow *> windows = QGuiApplication::topLevelWindows();
+
+    // Find the first visible QQuickWindow
+    for (QWindow *window : windows) {
+        QQuickWindow *quickWindow = qobject_cast<QQuickWindow *>(window);
+        if (quickWindow && quickWindow->isVisible()) {
+            return quickWindow; // Return the first visible window
+        }
+    }
+
+    return nullptr; // No visible window found
+}
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -44,7 +76,10 @@ int main(int argc, char *argv[]) {
     // Set up the QML engine
     QQmlApplicationEngine engine;
 
-    AppItemClickHandler handler;  // Create an instance of the handler
+    AppGeneralEventHandler handler;  // Create an instance of the handler
+
+    app.installEventFilter(&handler);
+
     // Register QMetalGraphicsItem with QML under the module name "CustomItems"
     auto ret = qmlRegisterType<QMetalGraphicsItem>("CustomItems", 1, 0, "MetalGraphicsItem");
 
@@ -140,9 +175,19 @@ int main(int argc, char *argv[]) {
     auto appItem = rootObject->findChild<QObject*>("appItems");
     if (appItem) {
         QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
+        QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
             screenCapture.stopCapture();
             appCapture.startCaptureWithApplicationName(appName.toStdString());
+            auto currentWindow = getCurrentWindow();
+
+            auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
+#ifdef __APPLE__
+            void *nativeWindow = (void*)currentWindow->winId();
+            stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
+#endif
+            ignoreMouseInputForAllWindows();
+            handler.initRemoteInputController(windowInfo->appPid);
         });
 
     } else {

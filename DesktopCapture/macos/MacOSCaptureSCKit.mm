@@ -366,6 +366,8 @@ public:
                          windowInfo->capturedAppY = std::get<1>(size) * windowInfo->scalingFactor;
                          windowInfo->capturedAppWidth = std::get<2>(size) * windowInfo->scalingFactor;
                          windowInfo->capturedAppHeight = std::get<3>(size) * windowInfo->scalingFactor;
+                         windowInfo->capturedWinId = std::get<4>(size);
+                         windowInfo->appPid = targetApplication.processID;
                      }
                      config.pixelFormat = kCVPixelFormatType_32BGRA;
                      config.minimumFrameInterval = CMTimeMake(1, 60);

@@ -6,5 +6,7 @@
 #define HIDINGIN_MACUTILS_H
 #include <tuple>
 extern float getScalingFactor();
-std::tuple<int, int, int,int> getWindowSizesForPID(pid_t targetPID);
+std::tuple<int, int, int, int, int> getWindowSizesForPID(pid_t targetPID);
+// Function declaration
+void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow);
 #endif //HIDINGIN_MACUTILS_H

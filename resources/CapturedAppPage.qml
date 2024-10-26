@@ -8,6 +8,10 @@ Item {
     width: 1200
     height: 800
 
+    // Define custom signals that can be connected to C++
+    // signal keyPressed(int key)
+    // signal mouseClicked(int x, int y)
+
     MetalGraphicsItem {
         anchors.fill: parent
         id: appCaptureItem

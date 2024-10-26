@@ -33,6 +33,8 @@ struct WindowSubMsg : public SubMsg{
     int capturedAppY;
     int capturedAppWidth;
     int capturedAppHeight;
+    int capturedWinId;
+    int appPid;
     float scalingFactor;
     std::atomic_bool needResizeForRender = false;
 };

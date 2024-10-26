@@ -6,6 +6,7 @@
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 #import "MacUtils.h"
+#include <iostream>
 float getScalingFactor() {
     NSScreen *mainScreen = [NSScreen mainScreen];
     // Get the screen's backing scale factor (retina or non-retina)
@@ -15,7 +16,7 @@ float getScalingFactor() {
 }
 
 // Function to find and print the size of windows based on a given PID
-std::tuple<int, int, int,int> getWindowSizesForPID(pid_t targetPID) {
+std::tuple<int, int, int,int, int> getWindowSizesForPID(pid_t targetPID) {
     // Get a list of all windows on the screen
     CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
 
@@ -35,8 +36,11 @@ std::tuple<int, int, int,int> getWindowSizesForPID(pid_t targetPID) {
             if (ownerPID == targetPID) {
                 // Get the window layer
                 auto layerRef = static_cast<CFNumberRef>(CFDictionaryGetValue(windowInfo, kCGWindowLayer));
+                auto windowIDRef = static_cast<CFNumberRef>(CFDictionaryGetValue(windowInfo, kCGWindowNumber));
                 int layer = 0;
                 CFNumberGetValue(layerRef, kCFNumberIntType, &layer);
+                CGWindowID windowID;
+                CFNumberGetValue(windowIDRef, kCFNumberIntType, &windowID);
                 // Get the window bounds (size and position)
                 auto windowBounds = static_cast<CFDictionaryRef>(CFDictionaryGetValue(windowInfo,
                                                                                                  kCGWindowBounds));
@@ -55,7 +59,7 @@ std::tuple<int, int, int,int> getWindowSizesForPID(pid_t targetPID) {
                           targetPID,
                           bounds.origin.x, bounds.origin.y,
                           bounds.size.width, bounds.size.height);
-                    return {bounds.origin.x, bounds.origin.y,bounds.size.width, bounds.size.height};
+                    return {bounds.origin.x, bounds.origin.y,bounds.size.width, bounds.size.height, windowID};
                 }
             }
         }
@@ -66,4 +70,80 @@ std::tuple<int, int, int,int> getWindowSizesForPID(pid_t targetPID) {
         NSLog(@"No windows found on screen.");
     }
     return {};
+}
+
+NSRunningApplication* findAppPidByPid(pid_t pid) {
+    NSArray *runningApps = [[NSWorkspace sharedWorkspace] runningApplications];
+
+    for (NSRunningApplication *app in runningApps) {
+        if (app.processIdentifier == pid) {
+            return app;
+        }
+    }
+    return nil;
+}
+
+// Function definition
+void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
+    NSView* nsView = (NSView*) overlayWindow;
+    NSWindow* nsWindow = [nsView window];
+
+    if (!nsWindow) {
+        std::cerr << "No valid overlay window found." << std::endl;
+        return;
+    }
+
+    // Step 1: Find the position and size of the window with the given CGWindowID
+    CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionIncludingWindow, targetAppWinId);
+    if (windowList == nullptr || CFArrayGetCount(windowList) == 0) {
+        std::cerr << "No window found with the given CGWindowID." << std::endl;
+        if (windowList) CFRelease(windowList);
+        return;
+    }
+
+    // Get window info dictionary
+    NSDictionary *windowInfo = (__bridge NSDictionary *)CFArrayGetValueAtIndex(windowList, 0);
+    if (!windowInfo) {
+        std::cerr << "Failed to retrieve window information." << std::endl;
+        CFRelease(windowList);
+        return;
+    }
+
+    // Extract window position and size
+    CGRect windowRect;
+    NSDictionary *boundsDict = windowInfo[(id)kCGWindowBounds];
+    if (!boundsDict || !CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)boundsDict, &windowRect)) {
+        std::cerr << "Failed to extract window bounds." << std::endl;
+        CFRelease(windowList);
+        return;
+    }
+
+    // Release the window list as we've extracted the needed information
+    CFRelease(windowList);
+
+    // Step 2: Update the overlay window's frame to match the target window
+    NSRect frame = NSMakeRect(windowRect.origin.x, windowRect.origin.y, windowRect.size.width, windowRect.size.height);
+
+    // Convert to screen coordinates if needed (depending on the screen origin)
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    if (mainScreen) {
+        CGFloat screenHeight = [mainScreen frame].size.height;
+        frame.origin.y = screenHeight - windowRect.origin.y - windowRect.size.height;
+    }
+
+    [nsWindow setFrame:frame display:YES];
+
+    auto nsApp = findAppPidByPid(targetAppPID);
+    [nsApp activateWithOptions:NSApplicationActivateAllWindows];
+
+    // Step 3: Make the overlay window topmost and ignore mouse events
+    [nsWindow setLevel:NSFloatingWindowLevel];   // Keep the window on top
+    [nsWindow setIgnoresMouseEvents:YES];        // Ignore mouse events to let them pass through
+
+    // Step 4: Bring the overlay window to the front and make it visible
+    //[nsWindow makeKeyAndOrderFront:nil];
+    //[[NSApplication sharedApplication] activateIgnoringOtherApps : YES];
+
+    // Finally, log for debugging
+    std::cout << "Overlay window now sticks to the target window with ID: " << targetAppWinId << std::endl;
 }

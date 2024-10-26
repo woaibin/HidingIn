@@ -15,6 +15,7 @@ QMetalGraphicsItem::QMetalGraphicsItem(): readMsgThread(&QMetalGraphicsItem::rea
     connect(this, &QMetalGraphicsItem::triggerRender, this, [this](){
         window()->update();
     });
+    setObjectName("metalGraphics");
 }
 // Slot: Called before rendering starts
 void QMetalGraphicsItem::onBeforeRendering() {
@@ -62,7 +63,7 @@ void QMetalGraphicsItem::onBeforeRenderPassRecording() {
     if(!latestTexture){
         return;
     }
-    qDebug() << "rendering item: " << idName;
+    //qDebug() << "rendering item: " << idName;
     window()->beginExternalCommands();
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>) rif->getResource(
             window(), QSGRendererInterface::CommandEncoderResource);
@@ -168,8 +169,7 @@ void QMetalGraphicsItem::handleWindowChanged(QQuickWindow *win) {
         connect(win, &QQuickWindow::beforeSynchronizing, this, &QMetalGraphicsItem::sync, Qt::DirectConnection);
         connect(win, &QQuickWindow::sceneGraphInvalidated, this, &QMetalGraphicsItem::cleanup, Qt::DirectConnection);
 
-        // Ensure we start with cleared to black. The squircle's blend mode relies on this.
-        win->setColor(Qt::black);
+        win->setObjectName("metalGraphicsWindow");
     }
 }
 

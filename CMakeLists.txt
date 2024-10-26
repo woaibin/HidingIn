@@ -22,8 +22,10 @@ set(SOURCE "" com/NotificationCenter.h main.cpp
         DataModel/WindowAbstractListModelMacOS.mm
         DataModel/SnapShotImageProvider.cpp
         DataModel/SnapShotImageProvider.h
-        Handler/AppItemClickHandler.cpp
-        Handler/AppItemClickHandler.h)
+        Handler/AppGeneralEventHandler.cpp
+        Handler/AppGeneralEventHandler.h
+        Control/macos/RemoteInputControllerMacOS.h
+        Control/macos/RemoteInputControllerMacOS.mm)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)
@@ -50,6 +52,7 @@ find_package(OpenGL REQUIRED)
 find_library(METAL_FRAMEWORK Metal)
 find_library(METALKIT_FRAMEWORK MetalKit)
 find_library(SCREENCAPTUREKIT_FRAMEWORK ScreenCaptureKit)
+find_library(CARBON_FRAMEWORK Carbon)
 target_link_libraries(${PROJECT_NAME} PUBLIC
         ${FOUNDATION_FRAMEWORK}
         ${VIDEO_TOOLBOX_FRAMEWORK}
@@ -59,7 +62,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         ${IOSURFACE_LIB}
         ${METAL_FRAMEWORK}
         ${METALKIT_FRAMEWORK}
-        ${COCOA_LIBRARY} ${IOKIT_LIBRARY} ${SCREENCAPTUREKIT_FRAMEWORK} "-framework CoreImage")
+        ${COCOA_LIBRARY} ${IOKIT_LIBRARY} ${SCREENCAPTUREKIT_FRAMEWORK} ${CARBON_FRAMEWORK} "-framework CoreImage")
 
 # Link the Qt libraries to the project
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Quick Qt6::Gui Qt6::Qml )
