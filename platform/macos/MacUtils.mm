@@ -147,3 +147,13 @@ void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
     // Finally, log for debugging
     std::cout << "Overlay window now sticks to the target window with ID: " << targetAppWinId << std::endl;
 }
+
+std::vector<int> getCurrentAppWindowIDVec(){
+    auto nsApp = [NSApplication sharedApplication];
+    std::vector<int> retWinIDs;
+    for(auto window in nsApp.windows){
+        retWinIDs.push_back((int)[window windowNumber]);
+    }
+
+    return retWinIDs;
+}

@@ -16,10 +16,14 @@
 // Enum for Message Types
 enum MessageType {
     Render,
-    Control
+    Control,
+    Device
 };
 
 struct SubMsg{
+};
+
+struct DeviceSubMsg: public SubMsg{
 };
 
 struct WindowSubMsg : public SubMsg{

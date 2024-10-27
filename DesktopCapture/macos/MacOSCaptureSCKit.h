@@ -1,21 +1,15 @@
 // ScreenCapture.h
-
+#include <optional>
 #ifndef SCREEN_CAPTURE_H
 #define SCREEN_CAPTURE_H
-
-enum class CaptureStatus{
-    NotStart,
-    Start,
-    Stop
-};
-
+#include "../common/CaptureStuff.h"
 class MacOSCaptureSCKit {  // Removed the trailing underscore
 public:
     MacOSCaptureSCKit();    // Constructor
     ~MacOSCaptureSCKit();   // Destructor
 
     // Start capturing the screen content
-    bool startCapture();
+    bool startCapture(std::optional<DesktopCaptureArgs> args = std::nullopt);
 
     bool startCaptureWithApplicationName(std::string applicationName);
 

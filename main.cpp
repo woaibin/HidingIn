@@ -12,6 +12,7 @@
 #include <utility>
 #include "com/NotificationCenter.h"
 #include "Handler/AppGeneralEventHandler.h"
+#include "DesktopCapture/CompositeCapture.h"
 
 // Function to make all windows ignore mouse input
 void ignoreMouseInputForAllWindows() {
@@ -50,7 +51,8 @@ int main(int argc, char *argv[]) {
 
 #ifdef __APPLE__
     MacOSCaptureSCKit screenCapture;
-    MacOSCaptureSCKit appCapture;
+    //MacOSCaptureSCKit appCapture;
+    CompositeCapture compositeCapture;
 #endif
 
     // Set the environment variable
@@ -160,8 +162,8 @@ int main(int argc, char *argv[]) {
             // Call the method on the instance
             metalItem->setTextureFetcher([&]() -> void* {
                 // Return your MTLTexture here
-                if(appCapture.getCaptureStatus() == CaptureStatus::Start){
-                    return appCapture.getLatestCaptureFrame();
+                if(compositeCapture.queryCaptureStatus() == CaptureStatus::Start){
+                    return compositeCapture.getLatestCompositeFrame();
                 }else{
                     return nullptr;
                 }
@@ -176,14 +178,18 @@ int main(int argc, char *argv[]) {
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
             screenCapture.stopCapture();
-            appCapture.startCaptureWithApplicationName(appName.toStdString());
+            DesktopCaptureArgs captureArgs;
+            captureArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
+            compositeCapture.addWholeDesktopCapture(captureArgs);
+            compositeCapture.addCaptureByApplicationName(appName.toStdString());
+            //appCapture.startCaptureWithApplicationName(appName.toStdString());
             auto currentWindow = getCurrentWindow();
             auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
-#ifdef __APPLE__
-            void *nativeWindow = (void*)currentWindow->winId();
-            stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
-#endif
-            ignoreMouseInputForAllWindows();
+//#ifdef __APPLE__
+//            void *nativeWindow = (void*)currentWindow->winId();
+//            stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
+//#endif
+//            ignoreMouseInputForAllWindows();
         });
 
     } else {

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.27)
 project(HidingIn)
 
 set(CMAKE_AUTOMOC ON)
@@ -25,7 +25,12 @@ set(SOURCE "" com/NotificationCenter.h main.cpp
         Handler/AppGeneralEventHandler.cpp
         Handler/AppGeneralEventHandler.h
         Control/macos/RemoteInputControllerMacOS.h
-        Control/macos/RemoteInputControllerMacOS.mm)
+        Control/macos/RemoteInputControllerMacOS.mm
+        DesktopCapture/CompositeCaptureMacOS.mm
+        DesktopCapture/CompositeCapture.h
+        Graphics/MetalProcessor.mm
+        Graphics/MetalProcessor.h
+        DesktopCapture/common/CaptureStuff.h)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)

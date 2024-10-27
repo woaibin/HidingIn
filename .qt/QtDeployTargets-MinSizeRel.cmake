@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_HidingIn_FILE /Users/binxiaokang/Desktop/HidingIn/MinSizeRel/HidingIn)
+set(__QT_DEPLOY_TARGET_HidingIn_TYPE EXECUTABLE)

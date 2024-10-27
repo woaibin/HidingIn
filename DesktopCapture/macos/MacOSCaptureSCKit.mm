@@ -5,7 +5,7 @@
 #include "MacOSCaptureSCKit.h"
 #import <CoreMedia/CoreMedia.h>
 #include <iostream>
-#include "../com/NotificationCenter.h"
+#include "com/NotificationCenter.h"
 #include "platform/macos/MacUtils.h"
 
 static void savePNG(CVImageBufferRef imageBuffer){
@@ -247,7 +247,7 @@ public:
         stopCapture();
     }
 
-    bool startCapture() {
+    bool startCapture(std::optional<DesktopCaptureArgs> args = std::nullopt) {
         // Create a dispatch semaphore to wait for the completion handler
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
@@ -290,7 +290,22 @@ public:
 //             }
 
              // Set up the content filter for the display
-             SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:content.windows];
+             SCContentFilter *filter = nullptr;
+             if(args.has_value() && !args->excludingWindowIDs.empty()){
+                 // Create a mutable copy of the windows array
+                 NSMutableArray<SCWindow *> *mutableWindows = [content.windows mutableCopy];
+                 for (int i = (int)content.windows.count - 1; i >= 0; i--) {
+                     SCWindow *window = content.windows[i];
+                     // Check if windowID is in the vector of excluded IDs
+                     if (std::find(args->excludingWindowIDs.begin(), args->excludingWindowIDs.end(), window.windowID) != args->excludingWindowIDs.end()) {
+                         // Remove the window from the array
+                         [mutableWindows removeObjectAtIndex:i];
+                     }
+                 }
+                 filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:mutableWindows];
+             }else{
+                 filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:content.windows];
+             }
              // Set up the stream
              frameReceiver = [[SCFrameReceiver alloc] init];
              [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
@@ -441,9 +456,9 @@ MacOSCaptureSCKit::~MacOSCaptureSCKit() {
     delete impl;
 }
 
-bool MacOSCaptureSCKit::startCapture() {
+bool MacOSCaptureSCKit::startCapture(std::optional<DesktopCaptureArgs> args) {
     captureStatus = CaptureStatus::Start;
-    return impl->startCapture();
+    return impl->startCapture(args);
 }
 
 void MacOSCaptureSCKit::stopCapture() {
