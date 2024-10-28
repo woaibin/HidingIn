@@ -12,6 +12,7 @@
 #include <ImageIO/ImageIO.h>
 #include <Foundation/Foundation.h>
 #include <vector>
+#include <com/NotificationCenter.h>
 #endif
 
 static void saveMTLTextureAsPNG(id<MTLTexture> texture) {
@@ -98,15 +99,41 @@ void CompositeCapture::stopAllCaptures() {
 }
 
 void *CompositeCapture::getLatestCompositeFrame() {
+    if(!m_textureProcessor){
+        QFile shaderFile(":/shader/textureBlendHide.metal");
+        if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            NSLog(@"Failed to open shader file at path: qrc:/shader/render.metal");
+            return nullptr;
+        }
+
+        // Read the entire shader file content into a string
+        QByteArray shaderContent = shaderFile.readAll();
+        shaderFile.close();
+        Message msg;
+        NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+        auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
+        m_textureProcessor = std::make_shared<TextureProcessor>(shaderContent.constData(),
+                                                                "textureBlendHide");
+    }
     std::vector<void*> inputTextures;
+    int index = 0;
     for(auto source : m_captureSources){
         auto tex = source->getLatestCaptureFrame();
-        if(tex){
+        if(tex && index){
+            // match the size to the first input:
+            auto firstInputTex = (id<MTLTexture>)inputTextures[0];
+            auto scaleTex = m_textureProcessor->applyScale(tex, firstInputTex.width, firstInputTex.height);
+            auto highPassTex = m_textureProcessor->applyHighPassFilter(scaleTex);
+            if(highPassTex){
+                inputTextures.push_back(highPassTex);
+            }
+        }else if(tex){
             inputTextures.push_back(tex);
         }
+        index++;
     }
 
-    if(inputTextures.empty()){
+    if(inputTextures.empty() || inputTextures.size() < m_compCapArgs.reqCompositeNum){
         return nullptr;
     }
 
@@ -130,17 +157,10 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<DesktopCaptureArgs> 
     return true;
 }
 
-CompositeCapture::CompositeCapture() {
-    QFile shaderFile(":/shader/textureBlendHide.metal");
-    if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        NSLog(@"Failed to open shader file at path: qrc:/shader/render.metal");
-        return;
+CompositeCapture::CompositeCapture(std::optional<CompositeCaptureArgs> compCapArgs) {
+    if(compCapArgs.has_value()){
+        m_compCapArgs = compCapArgs.value();
     }
-
-    // Read the entire shader file content into a string
-    QByteArray shaderContent = shaderFile.readAll();
-    shaderFile.close();
-    m_textureProcessor = std::make_shared<TextureProcessor>(shaderContent.constData(),"textureBlendHide");
 }
 
 CaptureStatus CompositeCapture::queryCaptureStatus() {

@@ -1,5 +1,6 @@
 #import "MetalProcessor.h"
 #import "MetalKit/MetalKit.h"
+#include <MetalPerformanceShaders/MetalPerformanceShaders.h>
 
 MetalProcessor::MetalProcessor(const char* shaderBuffer, const std::string& functionName) {
     // Initialize the Metal device and command queue
@@ -129,8 +130,100 @@ void *MetalProcessor::createOutputTexture(void *referenceTexture) {
 
     // Create the output texture only the first time this method is called
     outputTexture = [(id<MTLDevice>)device newTextureWithDescriptor:textureDescriptor];
+    outputTexture2 = [(id<MTLDevice>)device newTextureWithDescriptor:textureDescriptor];
     if (!outputTexture) {
         std::cerr << "Failed to create output texture!" << std::endl;
     }
+    if (!outputTexture2) {
+        std::cerr << "Failed to create output texture2!" << std::endl;
+    }
     return outputTexture;
+}
+
+void *MetalProcessor::createScaleTextureWithWidthAndHeight(void *refTex, int width, int height) {
+    // Create a texture descriptor based on the reference texture (typically the first input texture)
+    auto mtlInputTex = (id<MTLTexture>)refTex;
+    MTLTextureDescriptor *textureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlInputTex.pixelFormat
+                                                                                                 width:width
+                                                                                                height:height
+                                                                                             mipmapped:NO];
+    textureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite;
+
+    // Create the output texture only the first time this method is called
+    scaleTexture = [(id<MTLDevice>)device newTextureWithDescriptor:textureDescriptor];
+    if (!scaleTexture) {
+        std::cerr << "Failed to create output texture!" << std::endl;
+    }
+    return scaleTexture;
+}
+
+void *MetalProcessor::applyGaussianBlur(void *inputTexture, float sigma) {
+    MPSImageGaussianBlur* gaussianBlur = [[MPSImageGaussianBlur alloc] initWithDevice:static_cast<id <MTLDevice>>(device) sigma:sigma];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+
+    if(!outputTexture){
+        createOutputTexture(inputTexture);
+    }
+
+    auto blurredTexture = (id<MTLTexture>)outputTexture;
+
+    [gaussianBlur encodeToCommandBuffer:commandBuffer sourceTexture:(id<MTLTexture>)inputTexture destinationTexture:blurredTexture];
+    [commandBuffer commit];
+    [commandBuffer waitUntilCompleted];
+
+    return blurredTexture;
+}
+
+void *MetalProcessor::applyImageSubtraction(void *originalTexture, void *blurredTexture) {
+    MPSImageSubtract* subtract = [[MPSImageSubtract alloc] initWithDevice:static_cast<id <MTLDevice>>(device)];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+
+    if(!outputTexture2){
+        createOutputTexture(originalTexture);
+    }
+
+    auto highPassTexture = (id<MTLTexture>)outputTexture2;
+
+    [subtract encodeToCommandBuffer:commandBuffer primaryTexture:(id<MTLTexture>)originalTexture secondaryTexture:(id<MTLTexture>)blurredTexture destinationTexture:highPassTexture];
+    [commandBuffer commit];
+    [commandBuffer waitUntilCompleted];
+
+    return highPassTexture;
+}
+
+void *MetalProcessor::applyHighPassFilter(void *inputTexture) {
+    auto inputMtlTexture = (__bridge id<MTLTexture>)inputTexture;
+    // Step 1: Apply Gaussian blur (low-pass filter)
+    float blurSigma = 10.0f; // Adjust based on desired low-pass strength
+    auto blurredTexture = static_cast<id <MTLTexture>>(applyGaussianBlur(inputTexture, blurSigma));
+
+    // Step 2: Subtract blurred image from original to get high-pass filtered image
+    auto highPassTexture = static_cast<id <MTLTexture>>(applyImageSubtraction(inputTexture, blurredTexture));
+
+    return (__bridge void*)highPassTexture;
+}
+
+void *MetalProcessor::applyScale(void *inputTexture, int outputWidth, int outputHeight) {
+    MPSImageBilinearScale* imgScale = [[MPSImageBilinearScale alloc] initWithDevice:static_cast<id <MTLDevice>>(device)];
+    auto inputMtlTex = (id<MTLTexture>)inputTexture;
+    // finish this:
+    MPSScaleTransform scaleTransform;
+    scaleTransform.scaleX = (double)outputWidth / inputMtlTex.width;   // Horizontal scaling factor
+    scaleTransform.scaleY = (double)outputHeight / inputMtlTex.height; // Vertical scaling factor
+    scaleTransform.translateX = 0.0; // No horizontal translation
+    scaleTransform.translateY = 0.0; // No vertical translation
+    [imgScale setScaleTransform:&scaleTransform];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+
+    if(!scaleTexture){
+        createScaleTextureWithWidthAndHeight(inputTexture, outputWidth, outputHeight);
+    }
+
+    auto scaleTex = (id<MTLTexture>)scaleTexture;
+
+    [imgScale encodeToCommandBuffer:commandBuffer sourceTexture:(id<MTLTexture>)inputTexture destinationTexture:scaleTex];
+    [commandBuffer commit];
+    [commandBuffer waitUntilCompleted];
+
+    return scaleTex;
 }

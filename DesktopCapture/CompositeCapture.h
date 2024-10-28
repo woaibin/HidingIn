@@ -20,7 +20,7 @@ using TextureProcessor = MetalProcessor;
 
 class CompositeCapture {
 public:
-    CompositeCapture();  // Constructor
+    CompositeCapture(std::optional<CompositeCaptureArgs> compCapArgs = std::nullopt);  // Constructor
     ~CompositeCapture() = default; // Destructor
 
     // Add a screen capture by application name
@@ -42,6 +42,7 @@ public:
 private:
     std::vector<std::shared_ptr<DesktopCapture>> m_captureSources;
     std::shared_ptr<TextureProcessor> m_textureProcessor;
+    CompositeCaptureArgs m_compCapArgs;
 };
 
 

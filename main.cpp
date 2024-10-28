@@ -49,12 +49,6 @@ QQuickWindow* getCurrentWindow() {
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
-#ifdef __APPLE__
-    MacOSCaptureSCKit screenCapture;
-    //MacOSCaptureSCKit appCapture;
-    CompositeCapture compositeCapture;
-#endif
-
     // Set the environment variable
     qputenv("QT_QUICK_CONTROLS_IGNORE_CUSTOMIZATION_WARNINGS", "1");
 
@@ -63,6 +57,12 @@ int main(int argc, char *argv[]) {
     msg.whatHappen = "";
     msg.subMsg = std::make_shared<WindowSubMsg>(250,250, 1200, 800, getScalingFactor());
     NotificationCenter::getInstance().pushMessage(msg, true);
+
+#ifdef __APPLE__
+    MacOSCaptureSCKit screenCapture;
+    //MacOSCaptureSCKit appCapture;
+    CompositeCapture compositeCapture;
+#endif
 
     // Start capturing screen content and save it to "output.mov"
     if (screenCapture.startCapture()) {
