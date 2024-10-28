@@ -24,7 +24,9 @@ kernel void textureBlendHide(texture2d<float, access::read> tex1 [[texture(0)]],
     float4 color2 = tex2.read(tex2Coords);
 
     // Average the two colors
-    float4 blendedColor = (color1 + color2) * 0.5;
+    float4 tempColor = color1 + color2;
+    float4 blendedColor = clamp(tempColor, 0.0, 1.0);
+
 
     // Write the blended color to the output texture
     outputTex.write(blendedColor, gid);

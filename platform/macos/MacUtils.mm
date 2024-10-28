@@ -157,3 +157,51 @@ std::vector<int> getCurrentAppWindowIDVec(){
 
     return retWinIDs;
 }
+
+std::vector<int> getWindowIDsForAppByName(const std::string &appName) {
+    std::vector<int> windowIDs;
+
+    // Convert std::string to an NSString
+    NSString *targetAppName = [NSString stringWithUTF8String:appName.c_str()];
+
+    // Get list of running applications
+    NSArray *runningApps = [[NSWorkspace sharedWorkspace] runningApplications];
+
+    // Find the application by name
+    NSRunningApplication *targetApp = nil;
+    for (NSRunningApplication *app in runningApps) {
+        if ([[app localizedName] isEqualToString:targetAppName]) {
+            targetApp = app;
+            break;
+        }
+    }
+
+    if (!targetApp) {
+        printf("App with name %s not found.\n", appName.c_str());
+        return windowIDs;
+    }
+
+    // Get the process ID of the target application
+    pid_t targetPID = [targetApp processIdentifier];
+
+    // Fetch information for all windows
+    CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+
+    // Iterate over the windows
+    for (NSDictionary *windowInfo in (__bridge NSArray *)windowList) {
+        // Get the window's owner process ID
+        pid_t windowPID = [windowInfo[(NSString *)kCGWindowOwnerPID] intValue];
+
+        // Check if the window belongs to the target app
+        if (windowPID == targetPID) {
+            // Get the window ID
+            int windowID = [windowInfo[(NSString *)kCGWindowNumber] intValue];
+            windowIDs.push_back(windowID);
+        }
+    }
+
+    // Release the window list
+    CFRelease(windowList);
+
+    return windowIDs;
+}

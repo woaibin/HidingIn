@@ -10,4 +10,5 @@ std::tuple<int, int, int, int, int> getWindowSizesForPID(pid_t targetPID);
 // Function declaration
 void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow);
 std::vector<int> getCurrentAppWindowIDVec();
+std::vector<int> getWindowIDsForAppByName(const std::string &appName);
 #endif //HIDINGIN_MACUTILS_H
