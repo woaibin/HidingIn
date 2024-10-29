@@ -194,7 +194,7 @@ void *MetalProcessor::applyImageSubtraction(void *originalTexture, void *blurred
 void *MetalProcessor::applyHighPassFilter(void *inputTexture) {
     auto inputMtlTexture = (__bridge id<MTLTexture>)inputTexture;
     // Step 1: Apply Gaussian blur (low-pass filter)
-    float blurSigma = 10.0f; // Adjust based on desired low-pass strength
+    float blurSigma = 5.0f; // Adjust based on desired low-pass strength
     auto blurredTexture = static_cast<id <MTLTexture>>(applyGaussianBlur(inputTexture, blurSigma));
 
     // Step 2: Subtract blurred image from original to get high-pass filtered image

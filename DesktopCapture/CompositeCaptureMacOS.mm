@@ -119,7 +119,7 @@ void *CompositeCapture::getLatestCompositeFrame() {
     int index = 0;
     for(auto source : m_captureSources){
         auto tex = source->getLatestCaptureFrame();
-        if(tex && index){
+        if(tex && index && inputTextures.size() > 0){
             // match the size to the first input:
             auto firstInputTex = (id<MTLTexture>)inputTextures[0];
             auto scaleTex = m_textureProcessor->applyScale(tex, firstInputTex.width, firstInputTex.height);

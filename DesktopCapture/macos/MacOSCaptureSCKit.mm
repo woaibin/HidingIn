@@ -155,8 +155,13 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
                 [self prepareDupTextureWithWidth:windowInfo->width * windowInfo->scalingFactor
                                           height:windowInfo->height * windowInfo->scalingFactor];
             }else{
-                [self prepareDupTextureWithWidth:windowInfo->capturedAppWidth
-                                          height:windowInfo->capturedAppHeight];
+                if(windowInfo->width && windowInfo->height){
+                    [self prepareDupTextureWithWidth:windowInfo->capturedAppWidth
+                                              height:windowInfo->capturedAppHeight];
+                }else{
+                    std::cerr << "cap app window info invalid..." << std::endl;
+                    return;
+                }
             }
         }
 
