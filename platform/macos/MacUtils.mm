@@ -85,7 +85,7 @@ NSRunningApplication* findAppPidByPid(pid_t pid) {
 
 // Function definition
 void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
-    NSView* nsView = (NSView*) overlayWindow;
+    NSView* nsView = (NSView*) CFBridgingRelease(overlayWindow);
     NSWindow* nsWindow = [nsView window];
 
     if (!nsWindow) {

@@ -6,7 +6,9 @@
 #import <CoreMedia/CoreMedia.h>
 #include <iostream>
 #include "com/NotificationCenter.h"
+#include "com/EventListener.h"
 #include "platform/macos/MacUtils.h"
+#include "../GPUPipeline/macos/MetalPipeline.h"
 
 static void savePNG(CVImageBufferRef imageBuffer){
     // Lock the base address of the pixel buffer
@@ -54,81 +56,31 @@ static void savePNG(CVImageBufferRef imageBuffer){
     NSLog(@"Saved frame as PNG to %@", filePath);
 }
 
-// Function to calculate the centered CGRect for a window on a desktop
-CGRect calculateRectForWindowAtPosition(CGSize desktopSize, CGSize windowSize, CGPoint windowPosition) {
-    // Ensure the window fits within the desktop bounds by adjusting its position if necessary
-    CGFloat x = fmax(0, fmin(windowPosition.x, desktopSize.width - windowSize.width));
-    CGFloat y = fmax(0, fmin(windowPosition.y, desktopSize.height - windowSize.height));
-
-    // Create a CGRect with the given position and window size
-    CGRect windowRect = CGRectMake(x, y, windowSize.width, windowSize.height);
-
-    return windowRect;
-}
-
 @interface SCFrameReceiver : NSObject <SCStreamOutput,SCStreamDelegate>
-@property (nonatomic, strong) id<MTLDevice> device;
 @property (nonatomic) CVMetalTextureCacheRef textureCache;
 @property (nonatomic, assign) CVMetalTextureRef metalTextureRef;
-@property (nonatomic, strong) id<MTLTexture> mtlTexture;
-@property (nonatomic, strong) id<MTLTexture> dupTexture;
-@property (nonatomic, strong) id<MTLCommandBuffer> commandBuffer;
-@property (nonatomic, strong) id<MTLCommandQueue> commandQueue;
-@property (nonatomic, strong) NSLock *textureLock;
 @property (atomic) bool stopCapturing;
 @property (atomic) bool stopped;
 @property bool isDesktopCap;
+@property std::string captureEventName;
 
 - (void)stream:(SCStream *)stream
 didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
         ofType:(SCStreamOutputType)type;
-
-// Thread-safe methods to get and set the mtlTexture and dupTexture
-- (id<MTLTexture>)getMtlTexture;
-- (void)setMtlTexture:(id<MTLTexture>)texture;
-- (id<MTLTexture>)getDupTexture;
-- (void)setDupTexture:(id<MTLTexture>)texture;
-
 @end
 
 @implementation SCFrameReceiver
 
 - (instancetype)init {
     self = [super init];
-    self.device = MTLCreateSystemDefaultDevice();
-    CVReturn status = CVMetalTextureCacheCreate(kCFAllocatorDefault, NULL, self.device, NULL, &_textureCache);
-    if (self) {
-        _textureLock = [[NSLock alloc] init];
-    }
+    auto mtlDevice = (__bridge id<MTLDevice>)MetalPipeline::getGlobalInstance().getRenderPipeline().mtlDeviceRef;
+    CVReturn status = CVMetalTextureCacheCreate(kCFAllocatorDefault, NULL, mtlDevice, NULL, &_textureCache);
+    EventRegisterParam eventRegisterParam;
+    eventRegisterParam.type = EventType::General;
+    eventRegisterParam.eventName = _captureEventName;
+    EventManager::getInstance()->registerEvent(eventRegisterParam);
+
     return self;
-}
-
-- (void)setMtlTexture:(id<MTLTexture>)texture {
-    [self.textureLock lock];
-    _mtlTexture = texture;
-    [self.textureLock unlock];
-}
-
-- (id<MTLTexture>)getMtlTexture {
-    id<MTLTexture> texture = nil;
-    [self.textureLock lock];
-    texture = _mtlTexture;
-    [self.textureLock unlock];
-    return texture;
-}
-
-- (void)setDupTexture:(id<MTLTexture>)texture {
-    [self.textureLock lock];
-    _dupTexture = texture;
-    [self.textureLock unlock];
-}
-
-- (id<MTLTexture>)getDupTexture {
-    id<MTLTexture> texture = nil;
-    [self.textureLock lock];
-    texture = _dupTexture;
-    [self.textureLock unlock];
-    return texture;
 }
 
 - (void)stream:(SCStream *)stream didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer ofType:(SCStreamOutputType)type {
@@ -143,49 +95,9 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     }
     id<MTLTexture> newTexture = [self createTextureFromImage:imageBuffer];
     if (newTexture) {
-        Message windowMsg;
-        auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
-        auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
-        [self setMtlTexture:newTexture];
-
-        if (![self getDupTexture] || windowInfo->needResizeForRender) {
-            windowInfo->needResizeForRender = false;
-            savePNG(imageBuffer);
-            if(self.isDesktopCap){
-                [self prepareDupTextureWithWidth:windowInfo->width * windowInfo->scalingFactor
-                                          height:windowInfo->height * windowInfo->scalingFactor];
-            }else{
-                if(windowInfo->width && windowInfo->height){
-                    [self prepareDupTextureWithWidth:windowInfo->capturedAppWidth
-                                              height:windowInfo->capturedAppHeight];
-                }else{
-                    std::cerr << "cap app window info invalid..." << std::endl;
-                    return;
-                }
-            }
-        }
-
-        if(self.isDesktopCap){
-            [self copyTexture:[self getMtlTexture] toTexture:[self getDupTexture]
-                            x:windowInfo->xPos * windowInfo->scalingFactor
-                            y:windowInfo->yPos * windowInfo->scalingFactor
-                       wWidth:windowInfo->width * windowInfo->scalingFactor
-                      hHeight:windowInfo->height * windowInfo->scalingFactor];
-        }else{
-            auto cropRect = calculateRectForWindowAtPosition(CGSizeMake(newTexture.width, newTexture.height),
-                                  CGSizeMake(windowInfo->capturedAppWidth, windowInfo->capturedAppHeight),
-                                  CGPointMake(windowInfo->capturedAppX, windowInfo->capturedAppY));
-            [self copyTexture:[self getMtlTexture] toTexture:[self getDupTexture]
-                            x:cropRect.origin.x
-                            y:cropRect.origin.y
-                       wWidth:cropRect.size.width
-                      hHeight:cropRect.size.height];
-        }
-
-        Message msg;
-        msg.msgType = MessageType::Render;
-        msg.whatHappen = "TimeToRender";
-        NotificationCenter::getInstance().pushMessage(msg);
+        EventParam eventParam;
+        eventParam.addParameter("textureId", (__bridge void*)newTexture);
+        EventManager::getInstance()->triggerEvent(_captureEventName, eventParam);
     }
 }
 
@@ -199,38 +111,16 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
         _metalTextureRef = NULL;
     }
 
-    CVReturn status = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault, self.textureCache, imageBuffer, NULL, MTLPixelFormatBGRA8Unorm, width, height, 0, &_metalTextureRef);
+    CVReturn status = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                                self.textureCache, imageBuffer,
+                                                                NULL, MTLPixelFormatBGRA8Unorm,
+                                                                width, height, 0, &_metalTextureRef);
     if (status != kCVReturnSuccess) {
         NSLog(@"Failed to create Metal texture from image");
         return nil;
     }
 
     return CVMetalTextureGetTexture(_metalTextureRef);
-}
-
-- (void)prepareDupTextureWithWidth:(NSUInteger)width height:(NSUInteger)height {
-    MTLTextureDescriptor *desc = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:width height:height mipmapped:NO];
-    id<MTLTexture> texture = [self.device newTextureWithDescriptor:desc];
-    [self setDupTexture:texture];
-}
-
-- (void)copyTexture:(id<MTLTexture>)srcTexture toTexture:(id<MTLTexture>)dstTexture x:(int)windowX y:(int)windowY wWidth:(int)width hHeight:(int)height {
-    if (!srcTexture || !dstTexture) {
-        return;
-    }
-
-    if(!_commandQueue){
-        _commandQueue = [self.device newCommandQueue];
-    }
-
-    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    id<MTLBlitCommandEncoder> blitEncoder = [commandBuffer blitCommandEncoder];
-
-    [blitEncoder copyFromTexture:srcTexture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(windowX, windowY, 0) sourceSize:MTLSizeMake(width, height, 1) toTexture:dstTexture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0, 0, 0)];
-
-    [blitEncoder endEncoding];
-    [commandBuffer commit];
-    [commandBuffer waitUntilCompleted];
 }
 
 @end
@@ -252,7 +142,7 @@ public:
         stopCapture();
     }
 
-    bool startCapture(std::optional<DesktopCaptureArgs> args = std::nullopt) {
+    bool startCapture(std::optional<CaptureArgs> args = std::nullopt) {
         // Create a dispatch semaphore to wait for the completion handler
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
@@ -312,8 +202,9 @@ public:
                  filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:content.windows];
              }
              // Set up the stream
-             frameReceiver = [[SCFrameReceiver alloc] init];
+             frameReceiver = [SCFrameReceiver alloc];
              [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
+             [frameReceiver init];
              stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
              dispatch_queue_t streamQueue = dispatch_queue_create("com.yourAppName.streamOutputQueue", DISPATCH_QUEUE_SERIAL);
              [stream addStreamOutput:frameReceiver type:SCStreamOutputTypeScreen sampleHandlerQueue:streamQueue error:&error];
@@ -335,7 +226,7 @@ public:
         return captureStarted;
     }
 
-    bool startCaptureWithApplicationName(std::string applicationName){
+    bool startCaptureWithApplicationName(std::string applicationName, std::string captureEventName) {
         // Create a dispatch semaphore to wait for the completion handler
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
@@ -399,6 +290,7 @@ public:
                      SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingApplications:applicationsArray exceptingWindows:@[]];
                      // Set up the stream
                      frameReceiver = [[SCFrameReceiver alloc] init];
+                     [frameReceiver setCaptureEventName:captureEventName];
                      [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
                      stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
                      dispatch_queue_t streamQueue = dispatch_queue_create("com.yourAppName.streamOutputQueue", DISPATCH_QUEUE_SERIAL);
@@ -433,23 +325,9 @@ public:
                     }
                     std::this_thread::sleep_for(std::chrono::milliseconds(20));
                 }
-                auto dupTexture = [frameReceiver getDupTexture];
-                auto capTexture = [frameReceiver getMtlTexture];
-                if(dupTexture){
-                    CFRelease(dupTexture);
-                    [frameReceiver setDupTexture:nullptr];
-                }
-                if(capTexture){
-                    CFRelease(capTexture);
-                    [frameReceiver setMtlTexture:nullptr];
-                }
             }
         }];
 
-    }
-
-    id<MTLTexture> getLatestCaptureFrame() {
-        return [frameReceiver getDupTexture];
     }
 };
 
@@ -461,7 +339,7 @@ MacOSCaptureSCKit::~MacOSCaptureSCKit() {
     delete impl;
 }
 
-bool MacOSCaptureSCKit::startCapture(std::optional<DesktopCaptureArgs> args) {
+bool MacOSCaptureSCKit::startCapture(std::optional<CaptureArgs> args) {
     captureStatus = CaptureStatus::Start;
     return impl->startCapture(args);
 }
@@ -471,13 +349,7 @@ void MacOSCaptureSCKit::stopCapture() {
     impl->stopCapture();
 }
 
-void *MacOSCaptureSCKit::getLatestCaptureFrame() {
-    // first thing first, dump out the image, and see if it matches the desktop:
-    auto metalTexture = impl->getLatestCaptureFrame();
-    return impl->getLatestCaptureFrame();
-}
-
-bool MacOSCaptureSCKit::startCaptureWithApplicationName(std::string applicationName) {
+bool MacOSCaptureSCKit::startCaptureWithApplicationName(std::string applicationName, std::optional<CaptureArgs> args) {
     captureStatus = CaptureStatus::Start;
-    return impl->startCaptureWithApplicationName(applicationName);
+    return impl->startCaptureWithApplicationName(applicationName, args->captureEventName);
 }

@@ -64,13 +64,13 @@ int main(int argc, char *argv[]) {
     CompositeCapture compositeCapture;
 #endif
 
-    // Start capturing screen content and save it to "output.mov"
-    if (screenCapture.startCapture()) {
-        qDebug() << "start screen capturing";
-    } else {
-        qDebug() << "failed to start screen capturing";
-    }
-
+    MetalPipeline::getGlobalInstance().registerInitDoneHandler([&]{
+        if (screenCapture.startCapture()) {
+            qDebug() << "start screen capturing";
+        } else {
+            qDebug() << "failed to start screen capturing";
+        }
+    });
 #ifdef __APPLE__
     QQuickWindow::setGraphicsApi(QSGRendererInterface::Metal);
 #endif
@@ -142,33 +142,11 @@ int main(int argc, char *argv[]) {
     if (transparentBgCaptureItem) {
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(transparentBgCaptureItem);
         metalItem->setIdName("bgCap");
-        if (metalItem) {
-            // Call the method on the instance
-            metalItem->setTextureFetcher([&]() -> void* {
-                // Return your MTLTexture here
-                if(screenCapture.getCaptureStatus() == CaptureStatus::Start){
-                    return screenCapture.getLatestCaptureFrame();
-                }else{
-                    return nullptr;
-                }
-            });
-        }
     }
     QObject *appCaptureItem = rootObject->findChild<QObject*>("appCapture");
     if (appCaptureItem) {
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         metalItem->setIdName("appCap");
-        if (metalItem) {
-            // Call the method on the instance
-            metalItem->setTextureFetcher([&]() -> void* {
-                // Return your MTLTexture here
-                if(compositeCapture.queryCaptureStatus() == CaptureStatus::Start){
-                    return compositeCapture.getLatestCompositeFrame();
-                }else{
-                    return nullptr;
-                }
-            });
-        }
     }
 
     // find out all app items:
@@ -179,7 +157,7 @@ int main(int argc, char *argv[]) {
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
             auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
             screenCapture.stopCapture();
-            DesktopCaptureArgs captureArgs;
+            CaptureArgs captureArgs;
             captureArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
             auto capAppWinVec = getWindowIDsForAppByName(appName.toStdString());
             captureArgs.excludingWindowIDs.insert(captureArgs.excludingWindowIDs.end(), capAppWinVec.begin(), capAppWinVec.end());

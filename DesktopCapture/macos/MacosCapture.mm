@@ -280,10 +280,6 @@ public:
             [captureSession stopRunning];
         }
     }
-
-    id<MTLTexture> getLatestCaptureFrame(){
-        return [frameReceiver getDupTexture];
-    }
 };
 
 MacosCapture::MacosCapture() {
@@ -300,10 +296,4 @@ bool MacosCapture::startCapture() {
 
 void MacosCapture::stopCapture() {
     impl->stopCapture();
-}
-
-void* MacosCapture::getLatestCaptureFrame() {
-    // first thing first, dump out the image, and see if it matches the desktop:
-    auto metalTexture = impl->getLatestCaptureFrame();
-    return impl->getLatestCaptureFrame();
 }

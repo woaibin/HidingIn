@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <string>
+#import <QSGDynamicTexture>
+#import <QSGTexture>
+
 class MetalProcessor {
 public:
     MetalProcessor(const char* shaderBuffer, const std::string& functionName);

@@ -4,12 +4,12 @@
 
 MetalProcessor::MetalProcessor(const char* shaderBuffer, const std::string& functionName) {
     // Initialize the Metal device and command queue
-    device = MTLCreateSystemDefaultDevice();
+    device = (__bridge void*)MTLCreateSystemDefaultDevice();
     if (!device) {
         std::cerr << "Failed to create Metal device!" << std::endl;
         return;
     }
-    commandQueue = [(id<MTLDevice>)device newCommandQueue];
+    commandQueue = (__bridge void*)[(id<MTLDevice>)CFBridgingRelease(device) newCommandQueue];
 
     // Load shader from the provided path
     if (!loadShaderFromPath(shaderBuffer, functionName)) {
@@ -31,7 +31,7 @@ bool MetalProcessor::loadShaderFromPath(const char* shaderBuffer, const std::str
     }
 
     // Create a Metal library from the shader source
-    id<MTLLibrary> library = [(id<MTLDevice>)device newLibraryWithSource:shaderSource options:nil error:&error];
+    id<MTLLibrary> library = [(id<MTLDevice>)CFBridgingRelease(device) newLibraryWithSource:shaderSource options:nil error:&error];
     if (!library || error) {
         std::cerr << "Failed to create library from shader source: " << [[error localizedDescription] UTF8String] << std::endl;
         return false;
@@ -45,7 +45,7 @@ bool MetalProcessor::loadShaderFromPath(const char* shaderBuffer, const std::str
     }
 
     // Create the compute pipeline state
-    computePipelineState = [(id<MTLDevice>)device newComputePipelineStateWithFunction:function error:&error];
+    computePipelineState = (__bridge void*)[(id<MTLDevice>)CFBridgingRelease(device) newComputePipelineStateWithFunction:function error:&error];
     if (!computePipelineState || error) {
         std::cerr << "Failed to create compute pipeline state: " << [[error localizedDescription] UTF8String] << std::endl;
         return false;
@@ -64,19 +64,19 @@ void* MetalProcessor::processTextures(const std::vector<void*>& inputTextures) {
     if (!outputTexture) {
         outputTexture = createOutputTexture(inputTextures[0]);
     }
-    auto outputMTLTex =(id<MTLTexture>)outputTexture;
-    auto pipeLineState = (id<MTLComputePipelineState>)computePipelineState;
+    auto outputMTLTex =(id<MTLTexture>)CFBridgingRelease(outputTexture);
+    auto pipeLineState = (id<MTLComputePipelineState>)CFBridgingRelease(computePipelineState);
 
     // Create a command buffer and a compute command encoder
-    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)CFBridgingRelease(commandQueue) commandBuffer];
     id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
 
     // Set the compute pipeline state
-    [encoder setComputePipelineState:(id<MTLComputePipelineState>)computePipelineState];
+    [encoder setComputePipelineState:(id<MTLComputePipelineState>)CFBridgingRelease(computePipelineState)];
 
     // Bind all input textures to the shader
     for (int i = 0; i < inputTextures.size(); ++i) {
-        [encoder setTexture:(id<MTLTexture>)inputTextures[i] atIndex:i];
+        [encoder setTexture:(id<MTLTexture>)CFBridgingRelease(inputTextures[i]) atIndex:i];
     }
 
     // Configure thread groups and grid size based on the first texture (assuming they are the same size)
@@ -121,7 +121,7 @@ void* MetalProcessor::processTextures(const std::vector<void*>& inputTextures) {
 
 void *MetalProcessor::createOutputTexture(void *referenceTexture) {
     // Create a texture descriptor based on the reference texture (typically the first input texture)
-    auto mtlInputTex = (id<MTLTexture>)referenceTexture;
+    auto mtlInputTex = (id<MTLTexture>)CFBridgingRelease(referenceTexture);
     MTLTextureDescriptor *textureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlInputTex.pixelFormat
                                                                                                  width:mtlInputTex.width
                                                                                                 height:mtlInputTex.height
@@ -129,8 +129,8 @@ void *MetalProcessor::createOutputTexture(void *referenceTexture) {
     textureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite;
 
     // Create the output texture only the first time this method is called
-    outputTexture = [(id<MTLDevice>)device newTextureWithDescriptor:textureDescriptor];
-    outputTexture2 = [(id<MTLDevice>)device newTextureWithDescriptor:textureDescriptor];
+    outputTexture = (__bridge void*)[(id<MTLDevice>)CFBridgingRelease(device) newTextureWithDescriptor:textureDescriptor];
+    outputTexture2 = (__bridge void*)[(id<MTLDevice>)CFBridgingRelease(device) newTextureWithDescriptor:textureDescriptor];
     if (!outputTexture) {
         std::cerr << "Failed to create output texture!" << std::endl;
     }
@@ -142,7 +142,7 @@ void *MetalProcessor::createOutputTexture(void *referenceTexture) {
 
 void *MetalProcessor::createScaleTextureWithWidthAndHeight(void *refTex, int width, int height) {
     // Create a texture descriptor based on the reference texture (typically the first input texture)
-    auto mtlInputTex = (id<MTLTexture>)refTex;
+    auto mtlInputTex = (id<MTLTexture>)CFBridgingRelease(refTex);
     MTLTextureDescriptor *textureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlInputTex.pixelFormat
                                                                                                  width:width
                                                                                                 height:height
@@ -150,7 +150,7 @@ void *MetalProcessor::createScaleTextureWithWidthAndHeight(void *refTex, int wid
     textureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite;
 
     // Create the output texture only the first time this method is called
-    scaleTexture = [(id<MTLDevice>)device newTextureWithDescriptor:textureDescriptor];
+    scaleTexture = (__bridge void*)[(id<MTLDevice>)CFBridgingRelease(device) newTextureWithDescriptor:textureDescriptor];
     if (!scaleTexture) {
         std::cerr << "Failed to create output texture!" << std::endl;
     }
@@ -158,54 +158,54 @@ void *MetalProcessor::createScaleTextureWithWidthAndHeight(void *refTex, int wid
 }
 
 void *MetalProcessor::applyGaussianBlur(void *inputTexture, float sigma) {
-    MPSImageGaussianBlur* gaussianBlur = [[MPSImageGaussianBlur alloc] initWithDevice:static_cast<id <MTLDevice>>(device) sigma:sigma];
-    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+    MPSImageGaussianBlur* gaussianBlur = [[MPSImageGaussianBlur alloc] initWithDevice:(id <MTLDevice>)CFBridgingRelease(device) sigma:sigma];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)CFBridgingRelease(commandQueue) commandBuffer];
 
     if(!outputTexture){
         createOutputTexture(inputTexture);
     }
 
-    auto blurredTexture = (id<MTLTexture>)outputTexture;
+    auto blurredTexture = (id<MTLTexture>)CFBridgingRelease(outputTexture);
 
-    [gaussianBlur encodeToCommandBuffer:commandBuffer sourceTexture:(id<MTLTexture>)inputTexture destinationTexture:blurredTexture];
+    [gaussianBlur encodeToCommandBuffer:commandBuffer sourceTexture:(id<MTLTexture>)CFBridgingRelease(inputTexture) destinationTexture:blurredTexture];
     [commandBuffer commit];
     [commandBuffer waitUntilCompleted];
 
-    return blurredTexture;
+    return (__bridge void*)blurredTexture;
 }
 
 void *MetalProcessor::applyImageSubtraction(void *originalTexture, void *blurredTexture) {
-    MPSImageSubtract* subtract = [[MPSImageSubtract alloc] initWithDevice:static_cast<id <MTLDevice>>(device)];
-    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+    MPSImageSubtract* subtract = [[MPSImageSubtract alloc] initWithDevice:(id <MTLDevice>)CFBridgingRelease(device)];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)CFBridgingRelease(commandQueue) commandBuffer];
 
     if(!outputTexture2){
         createOutputTexture(originalTexture);
     }
 
-    auto highPassTexture = (id<MTLTexture>)outputTexture2;
+    auto highPassTexture = (id<MTLTexture>)CFBridgingRelease(outputTexture2);
 
-    [subtract encodeToCommandBuffer:commandBuffer primaryTexture:(id<MTLTexture>)originalTexture secondaryTexture:(id<MTLTexture>)blurredTexture destinationTexture:highPassTexture];
+    [subtract encodeToCommandBuffer:commandBuffer primaryTexture:(id<MTLTexture>)CFBridgingRelease(originalTexture) secondaryTexture:(id<MTLTexture>)CFBridgingRelease(blurredTexture) destinationTexture:highPassTexture];
     [commandBuffer commit];
     [commandBuffer waitUntilCompleted];
 
-    return highPassTexture;
+    return (__bridge void*)highPassTexture;
 }
 
 void *MetalProcessor::applyHighPassFilter(void *inputTexture) {
     auto inputMtlTexture = (__bridge id<MTLTexture>)inputTexture;
     // Step 1: Apply Gaussian blur (low-pass filter)
     float blurSigma = 5.0f; // Adjust based on desired low-pass strength
-    auto blurredTexture = static_cast<id <MTLTexture>>(applyGaussianBlur(inputTexture, blurSigma));
+    auto blurredTexture = applyGaussianBlur(inputTexture, blurSigma);
 
     // Step 2: Subtract blurred image from original to get high-pass filtered image
-    auto highPassTexture = static_cast<id <MTLTexture>>(applyImageSubtraction(inputTexture, blurredTexture));
+    auto highPassTexture = (applyImageSubtraction(inputTexture, blurredTexture));
 
-    return (__bridge void*)highPassTexture;
+    return highPassTexture;
 }
 
 void *MetalProcessor::applyScale(void *inputTexture, int outputWidth, int outputHeight) {
-    MPSImageBilinearScale* imgScale = [[MPSImageBilinearScale alloc] initWithDevice:static_cast<id <MTLDevice>>(device)];
-    auto inputMtlTex = (id<MTLTexture>)inputTexture;
+    MPSImageBilinearScale* imgScale = [[MPSImageBilinearScale alloc] initWithDevice:(id <MTLDevice>)CFBridgingRelease(device)];
+    auto inputMtlTex = (id<MTLTexture>)CFBridgingRelease(inputTexture);
     // finish this:
     MPSScaleTransform scaleTransform;
     scaleTransform.scaleX = (double)outputWidth / inputMtlTex.width;   // Horizontal scaling factor
@@ -213,17 +213,17 @@ void *MetalProcessor::applyScale(void *inputTexture, int outputWidth, int output
     scaleTransform.translateX = 0.0; // No horizontal translation
     scaleTransform.translateY = 0.0; // No vertical translation
     [imgScale setScaleTransform:&scaleTransform];
-    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)commandQueue commandBuffer];
+    id<MTLCommandBuffer> commandBuffer = [(id<MTLCommandQueue>)CFBridgingRelease(commandQueue) commandBuffer];
 
     if(!scaleTexture){
         createScaleTextureWithWidthAndHeight(inputTexture, outputWidth, outputHeight);
     }
 
-    auto scaleTex = (id<MTLTexture>)scaleTexture;
+    auto scaleTex = (id<MTLTexture>)CFBridgingRelease(scaleTexture);
 
-    [imgScale encodeToCommandBuffer:commandBuffer sourceTexture:(id<MTLTexture>)inputTexture destinationTexture:scaleTex];
+    [imgScale encodeToCommandBuffer:commandBuffer sourceTexture:(id<MTLTexture>)CFBridgingRelease(inputTexture) destinationTexture:scaleTex];
     [commandBuffer commit];
     [commandBuffer waitUntilCompleted];
 
-    return scaleTex;
+    return (__bridge void*)scaleTex;
 }

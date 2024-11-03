@@ -9,14 +9,12 @@ public:
     ~MacOSCaptureSCKit();   // Destructor
 
     // Start capturing the screen content
-    bool startCapture(std::optional<DesktopCaptureArgs> args = std::nullopt);
+    bool startCapture(std::optional<CaptureArgs> args = std::nullopt);
 
-    bool startCaptureWithApplicationName(std::string applicationName);
+    bool startCaptureWithApplicationName(std::string applicationName, std::optional<CaptureArgs> args);
 
     // Stop capturing the screen content
     void stopCapture();
-
-    void* getLatestCaptureFrame();
 
     CaptureStatus getCaptureStatus() { return captureStatus; }
 

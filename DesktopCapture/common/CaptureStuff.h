@@ -5,13 +5,15 @@
 #ifndef HIDINGIN_CAPTURESTUFF_H
 #define HIDINGIN_CAPTURESTUFF_H
 #include <vector>
+#include "string"
 enum class CaptureStatus{
     NotStart,
     Start,
     Stop
 };
 
-struct DesktopCaptureArgs{
+struct CaptureArgs{
+    std::string captureEventName;
     std::vector<int> excludingWindowIDs; // -1 means itself.
 };
 struct CompositeCaptureArgs{

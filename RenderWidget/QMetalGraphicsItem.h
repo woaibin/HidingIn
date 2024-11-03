@@ -5,6 +5,7 @@
 #include <QQuickWindow>
 #include <QSGSimpleTextureNode>
 #include <thread>
+#include <GPUPipeline/macos/MetalPipeline.h>
 // Declare the QMetalGraphicsItem class
 class QMetalGraphicsItem : public QQuickItem
 {
@@ -26,6 +27,7 @@ private:
         emit triggerRender();
     }
     void readMsgThreadFunc();
+    void initMetalRenderingPipeline(PipelineConfiguration& pipelineInitConfiguration);
 
 public slots:
     void sync();

@@ -12,9 +12,6 @@ public:
 
     // Stop capturing the screen content
     void stopCapture();
-
-    void* getLatestCaptureFrame();
-
 private:
     class Impl;         // Forward declaration of the implementation class
     Impl *impl;         // Pointer to the implementation class

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(HidingIn)
+project(HidingIn CXX OBJC OBJCXX)
 
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
@@ -15,8 +15,16 @@ qt_add_resources(QT_RESOURCES resources/resources.qrc)
 # Include directories for Qt headers
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_LIST_DIR})
+include_directories(${CMAKE_CURRENT_LIST_DIR}/3rdParty)
 
-set(SOURCE "" com/NotificationCenter.h main.cpp
+# Check if the compiler supports ARC and enable it
+if(CMAKE_OBJC_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_OBJCXX_COMPILER_ID STREQUAL "AppleClang")
+    message(STATUS "Enabling ARC for Objective-C/Objective-C++")
+    set(CMAKE_OBJC_FLAGS "${CMAKE_OBJC_FLAGS} -fobjc-arc")
+    set(CMAKE_OBJCXX_FLAGS "${CMAKE_OBJCXX_FLAGS} -fobjc-arc")
+endif()
+
+set(SOURCE "" com/NotificationCenter.h main.mm
         DesktopCapture/macos/MacOSAppSnapShot.h
         DesktopCapture/macos/MacOSAppSnapShot.mm
         DataModel/WindowAbstractListModelMacOS.mm
@@ -30,7 +38,15 @@ set(SOURCE "" com/NotificationCenter.h main.cpp
         DesktopCapture/CompositeCapture.h
         Graphics/MetalProcessor.mm
         Graphics/MetalProcessor.h
-        DesktopCapture/common/CaptureStuff.h)
+        DesktopCapture/common/CaptureStuff.h
+        GPUPipeline/macos/MetalPipeline.h
+        GPUPipeline/macos/MetalPipeline.mm
+        utils/TaskQueue.h
+        GPUPipeline/macos/MetalResources.h
+        GPUPipeline/PipelineConfiguration.h
+        GPUPipeline/macos/MetalResources.mm
+        com/EventListener.h
+        GPUPipeline/PipelineInOut.h)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)
@@ -71,4 +87,4 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         ${COCOA_LIBRARY} ${IOKIT_LIBRARY} ${SCREENCAPTUREKIT_FRAMEWORK} ${CARBON_FRAMEWORK} ${MPS_FRAMEWORK}  "-framework CoreImage")
 
 # Link the Qt libraries to the project
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Quick Qt6::Gui Qt6::Qml )
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Quick Qt6::Gui Qt6::Qml Qt6::GuiPrivate )
