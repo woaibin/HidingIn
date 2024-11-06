@@ -26,6 +26,7 @@ struct MtlRenderPipeline{
     void* mtlRenderPassDesc;
     std::unordered_map<std::string, void*> mtlPipelineStates;
     void* vertexBuffer;
+    void* renderTarget;
 };
 
 struct MtlComputePipeline{

@@ -18,12 +18,6 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 include_directories(${CMAKE_CURRENT_LIST_DIR}/3rdParty)
 
 # Check if the compiler supports ARC and enable it
-if(CMAKE_OBJC_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_OBJCXX_COMPILER_ID STREQUAL "AppleClang")
-    message(STATUS "Enabling ARC for Objective-C/Objective-C++")
-    set(CMAKE_OBJC_FLAGS "${CMAKE_OBJC_FLAGS} -fobjc-arc")
-    set(CMAKE_OBJCXX_FLAGS "${CMAKE_OBJCXX_FLAGS} -fobjc-arc")
-endif()
-
 set(SOURCE "" com/NotificationCenter.h main.mm
         DesktopCapture/macos/MacOSAppSnapShot.h
         DesktopCapture/macos/MacOSAppSnapShot.mm
@@ -46,7 +40,9 @@ set(SOURCE "" com/NotificationCenter.h main.mm
         GPUPipeline/PipelineConfiguration.h
         GPUPipeline/macos/MetalResources.mm
         com/EventListener.h
-        GPUPipeline/PipelineInOut.h)
+        GPUPipeline/PipelineInOut.h
+        RenderWidget/QCustomRenderNode.h
+        RenderWidget/QCustomRenderNode.mm)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)

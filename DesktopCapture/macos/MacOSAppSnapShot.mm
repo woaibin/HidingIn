@@ -53,7 +53,7 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
     // Get a list of all windows
     CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
 
-    for (NSDictionary *windowInfo in (__bridge NSArray *)windowList) {
+    for (NSDictionary *windowInfo in (NSArray *)windowList) {
         NSString *windowOwnerName = windowInfo[(NSString *)kCGWindowOwnerName];
 
         // Compare the window owner name with the app name

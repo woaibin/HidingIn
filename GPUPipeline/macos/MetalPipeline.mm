@@ -6,6 +6,7 @@
 #import <Metal/Metal.h>
 #import "MetalKit/MetalKit.h"
 #include "../com/NotificationCenter.h"
+#include <future>
 
 MetalPipeline::MetalPipeline() {
     std::vector<std::string> vecRenderThreadPool = { "renderQueue" };
@@ -19,24 +20,23 @@ MetalPipeline::MetalPipeline() {
 void MetalPipeline::initGlobalMetalPipeline(PipelineConfiguration &pipelineInitConfiguration) {
     auto& inst = getGlobalInstance();
     inst.prepRenderPipeline(pipelineInitConfiguration);
-    inst.prepComputePipeline(pipelineInitConfiguration);
-    inst.prepBlitPipeline(pipelineInitConfiguration);
-    inst.isInit = true;
-    EventManager::getInstance()->triggerEvent("gpuPipelineInit", EventParam());
+
+
+    //getGlobalInstance().prepComputePipeline(pipelineInitConfiguration);
+    //getGlobalInstance().prepBlitPipeline(pipelineInitConfiguration);
 }
 
 std::future<void> MetalPipeline::sendJobToRenderQueue(const GpuRenderTask& renderTask) {
+    // need to trigger update rendering to qt:
+    if(!m_triggerRenderUpdateFunc){
+        std::cerr << "warning, trigger render update function is not valid..." << std::endl;
+        return {};
+    }
     auto retFuture = m_renderingPipelineTasks->enqueueTask([=, this](const std::string& threadName) {
         renderTask(threadName, m_mtlRenderPipeline);
     });
 
-    // need to trigger update rendering to qt:
-    if(!triggerRenderUpdateFunc){
-        std::cerr << "warning, trigger render update function is not valid..." << std::endl;
-        return retFuture;
-    }
-
-    triggerRenderUpdateFunc();
+    m_triggerRenderUpdateFunc();
     return retFuture;
 }
 
@@ -53,14 +53,14 @@ std::future<void> MetalPipeline::sendJobToBlitQueue(const GpuBlitTask &blitTask)
 }
 
 void MetalPipeline::prepRenderPipeline(PipelineConfiguration& pipelineInitConfiguration, bool isUpdate) {
-    auto mtlDeviceOC = TO_MTL_DEVICE(CFBridgingRelease(pipelineInitConfiguration.graphicsDevice));
-    m_mtlRenderPipeline.mtlDeviceRef = (__bridge void*)mtlDeviceOC;
+    auto mtlDeviceOC = TO_MTL_DEVICE(pipelineInitConfiguration.graphicsDevice);
 
-    // qquick got its own render command queue and buffer, we should get from it:
-    m_mtlRenderPipeline.mtlCommandBuffer = pipelineInitConfiguration.mtlRenderCommandBuffer;
-    m_mtlRenderPipeline.mtlCommandQueue = pipelineInitConfiguration.mtlRenderCommandQueue;
-    m_mtlRenderPipeline.mtlRenderCommandEncoder = pipelineInitConfiguration.mtlRenderCommandEncoder;
-    m_mtlRenderPipeline.mtlRenderPassDesc = pipelineInitConfiguration.mtlRenderPassDesc;
+    // prep basic res
+    {
+        m_mtlRenderPipeline.mtlDeviceRef = (void*)mtlDeviceOC;
+        m_mtlRenderPipeline.mtlCommandQueue = (void*)pipelineInitConfiguration.mtlRenderCommandQueue;
+        m_mtlRenderPipeline.mtlCommandBuffer = (void*)pipelineInitConfiguration.mtlRenderCommandBuffer;
+    }
 
     if(isUpdate){
         return;
@@ -70,13 +70,13 @@ void MetalPipeline::prepRenderPipeline(PipelineConfiguration& pipelineInitConfig
     {
         // Define the vertices (position and color)
         static const float quadVertices[] = {
-                -1.0,  1.0, 0.0, 1.0,  // top left
-                1.0,  1.0, 1.0, 1.0,  // top right
-                -1.0, -1.0, 0.0, 0.0,  // bottom left
-                1.0, -1.0, 1.0, 0.0   // bottom right
+                -1.0,  1.0, 0.0, 0.0,  // top left
+                1.0,  1.0, 1.0, 0.0,  // top right
+                -1.0, -1.0, 0.0, 1.0,  // bottom left
+                1.0, -1.0, 1.0, 1.0   // bottom right
         };
         // Create the vertex buffer, storing the vertex data
-        m_mtlRenderPipeline.vertexBuffer = (__bridge void*) [mtlDeviceOC newBufferWithBytes:quadVertices
+        m_mtlRenderPipeline.vertexBuffer = (void*) [mtlDeviceOC newBufferWithBytes:quadVertices
                                                      length:sizeof(quadVertices)
                                                     options:MTLResourceStorageModeShared];
     }
@@ -108,43 +108,23 @@ void MetalPipeline::prepRenderPipeline(PipelineConfiguration& pipelineInitConfig
             pipelineDescriptor.fragmentFunction = fragmentFunction;
             pipelineDescriptor.colorAttachments[0].pixelFormat = MTLPixelFormatBGRA8Unorm;
             pipelineDescriptor.colorAttachments[0].blendingEnabled = false;
-            pipelineDescriptor.depthAttachmentPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
-            pipelineDescriptor.stencilAttachmentPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+            pipelineDescriptor.depthAttachmentPixelFormat = MTLPixelFormatInvalid;
+            pipelineDescriptor.stencilAttachmentPixelFormat = MTLPixelFormatInvalid;
 
             auto pipelineState = [mtlDeviceOC newRenderPipelineStateWithDescriptor:pipelineDescriptor error: &error];
-            m_mtlRenderPipeline.mtlPipelineStates.insert({shaderDesc.shaderDesc, (__bridge void*)pipelineState});
+            m_mtlRenderPipeline.mtlPipelineStates.insert({shaderDesc.shaderDesc, (void*)pipelineState});
         }
     }
-
-//    // here, we create our own render target, and present it in the qt scene graph rendering:
-//    Message msg;
-//    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
-//    auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
-//    MTLTextureDescriptor *desc = [[MTLTextureDescriptor alloc] init];
-//    desc.textureType = MTLTextureType2D;
-//    desc.pixelFormat = MTLPixelFormatRGBA8Unorm;
-//    desc.width = windowInfo->width;
-//    desc.height = windowInfo->height;
-//    desc.mipmapLevelCount = 1;
-//    desc.resourceOptions = MTLResourceStorageModePrivate;
-//    desc.storageMode = MTLStorageModePrivate;
-//    desc.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
-//    m_renderTarget = (__bridge void*)[mtlDeviceOC newTextureWithDescriptor: desc];
 }
 
 void MetalPipeline::prepComputePipeline(PipelineConfiguration& pipelineInitConfiguration) {
-    auto mtlDeviceOC = TO_MTL_DEVICE(pipelineInitConfiguration.graphicsDevice);
-    m_mtlComputePipeline.mtlDeviceRef = (__bridge void*)mtlDeviceOC;
+    auto mtlDeviceOC = MTLCreateSystemDefaultDevice();
+    m_mtlComputePipeline.mtlDeviceRef = (void*)mtlDeviceOC;
 
     // qquick got its own render command queue and buffer, we should get from it:
+    auto commandQueue = [mtlDeviceOC newCommandQueue];
     m_mtlComputePipeline.mtlCommandQueue =
-            (__bridge void*)[mtlDeviceOC newCommandQueue];
-    m_mtlComputePipeline.mtlCommandBuffer =
-            (__bridge void*)
-                    [TO_MTL_COMMAND_QUEUE(CFBridgingRelease(m_mtlComputePipeline.mtlCommandQueue)) commandBuffer];
-    m_mtlComputePipeline.mtlComputeCommandEncoder =
-            (__bridge void*)
-                    [TO_MTL_COMMAND_BUFFER(CFBridgingRelease(m_mtlComputePipeline.mtlCommandBuffer)) computeCommandEncoder];
+            (void*)commandQueue;
 
     // prep shaders, pipeline states:
     {
@@ -166,19 +146,25 @@ void MetalPipeline::prepComputePipeline(PipelineConfiguration& pipelineInitConfi
             id<MTLFunction> computeShaderProcFunc = [library newFunctionWithName:computeFunc];
 
             auto pipelineState = [mtlDeviceOC newComputePipelineStateWithFunction:computeShaderProcFunc error: &error];
-            m_mtlComputePipeline.mtlPipelineStates.insert({shaderDesc.shaderDesc, (__bridge void*)pipelineState});
+            m_mtlComputePipeline.mtlPipelineStates.insert({shaderDesc.shaderDesc, (void*)pipelineState});
         }
     }
+    m_mtlComputePipeline.mtlCommandBuffer =
+            (void*)
+                    [commandQueue commandBuffer];
+    m_mtlComputePipeline.mtlComputeCommandEncoder =
+            (void*)
+                    [TO_MTL_COMMAND_BUFFER(m_mtlComputePipeline.mtlCommandBuffer) computeCommandEncoder];
 }
 
 void MetalPipeline::prepBlitPipeline(PipelineConfiguration& pipelineInitConfiguration) {
-    auto mtlDeviceOC = TO_MTL_DEVICE(CFBridgingRelease(pipelineInitConfiguration.graphicsDevice));
-    m_blitPipeline.mtlDeviceRef = (__bridge void*)mtlDeviceOC;
-
+    auto mtlDeviceOC = TO_MTL_DEVICE(pipelineInitConfiguration.graphicsDevice);
+    m_blitPipeline.mtlDeviceRef = (void*)mtlDeviceOC;
+    auto commandQueue = [mtlDeviceOC newCommandQueue];
     // qquick got its own render command queue and buffer, we should get from it:
-    m_blitPipeline.mtlCommandQueue = (__bridge void*)[mtlDeviceOC newCommandQueue];
-    m_blitPipeline.mtlCommandBuffer = (__bridge void*)[TO_MTL_COMMAND_QUEUE(CFBridgingRelease(m_blitPipeline.mtlCommandQueue)) commandBuffer];
-    m_blitPipeline.mtlBlitCommandEncoder = (__bridge void*)[TO_MTL_COMMAND_BUFFER(CFBridgingRelease(m_blitPipeline.mtlCommandBuffer)) blitCommandEncoder];
+    m_blitPipeline.mtlCommandQueue = (void*)commandQueue;
+    m_blitPipeline.mtlCommandBuffer = (void*)[commandQueue commandBuffer];
+    m_blitPipeline.mtlBlitCommandEncoder = (void*)[TO_MTL_COMMAND_BUFFER(m_blitPipeline.mtlCommandBuffer) blitCommandEncoder];
 }
 
 void MetalPipeline::executeAllRenderTasksInPlace() {
@@ -186,7 +172,7 @@ void MetalPipeline::executeAllRenderTasksInPlace() {
 }
 
 void MetalPipeline::setTriggerRenderUpdateFunc(std::function<void()> func) {
-    triggerRenderUpdateFunc = func;
+    m_triggerRenderUpdateFunc = func;
 }
 
 void MetalPipeline::updateRenderPipelineRes(PipelineConfiguration & pipelineConfiguration) {
@@ -207,36 +193,63 @@ MtlRenderPipeline &MetalPipeline::getRenderPipeline() {
 
 
 void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures) {
-    auto pipelineState = (__bridge id<MTLRenderPipelineState>)m_mtlRenderPipeline.mtlPipelineStates[pipelineDesc];
-    auto encoder = (__bridge id<MTLRenderCommandEncoder>)m_mtlRenderPipeline.mtlRenderCommandEncoder;
-    auto renderPassDesc = (MTLRenderPassDescriptor*)CFBridgingRelease(m_mtlRenderPipeline.mtlRenderPassDesc);
-    [encoder setVertexBuffer:(__bridge id <MTLBuffer>)(m_mtlRenderPipeline.vertexBuffer) offset:0 atIndex:0];
+    auto findPipelineState = m_mtlRenderPipeline.mtlPipelineStates.find(pipelineDesc);
+    if(findPipelineState == m_mtlRenderPipeline.mtlPipelineStates.end()){
+        return {};
+    }
+    auto pipelineState = (id<MTLRenderPipelineState>)findPipelineState->second;
+
+    auto renderPassDesc = [MTLRenderPassDescriptor renderPassDescriptor];
+    m_mtlRenderPipeline.mtlRenderPassDesc = renderPassDesc;
+    renderPassDesc.colorAttachments[0].texture = (id<MTLTexture>)m_mtlRenderPipeline.renderTarget;
+    renderPassDesc.colorAttachments[0].loadAction = MTLLoadActionClear;
+    renderPassDesc.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 0.0, 1.0);
+    renderPassDesc.colorAttachments[0].storeAction = MTLStoreActionStore;
+
+    auto encoder = [(TO_MTL_COMMAND_BUFFER(m_mtlRenderPipeline.mtlCommandBuffer))
+                    renderCommandEncoderWithDescriptor: (MTLRenderPassDescriptor*)renderPassDesc];
+
+    Message msg;
+    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+    auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
+    MTLViewport vp;
+    vp.originX = 0;
+    vp.originY = 0;
+    vp.width = windowInfo->width;
+    vp.height = windowInfo->height;
+    vp.znear = 0;
+    vp.zfar = 1;
+
+    [encoder setViewport: vp];
+
+    [encoder setVertexBuffer:(id <MTLBuffer>)(m_mtlRenderPipeline.vertexBuffer) offset:0 atIndex:0];
     for(auto i = 0; i < inputTextures.size(); i++){
-        [encoder setFragmentTexture:(__bridge id<MTLTexture>)inputTextures[i] atIndex: i];
+        [encoder setFragmentTexture:(id<MTLTexture>)inputTextures[i] atIndex: i];
     }
     [encoder setRenderPipelineState:pipelineState];
     [encoder drawPrimitives: MTLPrimitiveTypeTriangleStrip vertexStart: 0 vertexCount: 4];
+
     [encoder endEncoding];
 
     // return output renderTarget:
-    return (__bridge void*)renderPassDesc.colorAttachments[0].texture;
+    return (void*)renderPassDesc.colorAttachments[0].texture;
 }
 
 void MetalPipeline::throughComputePipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures, void* resultTexture) {
-    auto pipelineState = (__bridge id<MTLComputePipelineState>) m_mtlComputePipeline.mtlPipelineStates[pipelineDesc];
-    auto encoder = (__bridge id<MTLComputeCommandEncoder>)m_mtlComputePipeline.mtlCommandBuffer;
+    auto pipelineState = (id<MTLComputePipelineState>) m_mtlComputePipeline.mtlPipelineStates[pipelineDesc];
+    auto encoder = (id<MTLComputeCommandEncoder>)m_mtlComputePipeline.mtlCommandBuffer;
     [encoder setComputePipelineState:pipelineState];
     for(auto i = 0; i< inputTextures.size(); i++){
-        [encoder setTexture:(__bridge id<MTLTexture>)inputTextures[i] atIndex:i];
+        [encoder setTexture:(id<MTLTexture>)inputTextures[i] atIndex:i];
     }
 
     // Bind the output texture
-    [encoder setTexture:(__bridge id<MTLTexture>)resultTexture atIndex:(int)inputTextures.size()];
+    [encoder setTexture:(id<MTLTexture>)resultTexture atIndex:(int)inputTextures.size()];
 
     // Configure thread groups and grid size based on the first texture (assuming they are the same size)
     // The texture size (assuming all input textures are the same size)
-    NSUInteger width = ((__bridge id<MTLTexture>)resultTexture).width;
-    NSUInteger height = ((__bridge id<MTLTexture>)resultTexture).height;
+    NSUInteger width = ((id<MTLTexture>)resultTexture).width;
+    NSUInteger height = ((id<MTLTexture>)resultTexture).height;
 
     // Get the maximum allowed threads per threadgroup for this compute pipeline
     NSUInteger maxThreadsPerThreadgroup = pipelineState.maxTotalThreadsPerThreadgroup;
@@ -259,12 +272,12 @@ void MetalPipeline::throughComputePipelineState(std::string pipelineDesc, std::v
 
 void MetalPipeline::throughBlitPipelineState(void *inputTexture, void *outputTexture) {
     // Convert the input and output texture pointers to MTLTexture objects.
-    auto inputTex = (__bridge id<MTLTexture>)inputTexture;
-    auto outputTex = (__bridge id<MTLTexture>)outputTexture;
+    auto inputTex = (id<MTLTexture>)inputTexture;
+    auto outputTex = (id<MTLTexture>)outputTexture;
 
     // Create the blit command encoder from the stored command encoder.
-    auto blitEncoder = (__bridge id<MTLBlitCommandEncoder>)m_blitPipeline.mtlBlitCommandEncoder;
-    auto blitCommandBuffer = (__bridge id<MTLCommandBuffer>)m_blitPipeline.mtlCommandBuffer;
+    auto blitEncoder = (id<MTLBlitCommandEncoder>)m_blitPipeline.mtlBlitCommandEncoder;
+    auto blitCommandBuffer = (id<MTLCommandBuffer>)m_blitPipeline.mtlCommandBuffer;
 
     // Ensure the textures have the same size, otherwise the operation will fail.
     MTLSize textureSize = MTLSizeMake(inputTex.width, inputTex.height, inputTex.depth);
@@ -287,7 +300,7 @@ void MetalPipeline::throughBlitPipelineState(void *inputTexture, void *outputTex
 }
 
 void MetalPipeline::registerInitDoneHandler(std::function<void()> initDoneFunc) {
-    EventManager::getInstance()->registerListener("gpuPipelineInit", [=](EventParam& eventParam){
+    EventManager::getInstance()->registerListener("gpuRenderPipelineInit", [=](EventParam& eventParam){
         initDoneFunc();
     });
 }

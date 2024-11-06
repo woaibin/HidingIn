@@ -1,0 +1,1191 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		2832F1B25F01433DBB65B86A /* HidingIn_autogen */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A3CEA0D4D0564DA587BD0FCE /* Build configuration list for PBXAggregateTarget "HidingIn_autogen" */;
+			buildPhases = (
+				C41DB900631C07F593702CE1 /* Generate CMakeFiles/HidingIn_autogen */,
+			);
+			dependencies = (
+				5E86021292AF4E69B5183577 /* PBXTargetDependency */,
+			);
+			name = HidingIn_autogen;
+			productName = HidingIn_autogen;
+		};
+		D624CD73127145378A47CCCB /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = E8E0932725364B60AF0ADE63 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				106D6810001685818ED54326 /* Generate CMakeFiles/ALL_BUILD */,
+			);
+			dependencies = (
+				8BAFDB854B374FDE99859C7E /* PBXTargetDependency */,
+				530AEB78727846DCA9599FF8 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		F75CD94C37EC4FA89BBC1A88 /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = CCEE6A96231F43F9B8283325 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				4E11C79811760DAF66DE1B5E /* Generate CMakeFiles/ZERO_CHECK */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		004DD289FF6344679C7ABB49 /* /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp */ = {isa = PBXBuildFile; fileRef = 6259CEBFAA184D5AAB55F28A /* /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp */; settings = {COMPILER_FLAGS = "-DCMAKE_SKIP_PRECOMPILE_HEADERS "; }; };
+		0BC3A91753F049DB80C14357 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOSurface.framework */ = {isa = PBXBuildFile; fileRef = A4BFD24F1BF04E21A0251ED4 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOSurface.framework */; };
+		0F86450E7A6048B1A54C1AFA /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.h */ = {isa = PBXBuildFile; fileRef = 9A55F64AE5FD49329BEE49D6 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.h */; };
+		103A79A0747C4B2AB0FE8517 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AGL.framework */ = {isa = PBXBuildFile; fileRef = 9BC2342BD93B4AFBA35E8FD1 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AGL.framework */; };
+		12C5CF895EBD4CCB839A9E5E /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Cocoa.framework */ = {isa = PBXBuildFile; fileRef = AA5AD38E87754C3BB5B9010F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Cocoa.framework */; };
+		1566582FD11A4F1DBC6CAB8A /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework */ = {isa = PBXBuildFile; fileRef = B36FCB186F5E46A2AA176A5E /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework */; };
+		19EDF20EA0DA4A5CA4643A74 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/VideoToolbox.framework */ = {isa = PBXBuildFile; fileRef = 0B0B7CCD11F14957B6098AAA /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/VideoToolbox.framework */; };
+		1AEB8710AEBD4A509976BAD3 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.cpp */ = {isa = PBXBuildFile; fileRef = 857DFC99865E43E39E89592A /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.cpp */; };
+		1CD90225BFD04271BAB27676 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.h */ = {isa = PBXBuildFile; fileRef = D6C89531C247422297152F88 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.h */; };
+		296C03DD4D4A498B84362A50 /* /Users/binxiaokang/Desktop/HidingIn/utils/TaskQueue.h */ = {isa = PBXBuildFile; fileRef = D14031F250A84077B30E7BC9 /* /Users/binxiaokang/Desktop/HidingIn/utils/TaskQueue.h */; };
+		2CC17652FD334746AA14D3D9 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.mm */ = {isa = PBXBuildFile; fileRef = 1F3E89DC340F428AB2AA50D0 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.mm */; };
+		2E05B5B8DB1D487EB50E388B /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/OpenGL.framework */ = {isa = PBXBuildFile; fileRef = 6646C431EC14419B8F8298F0 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/OpenGL.framework */; };
+		39AACD68B8674353AEF5F70C /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreMedia.framework */ = {isa = PBXBuildFile; fileRef = 71BF251EFBDE45A884F42265 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreMedia.framework */; };
+		3AA3864270CF4C3584983198 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework */ = {isa = PBXBuildFile; fileRef = 0A4F0382B2664E3DA0B78BBD /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework */; };
+		3E7FEB059622407785B0582F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalKit.framework */ = {isa = PBXBuildFile; fileRef = 7C79E9958EEF4F97BAEC5647 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalKit.framework */; };
+		40D632D3477B462B88FF5BC7 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.h */ = {isa = PBXBuildFile; fileRef = 699C12C1E5DB4B16B356154D /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.h */; };
+		46E92E6FBE974151BCD5D752 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework */ = {isa = PBXBuildFile; fileRef = DC837290949F45D498A47F69 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework */; };
+		4A710DF5A1F542799299E32F /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.mm */ = {isa = PBXBuildFile; fileRef = 49EBDB17E64D4429A4B4845B /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.mm */; };
+		4AAEC330C69145E8A14DF9E2 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework */ = {isa = PBXBuildFile; fileRef = 7CBD4401CA7E465F9DD1AB67 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework */; };
+		4C7B188410B94CFFBE2FEBAB /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/ScreenCaptureKit.framework */ = {isa = PBXBuildFile; fileRef = AE44BC0AA27544379DE5AFDB /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/ScreenCaptureKit.framework */; };
+		4CCF8F9F4A414FE3B9FBF6E5 /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = A5997376659E4C5DA016D3AC /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */; };
+		4CEEA08B16A7490EB27F7C9A /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineInOut.h */ = {isa = PBXBuildFile; fileRef = CAC2F41208DF4FE6990D9626 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineInOut.h */; };
+		4E7B477F769A475CA90EA247 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.mm */ = {isa = PBXBuildFile; fileRef = 0077589922024DCE9DECA9F5 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.mm */; };
+		53A13F3C054C467099E23FD9 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.mm */ = {isa = PBXBuildFile; fileRef = BCC7C864693343BEAACB8DB5 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.mm */; };
+		55BCEC469D284E52928539D7 /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.mm */ = {isa = PBXBuildFile; fileRef = 5D6FAF7B631644A3BC477C8E /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.mm */; };
+		566FAACB77A1427482A55825 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework */ = {isa = PBXBuildFile; fileRef = ADFA9E19CD444ADDB2DCC5AC /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework */; };
+		5672110FD1124311A43B9F02 /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.mm */ = {isa = PBXBuildFile; fileRef = 219861001C614C89B4C6970D /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.mm */; };
+		5C793AE1C7E54FEAA5C5AF11 /* /Users/binxiaokang/Desktop/HidingIn/com/EventListener.h */ = {isa = PBXBuildFile; fileRef = F1A9C7A9251649A186337CA7 /* /Users/binxiaokang/Desktop/HidingIn/com/EventListener.h */; };
+		627B229CBD6E43688A146C12 /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp */ = {isa = PBXBuildFile; fileRef = AF7B692DFAB54044A14982EB /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp */; };
+		64290D8F0580433DBC3D830A /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCapture.h */ = {isa = PBXBuildFile; fileRef = E12E947DC58D4BC4A2F941E3 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCapture.h */; };
+		6DC9C57A912F4937B60A4446 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Carbon.framework */ = {isa = PBXBuildFile; fileRef = 6C4D43B34343430FB02C452E /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Carbon.framework */; };
+		6F2B5433D4974D80AB2F698A /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOKit.framework */ = {isa = PBXBuildFile; fileRef = F2B3F37805D341D2AFFD6F84 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOKit.framework */; };
+		792138DD09614A2EBD36264E /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.h */ = {isa = PBXBuildFile; fileRef = 22D7552F0EB1405CB106C7A9 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.h */; };
+		7CD8E87C139449AF9C99F082 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowModel.h */ = {isa = PBXBuildFile; fileRef = EEF3CFC9F4F849F1BEC0CC48 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowModel.h */; };
+		7F8D5A4FC33648D6AC51059D /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework */ = {isa = PBXBuildFile; fileRef = 1D3C770503BE4824B4EFFB36 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework */; };
+		88ACC022A79943158C1E4DB9 /* /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc */ = {isa = PBXBuildFile; fileRef = 63624F2D47794472A95AB81D /* /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc */; };
+		8DB849D60923492FB496077C /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Metal.framework */ = {isa = PBXBuildFile; fileRef = 755ACBDC6F3B434AB858EE84 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Metal.framework */; };
+		9517D694653A44BE9ECBD7D4 /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.h */ = {isa = PBXBuildFile; fileRef = C040DE46A32946E2BC26BDAA /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.h */; };
+		98E91D3A0FCD4394B5B2E802 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework */ = {isa = PBXBuildFile; fileRef = B87AB485F2504058AD624F4A /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework */; };
+		9DAB5C01D6194376ADC69F54 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreVideo.framework */ = {isa = PBXBuildFile; fileRef = 95D001FFFC764D14A181920F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreVideo.framework */; };
+		A6F3A18525CF466A8040A6CD /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework */ = {isa = PBXBuildFile; fileRef = F0E21323B6C348939B02A341 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework */; };
+		A7E89B1DEA004F27892FCD4A /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.mm */ = {isa = PBXBuildFile; fileRef = 5C0D875789494926AC19E119 /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.mm */; };
+		A99406F4AFCE497B815C354E /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.h */ = {isa = PBXBuildFile; fileRef = 2EC32EE120BC4651BADA2D52 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.h */; };
+		AC7CCF53F01A4AD7A44DA5DB /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.h */ = {isa = PBXBuildFile; fileRef = 553A05731E3F44D6B05B9449 /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.h */; };
+		B4A1AB813CD94B1991CA8E9E /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.h */ = {isa = PBXBuildFile; fileRef = 8F820BA2295540AA8241648F /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.h */; };
+		B58ABE3460B24865934C6461 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModelMacOS.mm */ = {isa = PBXBuildFile; fileRef = DE81AE0F2B7647099A8F3C42 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModelMacOS.mm */; };
+		B705CB339AAC4335A7BDA6B9 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineConfiguration.h */ = {isa = PBXBuildFile; fileRef = 02A9B2DCACEE4694B2CA0721 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineConfiguration.h */; };
+		BB991DB9DD634F5F8F84808E /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework */ = {isa = PBXBuildFile; fileRef = F148BF8E6EA14D9C9067C829 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework */; };
+		BCE022A6DBC34A31A539C2B7 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.h */ = {isa = PBXBuildFile; fileRef = 558E9DD58ADA49D5B90FFA5E /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.h */; };
+		C21E482E9D33465CBCF2D676 /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.h */ = {isa = PBXBuildFile; fileRef = 71632ABDEDF749B9B0593EA7 /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.h */; };
+		C4C3F498359E42E180912899 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AVFoundation.framework */ = {isa = PBXBuildFile; fileRef = F299A1F134DE429EA92B8F58 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AVFoundation.framework */; };
+		C8FC41C8ED354428A37032C7 /* /Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/mocs_compilation.cpp */ = {isa = PBXBuildFile; fileRef = 886DE981F97F4644B331F4E0 /* /Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/mocs_compilation.cpp */; };
+		CD7DB6F600CA41C1A1C6B44E /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModel.h */ = {isa = PBXBuildFile; fileRef = 8EDDE3DF99CA4AB9A361815C /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModel.h */; };
+		CEB66C22A91146E2B26E7228 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.mm */ = {isa = PBXBuildFile; fileRef = E37BADCEA5964DAFB592C188 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.mm */; };
+		D4DF6ED22BB543A4A387E96E /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.h */ = {isa = PBXBuildFile; fileRef = 671670AA2D054B468970EF12 /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.h */; };
+		D757A58A26D44E0D977C8F56 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCaptureMacOS.mm */ = {isa = PBXBuildFile; fileRef = 4A68B5B1B3CD49FABEC8C8A0 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCaptureMacOS.mm */; };
+		D8D7D5FF2C4341FEAE3AC95D /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.h */ = {isa = PBXBuildFile; fileRef = CFAF00026CEF4D8DB193AB21 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.h */; };
+		DCB77141C65042DCA240547C /* /Users/binxiaokang/Desktop/HidingIn/main.mm */ = {isa = PBXBuildFile; fileRef = 11092801C6244F82A2BE44B1 /* /Users/binxiaokang/Desktop/HidingIn/main.mm */; };
+		DDDADE0A0F954972AF91D19A /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.mm */ = {isa = PBXBuildFile; fileRef = 31FE4084245341CD83CC9B30 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.mm */; };
+		DF136B4BB86A4C2AB4B2720A /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework */ = {isa = PBXBuildFile; fileRef = 44D73D53D762421E9EA7DB50 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework */; };
+		E071FAEAC961426C824AA73F /* /Users/binxiaokang/Desktop/HidingIn/com/NotificationCenter.h */ = {isa = PBXBuildFile; fileRef = 6A4599DC0CF447D1BECBC187 /* /Users/binxiaokang/Desktop/HidingIn/com/NotificationCenter.h */; };
+		EB81AD1E2850443982525D14 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm */ = {isa = PBXBuildFile; fileRef = 3EB72A077FD549A6BED6E921 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm */; };
+		EE8B237F536F45EB8A8BC3C1 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Foundation.framework */ = {isa = PBXBuildFile; fileRef = 2F6918AC08A74802986B611B /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Foundation.framework */; };
+		FA7D1FA7A5A04EEB8750819F /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h */ = {isa = PBXBuildFile; fileRef = 7CBC0471A0E6457DB0F77313 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		41C1FC3E6C424E63942383C9 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		4213ED85B79448CCB358E2F9 /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		B61FF33595934BF7870D54EB /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		E0D268664A9D40D0B740BF8D /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		34951E300F56447DA6F1C999 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F018DEFCEE1B4AEC8D27E105 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22A7FF9366EE448492499EEF;
+			remoteInfo = HidingIn;
+		};
+		372170F3AA2A46958A7F49CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F018DEFCEE1B4AEC8D27E105 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F75CD94C37EC4FA89BBC1A88;
+			remoteInfo = ZERO_CHECK;
+		};
+		545AA19BFC004AA89B197D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F018DEFCEE1B4AEC8D27E105 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F75CD94C37EC4FA89BBC1A88;
+			remoteInfo = ZERO_CHECK;
+		};
+		7DE2B05DB16842B981C2ADC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F018DEFCEE1B4AEC8D27E105 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2832F1B25F01433DBB65B86A;
+			remoteInfo = HidingIn_autogen;
+		};
+		981E5901CC814139A43594C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F018DEFCEE1B4AEC8D27E105 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F75CD94C37EC4FA89BBC1A88;
+			remoteInfo = ZERO_CHECK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0077589922024DCE9DECA9F5 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = QCustomRenderNode.mm; path = RenderWidget/QCustomRenderNode.mm; sourceTree = SOURCE_ROOT; };
+		02A9B2DCACEE4694B2CA0721 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineConfiguration.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = PipelineConfiguration.h; path = GPUPipeline/PipelineConfiguration.h; sourceTree = SOURCE_ROOT; };
+		03EC9D2DBD9B4E8890AD8B85 /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		0A4F0382B2664E3DA0B78BBD /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtQml.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework; sourceTree = "<absolute>"; };
+		0B0B7CCD11F14957B6098AAA /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/VideoToolbox.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/VideoToolbox.framework; sourceTree = "<absolute>"; };
+		11092801C6244F82A2BE44B1 /* /Users/binxiaokang/Desktop/HidingIn/main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = main.mm; path = main.mm; sourceTree = SOURCE_ROOT; };
+		1D3C770503BE4824B4EFFB36 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtQuick.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework; sourceTree = "<absolute>"; };
+		1F3E89DC340F428AB2AA50D0 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MetalResources.mm; path = GPUPipeline/macos/MetalResources.mm; sourceTree = SOURCE_ROOT; };
+		219861001C614C89B4C6970D /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MetalProcessor.mm; path = Graphics/MetalProcessor.mm; sourceTree = SOURCE_ROOT; };
+		22D7552F0EB1405CB106C7A9 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MetalResources.h; path = GPUPipeline/macos/MetalResources.h; sourceTree = SOURCE_ROOT; };
+		2CE189911BC14BBF8ABF66E5 /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		2EC32EE120BC4651BADA2D52 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MacOSAppSnapShot.h; path = DesktopCapture/macos/MacOSAppSnapShot.h; sourceTree = SOURCE_ROOT; };
+		2F6918AC08A74802986B611B /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Foundation.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		31FE4084245341CD83CC9B30 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = QMetalGraphicsItem.mm; path = RenderWidget/QMetalGraphicsItem.mm; sourceTree = SOURCE_ROOT; };
+		3EB72A077FD549A6BED6E921 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MetalPipeline.mm; path = GPUPipeline/macos/MetalPipeline.mm; sourceTree = SOURCE_ROOT; };
+		44303FDC05B24DFEB8F7E941 /* HidingIn */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = HidingIn; sourceTree = BUILT_PRODUCTS_DIR; };
+		44D73D53D762421E9EA7DB50 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework; sourceTree = "<absolute>"; };
+		49EBDB17E64D4429A4B4845B /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MacosCapture.mm; path = DesktopCapture/macos/MacosCapture.mm; sourceTree = SOURCE_ROOT; };
+		4A68B5B1B3CD49FABEC8C8A0 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCaptureMacOS.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = CompositeCaptureMacOS.mm; path = DesktopCapture/CompositeCaptureMacOS.mm; sourceTree = SOURCE_ROOT; };
+		553A05731E3F44D6B05B9449 /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MetalProcessor.h; path = Graphics/MetalProcessor.h; sourceTree = SOURCE_ROOT; };
+		558E9DD58ADA49D5B90FFA5E /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MetalPipeline.h; path = GPUPipeline/macos/MetalPipeline.h; sourceTree = SOURCE_ROOT; };
+		5C0D875789494926AC19E119 /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MacUtils.mm; path = platform/macos/MacUtils.mm; sourceTree = SOURCE_ROOT; };
+		5D6FAF7B631644A3BC477C8E /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = RemoteInputControllerMacOS.mm; path = Control/macos/RemoteInputControllerMacOS.mm; sourceTree = SOURCE_ROOT; };
+		6259CEBFAA184D5AAB55F28A /* /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = qrc_resources.cpp; path = build/qrc_resources.cpp; sourceTree = SOURCE_ROOT; };
+		63624F2D47794472A95AB81D /* /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = resources.qrc; path = resources/resources.qrc; sourceTree = SOURCE_ROOT; };
+		6646C431EC14419B8F8298F0 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/OpenGL.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		671670AA2D054B468970EF12 /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MacUtils.h; path = platform/macos/MacUtils.h; sourceTree = SOURCE_ROOT; };
+		699C12C1E5DB4B16B356154D /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MacosCapture.h; path = DesktopCapture/macos/MacosCapture.h; sourceTree = SOURCE_ROOT; };
+		6A4599DC0CF447D1BECBC187 /* /Users/binxiaokang/Desktop/HidingIn/com/NotificationCenter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = NotificationCenter.h; path = com/NotificationCenter.h; sourceTree = SOURCE_ROOT; };
+		6C4D43B34343430FB02C452E /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Carbon.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		71632ABDEDF749B9B0593EA7 /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = RemoteInputControllerMacOS.h; path = Control/macos/RemoteInputControllerMacOS.h; sourceTree = SOURCE_ROOT; };
+		71BF251EFBDE45A884F42265 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreMedia.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = "<absolute>"; };
+		755ACBDC6F3B434AB858EE84 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Metal.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = Metal.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Metal.framework; sourceTree = "<absolute>"; };
+		7C79E9958EEF4F97BAEC5647 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalKit.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = "<absolute>"; };
+		7CBC0471A0E6457DB0F77313 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = CaptureStuff.h; path = DesktopCapture/common/CaptureStuff.h; sourceTree = SOURCE_ROOT; };
+		7CBD4401CA7E465F9DD1AB67 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtOpenGL.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework; sourceTree = "<absolute>"; };
+		857DFC99865E43E39E89592A /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SnapShotImageProvider.cpp; path = DataModel/SnapShotImageProvider.cpp; sourceTree = SOURCE_ROOT; };
+		886DE981F97F4644B331F4E0 /* /Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/mocs_compilation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mocs_compilation.cpp; path = build/HidingIn_autogen/mocs_compilation.cpp; sourceTree = SOURCE_ROOT; };
+		8EDDE3DF99CA4AB9A361815C /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = WindowAbstractListModel.h; path = DataModel/WindowAbstractListModel.h; sourceTree = SOURCE_ROOT; };
+		8F820BA2295540AA8241648F /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = QMetalGraphicsItem.h; path = RenderWidget/QMetalGraphicsItem.h; sourceTree = SOURCE_ROOT; };
+		95D001FFFC764D14A181920F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreVideo.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		9A55F64AE5FD49329BEE49D6 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MacOSCaptureSCKit.h; path = DesktopCapture/macos/MacOSCaptureSCKit.h; sourceTree = SOURCE_ROOT; };
+		9BC2342BD93B4AFBA35E8FD1 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AGL.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		A4BFD24F1BF04E21A0251ED4 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOSurface.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOSurface.framework; sourceTree = "<absolute>"; };
+		A5997376659E4C5DA016D3AC /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		AA5AD38E87754C3BB5B9010F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Cocoa.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		ADFA9E19CD444ADDB2DCC5AC /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtQmlMeta.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework; sourceTree = "<absolute>"; };
+		AE44BC0AA27544379DE5AFDB /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/ScreenCaptureKit.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = ScreenCaptureKit.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/ScreenCaptureKit.framework; sourceTree = "<absolute>"; };
+		AF7B692DFAB54044A14982EB /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = AppGeneralEventHandler.cpp; path = Handler/AppGeneralEventHandler.cpp; sourceTree = SOURCE_ROOT; };
+		B36FCB186F5E46A2AA176A5E /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework; sourceTree = "<absolute>"; };
+		B87AB485F2504058AD624F4A /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework; sourceTree = "<absolute>"; };
+		BCC7C864693343BEAACB8DB5 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MacOSAppSnapShot.mm; path = DesktopCapture/macos/MacOSAppSnapShot.mm; sourceTree = SOURCE_ROOT; };
+		C040DE46A32946E2BC26BDAA /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = AppGeneralEventHandler.h; path = Handler/AppGeneralEventHandler.h; sourceTree = SOURCE_ROOT; };
+		CAC2F41208DF4FE6990D9626 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineInOut.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = PipelineInOut.h; path = GPUPipeline/PipelineInOut.h; sourceTree = SOURCE_ROOT; };
+		CFAF00026CEF4D8DB193AB21 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = SnapShotImageProvider.h; path = DataModel/SnapShotImageProvider.h; sourceTree = SOURCE_ROOT; };
+		D14031F250A84077B30E7BC9 /* /Users/binxiaokang/Desktop/HidingIn/utils/TaskQueue.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = TaskQueue.h; path = utils/TaskQueue.h; sourceTree = SOURCE_ROOT; };
+		D6C89531C247422297152F88 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = QCustomRenderNode.h; path = RenderWidget/QCustomRenderNode.h; sourceTree = SOURCE_ROOT; };
+		DC837290949F45D498A47F69 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtQmlModels.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework; sourceTree = "<absolute>"; };
+		DE81AE0F2B7647099A8F3C42 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModelMacOS.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = WindowAbstractListModelMacOS.mm; path = DataModel/WindowAbstractListModelMacOS.mm; sourceTree = SOURCE_ROOT; };
+		E12E947DC58D4BC4A2F941E3 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCapture.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = CompositeCapture.h; path = DesktopCapture/CompositeCapture.h; sourceTree = SOURCE_ROOT; };
+		E37BADCEA5964DAFB592C188 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MacOSCaptureSCKit.mm; path = DesktopCapture/macos/MacOSCaptureSCKit.mm; sourceTree = SOURCE_ROOT; };
+		EEF3CFC9F4F849F1BEC0CC48 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowModel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = WindowModel.h; path = DataModel/WindowModel.h; sourceTree = SOURCE_ROOT; };
+		F0E21323B6C348939B02A341 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = QtQmlWorkerScript.framework; path = /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework; sourceTree = "<absolute>"; };
+		F148BF8E6EA14D9C9067C829 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = "<absolute>"; };
+		F1A9C7A9251649A186337CA7 /* /Users/binxiaokang/Desktop/HidingIn/com/EventListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = EventListener.h; path = com/EventListener.h; sourceTree = SOURCE_ROOT; };
+		F299A1F134DE429EA92B8F58 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AVFoundation.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
+		F2B3F37805D341D2AFFD6F84 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOKit.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		76A10EDD3558425E83539D74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04A1DB2E7B3F42619B13B210 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2F6918AC08A74802986B611B /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Foundation.framework */,
+				0B0B7CCD11F14957B6098AAA /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/VideoToolbox.framework */,
+				71BF251EFBDE45A884F42265 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreMedia.framework */,
+				F299A1F134DE429EA92B8F58 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AVFoundation.framework */,
+				95D001FFFC764D14A181920F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreVideo.framework */,
+				A4BFD24F1BF04E21A0251ED4 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOSurface.framework */,
+				755ACBDC6F3B434AB858EE84 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Metal.framework */,
+				7C79E9958EEF4F97BAEC5647 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalKit.framework */,
+				AA5AD38E87754C3BB5B9010F /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Cocoa.framework */,
+				F2B3F37805D341D2AFFD6F84 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/IOKit.framework */,
+				AE44BC0AA27544379DE5AFDB /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/ScreenCaptureKit.framework */,
+				6C4D43B34343430FB02C452E /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Carbon.framework */,
+				F148BF8E6EA14D9C9067C829 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework */,
+				1D3C770503BE4824B4EFFB36 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework */,
+				ADFA9E19CD444ADDB2DCC5AC /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework */,
+				F0E21323B6C348939B02A341 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework */,
+				DC837290949F45D498A47F69 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework */,
+				0A4F0382B2664E3DA0B78BBD /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework */,
+				7CBD4401CA7E465F9DD1AB67 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework */,
+				B36FCB186F5E46A2AA176A5E /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework */,
+				44D73D53D762421E9EA7DB50 /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework */,
+				6646C431EC14419B8F8298F0 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/OpenGL.framework */,
+				9BC2342BD93B4AFBA35E8FD1 /* /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/AGL.framework */,
+				B87AB485F2504058AD624F4A /* /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0EF92A181D224BCEA4BB66E8 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		13F255CED44B4773ACEBB059 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D6FAF7B631644A3BC477C8E /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.mm */,
+				857DFC99865E43E39E89592A /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.cpp */,
+				DE81AE0F2B7647099A8F3C42 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModelMacOS.mm */,
+				4A68B5B1B3CD49FABEC8C8A0 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCaptureMacOS.mm */,
+				BCC7C864693343BEAACB8DB5 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.mm */,
+				E37BADCEA5964DAFB592C188 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.mm */,
+				49EBDB17E64D4429A4B4845B /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.mm */,
+				3EB72A077FD549A6BED6E921 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm */,
+				1F3E89DC340F428AB2AA50D0 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.mm */,
+				219861001C614C89B4C6970D /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.mm */,
+				AF7B692DFAB54044A14982EB /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp */,
+				0077589922024DCE9DECA9F5 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.mm */,
+				31FE4084245341CD83CC9B30 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.mm */,
+				886DE981F97F4644B331F4E0 /* /Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/mocs_compilation.cpp */,
+				6259CEBFAA184D5AAB55F28A /* /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp */,
+				11092801C6244F82A2BE44B1 /* /Users/binxiaokang/Desktop/HidingIn/main.mm */,
+				5C0D875789494926AC19E119 /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		6613471B95BD47AE9BEE36F1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				44303FDC05B24DFEB8F7E941 /* HidingIn */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		76CA85A263DD4D0896E66675 /* HidingIn */ = {
+			isa = PBXGroup;
+			children = (
+				13F255CED44B4773ACEBB059 /* Source Files */,
+				8D6EE93A497D443C972D13F2 /* Header Files */,
+				A5997376659E4C5DA016D3AC /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */,
+				63624F2D47794472A95AB81D /* /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc */,
+			);
+			name = HidingIn;
+			sourceTree = "<group>";
+		};
+		791F0D5120E1408AB595BB6B = {
+			isa = PBXGroup;
+			children = (
+				76CA85A263DD4D0896E66675 /* HidingIn */,
+				7FF05CCE22A249618861DD06 /* HidingIn_autogen */,
+				892C5CDDAD0F436C801E6DBC /* ALL_BUILD */,
+				6613471B95BD47AE9BEE36F1 /* Products */,
+				04A1DB2E7B3F42619B13B210 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		7FF05CCE22A249618861DD06 /* HidingIn_autogen */ = {
+			isa = PBXGroup;
+			children = (
+				D78B188D2B8F4224AD258461 /* CMake Rules */,
+				2CE189911BC14BBF8ABF66E5 /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */,
+			);
+			name = HidingIn_autogen;
+			sourceTree = "<group>";
+		};
+		892C5CDDAD0F436C801E6DBC /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				0EF92A181D224BCEA4BB66E8 /* CMake Rules */,
+				03EC9D2DBD9B4E8890AD8B85 /* /Users/binxiaokang/Desktop/HidingIn/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		8D6EE93A497D443C972D13F2 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				71632ABDEDF749B9B0593EA7 /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.h */,
+				CFAF00026CEF4D8DB193AB21 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.h */,
+				8EDDE3DF99CA4AB9A361815C /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModel.h */,
+				EEF3CFC9F4F849F1BEC0CC48 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowModel.h */,
+				E12E947DC58D4BC4A2F941E3 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCapture.h */,
+				7CBC0471A0E6457DB0F77313 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h */,
+				2EC32EE120BC4651BADA2D52 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.h */,
+				9A55F64AE5FD49329BEE49D6 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.h */,
+				699C12C1E5DB4B16B356154D /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.h */,
+				02A9B2DCACEE4694B2CA0721 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineConfiguration.h */,
+				CAC2F41208DF4FE6990D9626 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/PipelineInOut.h */,
+				558E9DD58ADA49D5B90FFA5E /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.h */,
+				22D7552F0EB1405CB106C7A9 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.h */,
+				553A05731E3F44D6B05B9449 /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.h */,
+				C040DE46A32946E2BC26BDAA /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.h */,
+				D6C89531C247422297152F88 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.h */,
+				8F820BA2295540AA8241648F /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.h */,
+				F1A9C7A9251649A186337CA7 /* /Users/binxiaokang/Desktop/HidingIn/com/EventListener.h */,
+				6A4599DC0CF447D1BECBC187 /* /Users/binxiaokang/Desktop/HidingIn/com/NotificationCenter.h */,
+				671670AA2D054B468970EF12 /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.h */,
+				D14031F250A84077B30E7BC9 /* /Users/binxiaokang/Desktop/HidingIn/utils/TaskQueue.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		D78B188D2B8F4224AD258461 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		22A7FF9366EE448492499EEF /* HidingIn */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB06745248FA49F8893E8F16 /* Build configuration list for PBXNativeTarget "HidingIn" */;
+			buildPhases = (
+				34E3394824425A138B647383 /* Generate qrc_resources.cpp */,
+				6D341F7C6510416F89A5A49C /* Sources */,
+				76A10EDD3558425E83539D74 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A8002DE9E51846CC9E953564 /* PBXTargetDependency */,
+				1688EE15C62A48B9B57A2E72 /* PBXTargetDependency */,
+			);
+			name = HidingIn;
+			productName = HidingIn;
+			productReference = 44303FDC05B24DFEB8F7E941 /* HidingIn */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F018DEFCEE1B4AEC8D27E105 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = EACCD1E7A7C84F37B54B1C98 /* Build configuration list for PBXProject "HidingIn" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				41C1FC3E6C424E63942383C9 /* Debug */,
+				B61FF33595934BF7870D54EB /* Release */,
+				4213ED85B79448CCB358E2F9 /* MinSizeRel */,
+				E0D268664A9D40D0B740BF8D /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = 791F0D5120E1408AB595BB6B;
+			projectDirPath = /Users/binxiaokang/Desktop/HidingIn;
+			projectRoot = "";
+			targets = (
+				D624CD73127145378A47CCCB /* ALL_BUILD */,
+				22A7FF9366EE448492499EEF /* HidingIn */,
+				2832F1B25F01433DBB65B86A /* HidingIn_autogen */,
+				F75CD94C37EC4FA89BBC1A88 /* ZERO_CHECK */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		106D6810001685818ED54326 /* Generate CMakeFiles/ALL_BUILD */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ALL_BUILD";
+			outputPaths = (
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/ALL_BUILD			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  echo Build\\ all\\ projects
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		34E3394824425A138B647383 /* Generate qrc_resources.cpp */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+/Users/binxiaokang/Desktop/HidingIn/build/resources/resources.qrc.depends,/Users/binxiaokang/Desktop/HidingIn/resources/AppListComponent.qml,/Users/binxiaokang/Desktop/HidingIn/resources/CapturedAppPage.qml,/Users/binxiaokang/Desktop/HidingIn/resources/CustomizeTitleBar.qml,/Users/binxiaokang/Desktop/HidingIn/resources/FullScreenBackground.qml,/Users/binxiaokang/Desktop/HidingIn/resources/HomePage.qml,/Users/binxiaokang/Desktop/HidingIn/resources/NavSection.qml,/Users/binxiaokang/Desktop/HidingIn/resources/icon/home.png,/Users/binxiaokang/Desktop/HidingIn/resources/main.qml,/Users/binxiaokang/Desktop/HidingIn/resources/pic/lanscape.jpg,/Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc,/Users/binxiaokang/Desktop/HidingIn/resources/shader/render.metal,/Users/binxiaokang/Desktop/HidingIn/resources/shader/textureBlendHide.metal,/Users/binxiaokang/QT6/6.8.0/macos/libexec/rcc			);
+			name = "Generate qrc_resources.cpp";
+			outputPaths = (
+/Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Users/binxiaokang/QT6/6.8.0/macos/libexec/rcc --no-zstd --name resources --output /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Users/binxiaokang/QT6/6.8.0/macos/libexec/rcc --no-zstd --name resources --output /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Users/binxiaokang/QT6/6.8.0/macos/libexec/rcc --no-zstd --name resources --output /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Users/binxiaokang/QT6/6.8.0/macos/libexec/rcc --no-zstd --name resources --output /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		3C0110FC8322DE7E50886E21 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		4E11C79811760DAF66DE1B5E /* Generate CMakeFiles/ZERO_CHECK */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ZERO_CHECK";
+			outputPaths = (
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/ZERO_CHECK			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  make -f /Users/binxiaokang/Desktop/HidingIn/build/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  make -f /Users/binxiaokang/Desktop/HidingIn/build/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  make -f /Users/binxiaokang/Desktop/HidingIn/build/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  make -f /Users/binxiaokang/Desktop/HidingIn/build/CMakeScripts/ReRunCMake.make
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		73CDC153A3B3498BC968392B = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		9B50530E35CC49C82C2FACCF = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		C41DB900631C07F593702CE1 /* Generate CMakeFiles/HidingIn_autogen */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/HidingIn_autogen";
+			outputPaths = (
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn_autogen,/Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/mocs_compilation.cpp			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_autogen /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn_autogen.dir/AutogenInfo.json Debug
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_autogen /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn_autogen.dir/AutogenInfo.json Release
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_autogen /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn_autogen.dir/AutogenInfo.json MinSizeRel
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/binxiaokang/Desktop/HidingIn/build
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_autogen /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn_autogen.dir/AutogenInfo.json RelWithDebInfo
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6D341F7C6510416F89A5A49C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55BCEC469D284E52928539D7 /* /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.mm */,
+				1AEB8710AEBD4A509976BAD3 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.cpp */,
+				B58ABE3460B24865934C6461 /* /Users/binxiaokang/Desktop/HidingIn/DataModel/WindowAbstractListModelMacOS.mm */,
+				D757A58A26D44E0D977C8F56 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCaptureMacOS.mm */,
+				53A13F3C054C467099E23FD9 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSAppSnapShot.mm */,
+				CEB66C22A91146E2B26E7228 /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.mm */,
+				4A710DF5A1F542799299E32F /* /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacosCapture.mm */,
+				EB81AD1E2850443982525D14 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm */,
+				2CC17652FD334746AA14D3D9 /* /Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalResources.mm */,
+				5672110FD1124311A43B9F02 /* /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.mm */,
+				627B229CBD6E43688A146C12 /* /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp */,
+				4E7B477F769A475CA90EA247 /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.mm */,
+				DDDADE0A0F954972AF91D19A /* /Users/binxiaokang/Desktop/HidingIn/RenderWidget/QMetalGraphicsItem.mm */,
+				C8FC41C8ED354428A37032C7 /* /Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/mocs_compilation.cpp */,
+				004DD289FF6344679C7ABB49 /* /Users/binxiaokang/Desktop/HidingIn/build/qrc_resources.cpp */,
+				DCB77141C65042DCA240547C /* /Users/binxiaokang/Desktop/HidingIn/main.mm */,
+				A7E89B1DEA004F27892FCD4A /* /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.mm */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1688EE15C62A48B9B57A2E72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2832F1B25F01433DBB65B86A /* HidingIn_autogen */;
+			targetProxy = 7DE2B05DB16842B981C2ADC5 /* PBXContainerItemProxy */;
+		};
+		530AEB78727846DCA9599FF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F75CD94C37EC4FA89BBC1A88 /* ZERO_CHECK */;
+			targetProxy = 545AA19BFC004AA89B197D37 /* PBXContainerItemProxy */;
+		};
+		5E86021292AF4E69B5183577 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F75CD94C37EC4FA89BBC1A88 /* ZERO_CHECK */;
+			targetProxy = 372170F3AA2A46958A7F49CB /* PBXContainerItemProxy */;
+		};
+		8BAFDB854B374FDE99859C7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22A7FF9366EE448492499EEF /* HidingIn */;
+			targetProxy = 34951E300F56447DA6F1C999 /* PBXContainerItemProxy */;
+		};
+		A8002DE9E51846CC9E953564 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F75CD94C37EC4FA89BBC1A88 /* ZERO_CHECK */;
+			targetProxy = 981E5901CC814139A43594C6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2CD8CDD6206D474A94D0A1A9 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/binxiaokang/Desktop/HidingIn/build/MinSizeRel;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks,"$(inherited)");
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",QT_CORE_LIB,QT_NO_DEBUG,QT_QUICK_LIB,QT_GUI_LIB,QT_QML_LIB,QT_QMLINTEGRATION_LIB,QT_NETWORK_LIB,QT_QMLMETA_LIB,QT_QMLMODELS_LIB,QT_QMLWORKERSCRIPT_LIB,QT_OPENGL_LIB,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build,/Users/binxiaokang/Desktop/HidingIn,/Users/binxiaokang/Desktop/HidingIn/3rdParty,"$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=gnu++20' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","-Xlinker -framework -Xlinker Foundation","-Xlinker -framework -Xlinker VideoToolbox","-Xlinker -framework -Xlinker CoreMedia","-Xlinker -framework -Xlinker AVFoundation","-Xlinker -framework -Xlinker CoreVideo","-Xlinker -framework -Xlinker IOSurface","-Xlinker -framework -Xlinker Metal","-Xlinker -framework -Xlinker MetalKit","-Xlinker -framework -Xlinker Cocoa","-Xlinker -framework -Xlinker IOKit","-Xlinker -framework -Xlinker ScreenCaptureKit","-Xlinker -framework -Xlinker Carbon","-Xlinker -framework -Xlinker MetalPerformanceShaders","-framework CoreImage",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Versions/A/QtQuick,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Versions/A/QtQmlMeta,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Versions/A/QtQmlWorkerScript,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Versions/A/QtQmlModels,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Versions/A/QtQml,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Versions/A/QtOpenGL,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Versions/A/QtNetwork,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/QtGui,"-Xlinker -framework -Xlinker OpenGL","-Xlinker -framework -Xlinker AGL","-framework AppKit","-framework ImageIO","-framework Metal",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/QtCore,"-framework IOKit","-framework DiskArbitration","-framework UniformTypeIdentifiers","-lobjc","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn;
+				SECTORDER_FLAGS = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				SYSTEM_HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/include_MinSizeRel,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Headers,"/Users/binxiaokang/QT6/6.8.0/macos/mkspecs/macx-clang",/Users/binxiaokang/QT6/6.8.0/macos/include,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/include/QtQmlIntegration,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0/QtGui,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0/QtCore,"$(inherited)");
+				TARGET_TEMP_DIR = "/Users/binxiaokang/Desktop/HidingIn/build/build/HidingIn.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		30CB80AFB7D348109C83E345 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/binxiaokang/Desktop/HidingIn/build/Release;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks,"$(inherited)");
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",QT_CORE_LIB,QT_NO_DEBUG,QT_QUICK_LIB,QT_GUI_LIB,QT_QML_LIB,QT_QMLINTEGRATION_LIB,QT_NETWORK_LIB,QT_QMLMETA_LIB,QT_QMLMODELS_LIB,QT_QMLWORKERSCRIPT_LIB,QT_OPENGL_LIB,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build,/Users/binxiaokang/Desktop/HidingIn,/Users/binxiaokang/Desktop/HidingIn/3rdParty,"$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=gnu++20' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","-Xlinker -framework -Xlinker Foundation","-Xlinker -framework -Xlinker VideoToolbox","-Xlinker -framework -Xlinker CoreMedia","-Xlinker -framework -Xlinker AVFoundation","-Xlinker -framework -Xlinker CoreVideo","-Xlinker -framework -Xlinker IOSurface","-Xlinker -framework -Xlinker Metal","-Xlinker -framework -Xlinker MetalKit","-Xlinker -framework -Xlinker Cocoa","-Xlinker -framework -Xlinker IOKit","-Xlinker -framework -Xlinker ScreenCaptureKit","-Xlinker -framework -Xlinker Carbon","-Xlinker -framework -Xlinker MetalPerformanceShaders","-framework CoreImage",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Versions/A/QtQuick,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Versions/A/QtQmlMeta,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Versions/A/QtQmlWorkerScript,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Versions/A/QtQmlModels,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Versions/A/QtQml,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Versions/A/QtOpenGL,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Versions/A/QtNetwork,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/QtGui,"-Xlinker -framework -Xlinker OpenGL","-Xlinker -framework -Xlinker AGL","-framework AppKit","-framework ImageIO","-framework Metal",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/QtCore,"-framework IOKit","-framework DiskArbitration","-framework UniformTypeIdentifiers","-lobjc","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn;
+				SECTORDER_FLAGS = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				SYSTEM_HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/include_Release,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Headers,"/Users/binxiaokang/QT6/6.8.0/macos/mkspecs/macx-clang",/Users/binxiaokang/QT6/6.8.0/macos/include,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/include/QtQmlIntegration,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0/QtGui,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0/QtCore,"$(inherited)");
+				TARGET_TEMP_DIR = "/Users/binxiaokang/Desktop/HidingIn/build/build/HidingIn.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		31AEAD1F6D7C46CA91B9ED48 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/binxiaokang/Desktop/HidingIn/build/RelWithDebInfo;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks,"$(inherited)");
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",QT_CORE_LIB,QT_NO_DEBUG,QT_QUICK_LIB,QT_GUI_LIB,QT_QML_LIB,QT_QMLINTEGRATION_LIB,QT_NETWORK_LIB,QT_QMLMETA_LIB,QT_QMLMODELS_LIB,QT_QMLWORKERSCRIPT_LIB,QT_OPENGL_LIB,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build,/Users/binxiaokang/Desktop/HidingIn,/Users/binxiaokang/Desktop/HidingIn/3rdParty,"$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=gnu++20' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","-Xlinker -framework -Xlinker Foundation","-Xlinker -framework -Xlinker VideoToolbox","-Xlinker -framework -Xlinker CoreMedia","-Xlinker -framework -Xlinker AVFoundation","-Xlinker -framework -Xlinker CoreVideo","-Xlinker -framework -Xlinker IOSurface","-Xlinker -framework -Xlinker Metal","-Xlinker -framework -Xlinker MetalKit","-Xlinker -framework -Xlinker Cocoa","-Xlinker -framework -Xlinker IOKit","-Xlinker -framework -Xlinker ScreenCaptureKit","-Xlinker -framework -Xlinker Carbon","-Xlinker -framework -Xlinker MetalPerformanceShaders","-framework CoreImage",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Versions/A/QtQuick,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Versions/A/QtQmlMeta,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Versions/A/QtQmlWorkerScript,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Versions/A/QtQmlModels,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Versions/A/QtQml,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Versions/A/QtOpenGL,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Versions/A/QtNetwork,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/QtGui,"-Xlinker -framework -Xlinker OpenGL","-Xlinker -framework -Xlinker AGL","-framework AppKit","-framework ImageIO","-framework Metal",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/QtCore,"-framework IOKit","-framework DiskArbitration","-framework UniformTypeIdentifiers","-lobjc","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn;
+				SECTORDER_FLAGS = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				SYSTEM_HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/include_RelWithDebInfo,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Headers,"/Users/binxiaokang/QT6/6.8.0/macos/mkspecs/macx-clang",/Users/binxiaokang/QT6/6.8.0/macos/include,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/include/QtQmlIntegration,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0/QtGui,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0/QtCore,"$(inherited)");
+				TARGET_TEMP_DIR = "/Users/binxiaokang/Desktop/HidingIn/build/build/HidingIn.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		368943FA054C4824B0035999 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		4778C3AB2DD54579B12B91D3 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		4913BE7F6F9B4299A67AC8DA /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		5E2B44E2D60A4F2C9AD97F1A /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		720437A2D3D44D349A6AE746 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		7921574A6BD346F4B5923845 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = /Users/binxiaokang/Desktop/HidingIn/build/build;
+			};
+			name = Release;
+		};
+		826E50EC64ED42C291B04BFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		92148D98594C4684A029648F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn_autogen;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		9CBAFC96B47F4F5A8AEE5B3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		B67AE7FD96A847A287A12DDD /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = /Users/binxiaokang/Desktop/HidingIn/build/build;
+			};
+			name = RelWithDebInfo;
+		};
+		B6AE017759454E3681109B67 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = /Users/binxiaokang/Desktop/HidingIn/build/build;
+			};
+			name = MinSizeRel;
+		};
+		BCDCCD969DAC447EB95F6868 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn_autogen;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		C0B6085E35C046698E2ED671 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn_autogen;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		C3521D00CE71408595869768 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/binxiaokang/Desktop/HidingIn/build/Debug;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks,"$(inherited)");
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",QT_CORE_LIB,QT_QUICK_LIB,QT_GUI_LIB,QT_QML_LIB,QT_QMLINTEGRATION_LIB,QT_NETWORK_LIB,QT_QMLMETA_LIB,QT_QMLMODELS_LIB,QT_QMLWORKERSCRIPT_LIB,QT_OPENGL_LIB,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build,/Users/binxiaokang/Desktop/HidingIn,/Users/binxiaokang/Desktop/HidingIn/3rdParty,"$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "   '-std=gnu++20' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","-Xlinker -framework -Xlinker Foundation","-Xlinker -framework -Xlinker VideoToolbox","-Xlinker -framework -Xlinker CoreMedia","-Xlinker -framework -Xlinker AVFoundation","-Xlinker -framework -Xlinker CoreVideo","-Xlinker -framework -Xlinker IOSurface","-Xlinker -framework -Xlinker Metal","-Xlinker -framework -Xlinker MetalKit","-Xlinker -framework -Xlinker Cocoa","-Xlinker -framework -Xlinker IOKit","-Xlinker -framework -Xlinker ScreenCaptureKit","-Xlinker -framework -Xlinker Carbon","-Xlinker -framework -Xlinker MetalPerformanceShaders","-framework CoreImage",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Versions/A/QtQuick,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Versions/A/QtQmlMeta,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Versions/A/QtQmlWorkerScript,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Versions/A/QtQmlModels,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Versions/A/QtQml,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Versions/A/QtOpenGL,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Versions/A/QtNetwork,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/QtGui,"-Xlinker -framework -Xlinker OpenGL","-Xlinker -framework -Xlinker AGL","-framework AppKit","-framework ImageIO","-framework Metal",/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/QtCore,"-framework IOKit","-framework DiskArbitration","-framework UniformTypeIdentifiers","-lobjc","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn;
+				SECTORDER_FLAGS = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (/Users/binxiaokang/QT6/6.8.0/macos/lib,"$(inherited)");
+				SYSTEM_HEADER_SEARCH_PATHS = (/Users/binxiaokang/Desktop/HidingIn/build/HidingIn_autogen/include_Debug,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Headers,"/Users/binxiaokang/QT6/6.8.0/macos/mkspecs/macx-clang",/Users/binxiaokang/QT6/6.8.0/macos/include,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQuick.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQml.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/include/QtQmlIntegration,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtNetwork.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlMeta.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlModels.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtQmlWorkerScript.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtOpenGL.framework/Headers,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtGui.framework/Versions/A/Headers/6.8.0/QtGui,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0,/Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/6.8.0/QtCore,"$(inherited)");
+				TARGET_TEMP_DIR = "/Users/binxiaokang/Desktop/HidingIn/build/build/HidingIn.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		D597C32ACD844E6AA272B3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		E5901C08B45549639DCBE5C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk;
+				SYMROOT = /Users/binxiaokang/Desktop/HidingIn/build/build;
+			};
+			name = Debug;
+		};
+		F6C25E92B1E5406ABA222965 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HidingIn_autogen;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A3CEA0D4D0564DA587BD0FCE /* Build configuration list for PBXAggregateTarget "HidingIn_autogen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92148D98594C4684A029648F /* Debug */,
+				C0B6085E35C046698E2ED671 /* Release */,
+				BCDCCD969DAC447EB95F6868 /* MinSizeRel */,
+				F6C25E92B1E5406ABA222965 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BB06745248FA49F8893E8F16 /* Build configuration list for PBXNativeTarget "HidingIn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3521D00CE71408595869768 /* Debug */,
+				30CB80AFB7D348109C83E345 /* Release */,
+				2CD8CDD6206D474A94D0A1A9 /* MinSizeRel */,
+				31AEAD1F6D7C46CA91B9ED48 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CCEE6A96231F43F9B8283325 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				368943FA054C4824B0035999 /* Debug */,
+				D597C32ACD844E6AA272B3DC /* Release */,
+				720437A2D3D44D349A6AE746 /* MinSizeRel */,
+				5E2B44E2D60A4F2C9AD97F1A /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E8E0932725364B60AF0ADE63 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				826E50EC64ED42C291B04BFD /* Debug */,
+				9CBAFC96B47F4F5A8AEE5B3E /* Release */,
+				4913BE7F6F9B4299A67AC8DA /* MinSizeRel */,
+				4778C3AB2DD54579B12B91D3 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EACCD1E7A7C84F37B54B1C98 /* Build configuration list for PBXProject "HidingIn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5901C08B45549639DCBE5C9 /* Debug */,
+				7921574A6BD346F4B5923845 /* Release */,
+				B6AE017759454E3681109B67 /* MinSizeRel */,
+				B67AE7FD96A847A287A12DDD /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F018DEFCEE1B4AEC8D27E105 /* Project object */;
+}

@@ -59,13 +59,17 @@ int main(int argc, char *argv[]) {
     NotificationCenter::getInstance().pushMessage(msg, true);
 
 #ifdef __APPLE__
-    MacOSCaptureSCKit screenCapture;
     //MacOSCaptureSCKit appCapture;
-    CompositeCapture compositeCapture;
+    CompositeCaptureArgs compositeCaptureArgs;
+    compositeCaptureArgs.reqCompositeNum = 1;
+    CompositeCapture compositeCapture(compositeCaptureArgs);
 #endif
 
     MetalPipeline::getGlobalInstance().registerInitDoneHandler([&]{
-        if (screenCapture.startCapture()) {
+        CaptureArgs captureArgs;
+        captureArgs.captureEventName = "DesktopCapture";
+        captureArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
+        if (compositeCapture.addWholeDesktopCapture(captureArgs)) {
             qDebug() << "start screen capturing";
         } else {
             qDebug() << "failed to start screen capturing";
@@ -82,6 +86,7 @@ int main(int argc, char *argv[]) {
 
     // Register QMetalGraphicsItem with QML under the module name "CustomItems"
     auto ret = qmlRegisterType<QMetalGraphicsItem>("CustomItems", 1, 0, "MetalGraphicsItem");
+    ret = qmlRegisterType<QCustomRenderNode>("CustomRenderItems", 1, 0, "MetalRenderGraphicsItem");
 
     // Create the model and add data to it
     WindowAbstractListModel windowModel;
@@ -156,7 +161,7 @@ int main(int argc, char *argv[]) {
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
             auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
-            screenCapture.stopCapture();
+            compositeCapture.stopAllCaptures();
             CaptureArgs captureArgs;
             captureArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
             auto capAppWinVec = getWindowIDsForAppByName(appName.toStdString());
@@ -188,6 +193,6 @@ int main(int argc, char *argv[]) {
     if (engine.rootObjects().isEmpty())
         return -1;
     auto finalRet = app.exec();
-    screenCapture.stopCapture();
+    compositeCapture.stopAllCaptures();
     return finalRet;
 }

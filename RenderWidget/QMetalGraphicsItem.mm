@@ -13,8 +13,10 @@
 QMetalGraphicsItem::QMetalGraphicsItem() {
     // Connecting to the windowChanged signal to handle when the item is associated with a window
     connect(this, &QQuickItem::windowChanged, this, &QMetalGraphicsItem::handleWindowChanged);
+    setFlag(ItemHasContents, true);
     connect(this, &QMetalGraphicsItem::triggerRender, this, [this](){
         window()->update();
+        couldRender = true;
     });
 
     setObjectName("metalGraphics");
@@ -24,17 +26,8 @@ void QMetalGraphicsItem::onBeforeRendering() {
     QSGRendererInterface *rif = window()->rendererInterface();
     // We are not prepared for anything other than running with the RHI and its Metal backend.
     Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::Metal);
-}
 
-void QMetalGraphicsItem::onBeforeRenderPassRecording() {
-    const QQuickWindow::GraphicsStateInfo &stateInfo(window()->graphicsStateInfo());
-    QSGRendererInterface *rif = window()->rendererInterface();
-    window()->beginExternalCommands();
-
-    auto rhiSwapChain = (QRhiSwapChain*)rif->getResource(window(), QSGRendererInterface::RhiSwapchainResource);
-    auto renderTarget = rhiSwapChain->currentFrameRenderTarget();
-    auto renderPassDesc = renderTarget->renderPassDescriptor()->nativeHandles();
-
+    auto& mtlPipeline = MetalPipeline::getGlobalInstance();
     static bool isInit = false;
     if(!isInit){
         isInit = true;
@@ -72,46 +65,52 @@ void QMetalGraphicsItem::onBeforeRenderPassRecording() {
         pipelineConfiguration.mtlRenderCommandQueue = rif->getResource(window(), QSGRendererInterface::CommandQueueResource);
         pipelineConfiguration.mtlRenderCommandEncoder = rif->getResource(window(), QSGRendererInterface::CommandEncoderResource);
         pipelineConfiguration.mtlRenderPassDesc = rif->getResource(window(), QSGRendererInterface::RenderPassResource);
-        pipelineConfiguration.mtlRenderCommandBuffer = nil;
+        pipelineConfiguration.mtlRenderCommandBuffer = rif->getResource(window(), QSGRendererInterface::CommandListResource);
         pipelineConfiguration.renderShaders = renderShaders;
 
         initMetalRenderingPipeline(pipelineConfiguration);
+    }else{
+        PipelineConfiguration pipelineConfiguration;
+        pipelineConfiguration.graphicsDevice = rif->getResource(window(), QSGRendererInterface::DeviceResource);
+        pipelineConfiguration.mtlRenderCommandQueue = rif->getResource(window(), QSGRendererInterface::CommandQueueResource);
+        pipelineConfiguration.mtlRenderCommandEncoder = rif->getResource(window(), QSGRendererInterface::CommandEncoderResource);
+        pipelineConfiguration.mtlRenderPassDesc = rif->getResource(window(), QSGRendererInterface::RenderPassResource);
+        pipelineConfiguration.mtlRenderCommandBuffer = rif->getResource(window(), QSGRendererInterface::CommandListResource);
+
+        MetalPipeline::getGlobalInstance().updateRenderPipelineRes(pipelineConfiguration);
     }
-
-    auto& mtlPipeline = MetalPipeline::getGlobalInstance();
-    PipelineConfiguration pipelineConfiguration;
-    pipelineConfiguration.graphicsDevice = rif->getResource(window(), QSGRendererInterface::DeviceResource);
-    pipelineConfiguration.mtlRenderCommandQueue = rif->getResource(window(), QSGRendererInterface::CommandQueueResource);
-    pipelineConfiguration.mtlRenderCommandEncoder = rif->getResource(window(), QSGRendererInterface::CommandEncoderResource);
-    pipelineConfiguration.mtlRenderCommandBuffer = nil;
-    mtlPipeline.updateRenderPipelineRes(pipelineConfiguration);
-
-    auto encoder = (id<MTLRenderCommandEncoder>) CFBridgingRelease(rif->getResource(
-            window(), QSGRendererInterface::CommandEncoderResource));
-    assert(encoder);
-    QSize logicalSize = window()->size();
-    qreal devicePixelRatioFloat = window()->devicePixelRatio();
-    QSize physicalSize = logicalSize * devicePixelRatioFloat;
-    MTLViewport vp;
-    vp.originX = 0;
-    vp.originY = 0;
-    vp.width = physicalSize.width();
-    vp.height = physicalSize.height();
-    vp.znear = 0;
-    vp.zfar = 1;
-
-    [encoder setViewport: vp];
     mtlPipeline.executeAllRenderTasksInPlace();
-
-    // to-do perform basic rendering:
-
-
-    window()->endExternalCommands();
 }
 
-// Method to set the texture fetching function
-void QMetalGraphicsItem::setTextureFetcher(std::function<void*()> fetcher) {
-    textureFetcher = fetcher;
+void QMetalGraphicsItem::onBeforeRenderPassRecording() {
+//    if(!couldRender && MetalPipeline::getGlobalInstance().isRenderingInitDoneBefore()){
+//        return;
+//    }else{
+//        couldRender = false;
+//    }
+//
+////    const QQuickWindow::GraphicsStateInfo &stateInfo(window()->graphicsStateInfo());
+////    QSGRendererInterface *rif = window()->rendererInterface();
+   //window()->beginExternalCommands();
+////
+////    auto encoder = (id<MTLRenderCommandEncoder>) rif->getResource(
+////            window(), QSGRendererInterface::CommandEncoderResource);
+////    assert(encoder);
+////    QSize logicalSize = window()->size();
+////    qreal devicePixelRatioFloat = window()->devicePixelRatio();
+////    QSize physicalSize = logicalSize * devicePixelRatioFloat;
+////    MTLViewport vp;
+////    vp.originX = 0;
+////    vp.originY = 0;
+////    vp.width = physicalSize.width();
+////    vp.height = physicalSize.height();
+////    vp.znear = 0;
+////    vp.zfar = 1;
+////
+////    [encoder setViewport: vp];
+////    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+////    std::cerr << "bxk task to exec: " << mtlPipeline.getRenderingTasksCount() << std::endl;
+    //window()->endExternalCommands();
 }
 
 void QMetalGraphicsItem::handleWindowChanged(QQuickWindow *win) {
@@ -131,6 +130,7 @@ void QMetalGraphicsItem::sync() {
     // beforeRenderPassRecording. Changing to afterRenderPassRecording
     // would render the squircle on top (overlay).
     connect(window(), &QQuickWindow::beforeRenderPassRecording, this, &QMetalGraphicsItem::onBeforeRenderPassRecording, Qt::DirectConnection);
+    connect(window(), &QQuickWindow::afterRendering, this, &QMetalGraphicsItem::afterRenderingDone, Qt::DirectConnection);
 }
 
 void QMetalGraphicsItem::cleanup() {
@@ -156,4 +156,75 @@ void QMetalGraphicsItem::initMetalRenderingPipeline(PipelineConfiguration &pipel
 
     // init all pipelines:
     MetalPipeline::initGlobalMetalPipeline(pipelineInitConfiguration);
+}
+
+void QMetalGraphicsItem::afterRenderingDone() {
+    if(!MetalPipeline::getGlobalInstance().isRenderingInitDoneBefore()){
+        MetalPipeline::getGlobalInstance().setRenderingInitDone();
+        EventManager::getInstance()->triggerEvent("gpuRenderPipelineInit", EventParam());
+    }
+}
+
+QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *) {
+    // Create a new node if necessary
+    QCustomRenderNode* node = static_cast<QCustomRenderNode*>(oldNode);
+    if (!node) {
+        node = new QCustomRenderNode(this);
+
+    }
+
+    node->setTextureCoordinatesTransform(QSGSimpleTextureNode::NoTransform);
+    node->setFiltering(QSGTexture::Linear);
+    node->setRect(0, 0, width(), height());
+
+    auto metalPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
+    if(!metalPipeline.renderTarget){
+        QSGRendererInterface *rif = window()->rendererInterface();
+        auto device = (id<MTLDevice>) rif->getResource(window(), QSGRendererInterface::DeviceResource);
+        Message msg;
+        NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+        auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
+        MTLTextureDescriptor *desc = [[MTLTextureDescriptor alloc] init];
+        desc.textureType = MTLTextureType2D;
+        desc.pixelFormat = MTLPixelFormatBGRA8Unorm;
+        desc.width = windowInfo->width;
+        desc.height = windowInfo->height;
+        desc.mipmapLevelCount = 1;
+        desc.resourceOptions = MTLResourceStorageModePrivate;
+        desc.storageMode = MTLStorageModePrivate;
+        desc.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+        auto texture = [device newTextureWithDescriptor: desc];
+        [desc release];
+
+        QSGTexture *wrapper = QNativeInterface::QSGMetalTexture::fromNative(
+                texture, window(), QSize(texture.width, texture.height));
+
+        MetalPipeline::getGlobalInstance().setRenderTarget(texture);
+        node->setTexture(wrapper);
+    }else{
+        auto mtlTexture = (id<MTLTexture>)metalPipeline.renderTarget;
+        QSGTexture *wrapper = QNativeInterface::QSGMetalTexture::fromNative(
+                mtlTexture, window(), QSize(mtlTexture.width, mtlTexture.height));
+        node->setTexture(wrapper);
+    }
+
+    window()->update();
+    return node;
+}
+
+void QMetalGraphicsItem::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry){
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
+
+    if (newGeometry.size() != oldGeometry.size())
+        update();
+}
+
+void QMetalGraphicsItem::setT(qreal t){
+    if (t == m_t)
+        return;
+
+    m_t = t;
+    emit tChanged();
+
+    update();
 }

@@ -1,0 +1,4 @@
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn.dir
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/HidingIn_autogen.dir
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/ALL_BUILD.dir
+/Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/ZERO_CHECK.dir

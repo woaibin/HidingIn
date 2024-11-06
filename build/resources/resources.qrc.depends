@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>NavSection.qml</file>
+        <file>CustomizeTitleBar.qml</file>
+        <file>AppListComponent.qml</file>
+        <file>FullScreenBackground.qml</file>
+        <file>HomePage.qml</file>
+        <file>CapturedAppPage.qml</file>
+        <file>icon/home.png</file>
+        <file>pic/lanscape.jpg</file>
+        <file>shader/render.metal</file>
+        <file>shader/textureBlendHide.metal</file>
+    </qresource>
+</RCC>

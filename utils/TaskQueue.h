@@ -30,6 +30,16 @@ public:
         }
     }
 
+    bool empty(){
+        std::unique_lock<std::mutex> lock(queueMutex);
+        return taskQueue.empty();
+    }
+
+    int size(){
+        std::unique_lock<std::mutex> lock(queueMutex);
+        return taskQueue.size();
+    }
+
     // Enqueue tasks that take the thread name as a parameter and return a future to wait for completion
     std::future<void> enqueueTask(const std::function<void(const std::string&)>& task) {
         auto promisePtr = std::make_shared<std::promise<void>>();

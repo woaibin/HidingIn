@@ -73,7 +73,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
 - (instancetype)init {
     self = [super init];
-    auto mtlDevice = (__bridge id<MTLDevice>)MetalPipeline::getGlobalInstance().getRenderPipeline().mtlDeviceRef;
+    auto mtlDevice = (id<MTLDevice>)MetalPipeline::getGlobalInstance().getRenderPipeline().mtlDeviceRef;
     CVReturn status = CVMetalTextureCacheCreate(kCFAllocatorDefault, NULL, mtlDevice, NULL, &_textureCache);
     EventRegisterParam eventRegisterParam;
     eventRegisterParam.type = EventType::General;
@@ -96,7 +96,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     id<MTLTexture> newTexture = [self createTextureFromImage:imageBuffer];
     if (newTexture) {
         EventParam eventParam;
-        eventParam.addParameter("textureId", (__bridge void*)newTexture);
+        eventParam.addParameter("textureId", (void*)newTexture);
         EventManager::getInstance()->triggerEvent(_captureEventName, eventParam);
     }
 }
@@ -204,6 +204,7 @@ public:
              // Set up the stream
              frameReceiver = [SCFrameReceiver alloc];
              [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
+             [frameReceiver setCaptureEventName:args->captureEventName];
              [frameReceiver init];
              stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
              dispatch_queue_t streamQueue = dispatch_queue_create("com.yourAppName.streamOutputQueue", DISPATCH_QUEUE_SERIAL);
@@ -289,8 +290,9 @@ public:
                      NSArray<SCRunningApplication *> *applicationsArray = [NSArray arrayWithObjects:targetApplication, nil];
                      SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingApplications:applicationsArray exceptingWindows:@[]];
                      // Set up the stream
-                     frameReceiver = [[SCFrameReceiver alloc] init];
+                     frameReceiver = [SCFrameReceiver alloc];
                      [frameReceiver setCaptureEventName:captureEventName];
+                     [frameReceiver init];
                      [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
                      stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
                      dispatch_queue_t streamQueue = dispatch_queue_create("com.yourAppName.streamOutputQueue", DISPATCH_QUEUE_SERIAL);

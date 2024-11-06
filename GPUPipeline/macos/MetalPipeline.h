@@ -5,6 +5,8 @@
 #ifndef HIDINGIN_METALPIPELINE_H
 #define HIDINGIN_METALPIPELINE_H
 
+#include <utility>
+
 #include "utils/TaskQueue.h"
 #include "MetalResources.h"
 #include "../PipelineConfiguration.h"
@@ -14,6 +16,17 @@
 using GpuRenderTask = std::function<void(const std::string& threadName, const MtlRenderPipeline& renderPipelineRes)>;
 using GpuComputeTask = std::function<void(const std::string& threadName, const MtlComputePipeline& computePipelineRes)>;
 using GpuBlitTask = std::function<void(const std::string& threadName, const MtlBlitPipeline& blitPipelineRes)>;
+
+struct LastRenderingReplayRecord{
+    LastRenderingReplayRecord(std::function<void(std::string pipelineDesc, std::vector<void*>& inputTextures)> replayLastRenderingRecord, std::string& pipelineDesc)
+        : pipelineDesc(pipelineDesc), m_replayLastRenderingRecord(std::move(replayLastRenderingRecord))
+    {
+
+    }
+    std::function<void(std::string pipelineDesc, std::vector<void*>& inputTextures)> m_replayLastRenderingRecord;
+    std::string pipelineDesc;
+    std::vector<void*> inputTextures;
+};
 
 struct StateExchangeTextureSet;
 class MetalPipeline {
@@ -31,10 +44,10 @@ public:
 public:
     static MetalPipeline& getGlobalInstance(){
         static MetalPipeline metalPipeline;
-        if(!metalPipeline.isInit){
+        if(!metalPipeline.m_isRenderPipelineInit){
             // register init event:
             EventRegisterParam eventRegisterParam;
-            eventRegisterParam.eventName = "gpuPipelineInit";
+            eventRegisterParam.eventName = "gpuRenderPipelineInit";
             eventRegisterParam.type = EventType::General;
             EventManager::getInstance()->registerEvent(eventRegisterParam);
         }
@@ -55,8 +68,23 @@ public:
     void* throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures);
     void throughComputePipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures, void* resultTexture);
     void throughBlitPipelineState(void* inputTexture, void* outputTexture); // resource copy method
-
+    bool isRenderingInitDoneBefore(){
+        return m_isRenderPipelineInit;
+    }
+    int getRenderingTasksCount(){
+        return m_renderingPipelineTasks->size();
+    }
+    void setRenderingInitDone(){
+        m_isRenderPipelineInit = true;
+    }
     void registerInitDoneHandler(std::function<void()>);
+    bool isRenderingTasksEmpty(){
+        return m_renderingPipelineTasks->empty();
+    }
+
+    void setRenderTarget(void* renderTarget){
+        m_mtlRenderPipeline.renderTarget = renderTarget;
+    }
 
 public:
     void executeAllRenderTasksInPlace();
@@ -80,8 +108,9 @@ private:
     MtlBlitPipeline m_blitPipeline;
 
 private:
-    bool isInit = false;
-    std::function<void()> triggerRenderUpdateFunc;
+    bool m_isRenderPipelineInit = false;
+    std::function<void()> m_triggerRenderUpdateFunc;
+    std::unique_ptr<LastRenderingReplayRecord> m_lastRenderingReplayRecord = nullptr;
     void* m_renderTarget;
 };
 

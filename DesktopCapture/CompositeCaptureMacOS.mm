@@ -93,21 +93,14 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
     if(captureSource){
         captureSource->startCaptureWithApplicationName(applicationName, args);
 
-        // register frame consume event:
-        EventRegisterParam eventRegisterParam;
-        eventRegisterParam.eventName = args->captureEventName + "frameConsume";
-        eventRegisterParam.type = EventType::General;
-        EventManager::getInstance()->registerEvent(eventRegisterParam);
 
         // register capture event handler:
-        EventManager::getInstance()->registerListener(args->captureEventName, [&](EventParam& eventParam){
-            m_framesSetMutex.lock();
+        EventManager::getInstance()->registerListener(args->captureEventName, [this](EventParam& eventParam){
             CaptureFrameDesc captureFrameDesc;
-            captureFrameDesc.texUUID = eventRegisterParam.eventName;
             captureFrameDesc.texId = std::get<void*>(eventParam.parameters["textureId"]);
             // for capture app, need to crop out the capture area:
             captureFrameDesc.opsToBePerformBeforeComposition = [&](void* texId){
-                auto mtlTexture = (__bridge id<MTLTexture>)texId;
+                auto mtlTexture = (id<MTLTexture>)texId;
 
                 Message windowMsg;
                 auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
@@ -136,9 +129,9 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
                     MtlProcessMisc::getGlobalInstance().encodeScaleProcessIntoPipeline(texId, retTexture, renderPipeline.mtlCommandBuffer);
                 }
             };
+            m_framesSetMutex.lock();
             m_captureFrameSet.insert({m_capOrder++, captureFrameDesc});
             m_framesSetMutex.unlock();
-            EventManager::getInstance()->waitForEvent(eventRegisterParam.eventName);
         });
 
         m_captureSources.push_back(captureSource);
@@ -152,6 +145,7 @@ void CompositeCapture::stopAllCaptures() {
     for(auto captureSource : m_captureSources){
         captureSource->stopCapture();
     }
+    m_captureSources.clear();
 }
 
 void *CompositeCapture::getLatestCompositeFrame() {
@@ -163,21 +157,13 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
     if(captureSource){
         captureSource->startCapture(args);
 
-        // register frame consume event:
-        EventRegisterParam eventRegisterParam;
-        eventRegisterParam.eventName = args->captureEventName + "frameConsume";
-        eventRegisterParam.type = EventType::General;
-        EventManager::getInstance()->registerEvent(eventRegisterParam);
-
         // register capture event handler:
-        EventManager::getInstance()->registerListener(args->captureEventName, [&](EventParam& eventParam){
-            m_framesSetMutex.lock();
+        EventManager::getInstance()->registerListener(args->captureEventName, [this](EventParam& eventParam){
             CaptureFrameDesc captureFrameDesc;
             captureFrameDesc.texId = std::get<void*>(eventParam.parameters["textureId"]);
-            captureFrameDesc.texUUID = eventRegisterParam.eventName;
             // for capture app, need to crop out the capture area:
             captureFrameDesc.opsToBePerformBeforeComposition = [&](void* texId){
-                auto mtlTexture = (__bridge id<MTLTexture>)texId;
+                auto mtlTexture = (id<MTLTexture>)texId;
 
                 Message windowMsg;
                 auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
@@ -195,9 +181,9 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                 MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
                         cropTuple, texId, retTexture, renderPipeline.mtlCommandBuffer);
             };
+            m_framesSetMutex.lock();
             m_captureFrameSet.insert(std::make_pair(m_capOrder++, captureFrameDesc));
             m_framesSetMutex.unlock();
-            EventManager::getInstance()->waitForEvent(eventRegisterParam.eventName);
         });
         m_captureSources.push_back(captureSource);
     }else{
@@ -225,7 +211,6 @@ CaptureStatus CompositeCapture::queryCaptureStatus() {
 
 void CompositeCapture::compositeThreadFunc() {
     while(!m_stopAllWork){
-        m_framesSetMutex.lock();
         std::vector<int> consumeVec;
         auto execFuture = MetalPipeline::getGlobalInstance().sendJobToRenderQueue(
                 [&](const std::string& threadName, const MtlRenderPipeline& renderPipelineRes){
@@ -237,19 +222,20 @@ void CompositeCapture::compositeThreadFunc() {
             auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
             auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
             void* lastTexId = nullptr;
+            m_framesSetMutex.lock();
             for(auto& it : m_captureFrameSet){
                 consumeVec.push_back(it.first);
                 // will finally match the result size of the result to the window size:
-                auto texIdMtl = (__bridge id<MTLTexture>)it.second.texId;
+                auto texIdMtl = (id<MTLTexture>)it.second.texId;
                 if(lastTexId){
                     // apply high pass:
                     REQUEST_TEXTURE(texIdMtl.width, texIdMtl.height, texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
-                    MtlProcessMisc::getGlobalInstance().encodeGaussianProcessIntoPipeline((__bridge void*)texIdMtl,
+                    MtlProcessMisc::getGlobalInstance().encodeGaussianProcessIntoPipeline((void*)texIdMtl,
                                                                                           retTexture,
                                                                                           renderPipelineRes.mtlCommandBuffer);
                     REQUEST_TEXTURE_ANOTHER(texIdMtl.width, texIdMtl.height,
                                             texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
-                    MtlProcessMisc::getGlobalInstance().encodeSubtractProcessIntoPipeline((__bridge void*)texIdMtl,
+                    MtlProcessMisc::getGlobalInstance().encodeSubtractProcessIntoPipeline((void*)texIdMtl,
                                                                                           retTexture,
                                                                                           retTextureAnother,
                                                                                           renderPipelineRes.mtlCommandBuffer);
@@ -262,19 +248,23 @@ void CompositeCapture::compositeThreadFunc() {
                     auto renderTarget = MetalPipeline::getGlobalInstance().
                             throughRenderingPipelineState("hidingShader", inputTextures);
                 }else{
-                    lastTexId = (__bridge void*)texIdMtl;
+                    if (m_compCapArgs.reqCompositeNum == 1){
+                        // if only there's only one frame, we just render the texture to the scene
+                        std::vector<void*> inputTextures;
+                        inputTextures.push_back(texIdMtl);
+                        auto renderTarget = MetalPipeline::getGlobalInstance().
+                                throughRenderingPipelineState("basicRenderShader", inputTextures);
+                    }else{
+                        lastTexId = (void*)texIdMtl;
+                    }
                 }
             }
+            m_captureFrameSet.clear();
+            m_framesSetMutex.unlock();
         });
-        execFuture.get();
-
-        // trigger all finish event:
-        for(auto& it : consumeVec){
-            EventParam param;
-            EventManager::getInstance()->triggerEvent(m_captureFrameSet[it].texUUID, param);
+        if(execFuture.valid()){
+            execFuture.get();
         }
-
-        m_framesSetMutex.unlock();
     }
 }
 

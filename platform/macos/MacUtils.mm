@@ -85,7 +85,7 @@ NSRunningApplication* findAppPidByPid(pid_t pid) {
 
 // Function definition
 void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
-    NSView* nsView = (NSView*) CFBridgingRelease(overlayWindow);
+    auto nsView = (NSView*) overlayWindow;
     NSWindow* nsWindow = [nsView window];
 
     if (!nsWindow) {
@@ -102,7 +102,7 @@ void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
     }
 
     // Get window info dictionary
-    NSDictionary *windowInfo = (__bridge NSDictionary *)CFArrayGetValueAtIndex(windowList, 0);
+    NSDictionary *windowInfo = (NSDictionary *)CFArrayGetValueAtIndex(windowList, 0);
     if (!windowInfo) {
         std::cerr << "Failed to retrieve window information." << std::endl;
         CFRelease(windowList);
@@ -112,7 +112,7 @@ void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
     // Extract window position and size
     CGRect windowRect;
     NSDictionary *boundsDict = windowInfo[(id)kCGWindowBounds];
-    if (!boundsDict || !CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)boundsDict, &windowRect)) {
+    if (!boundsDict || !CGRectMakeWithDictionaryRepresentation((CFDictionaryRef)boundsDict, &windowRect)) {
         std::cerr << "Failed to extract window bounds." << std::endl;
         CFRelease(windowList);
         return;
@@ -188,7 +188,7 @@ std::vector<int> getWindowIDsForAppByName(const std::string &appName) {
     CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
 
     // Iterate over the windows
-    for (NSDictionary *windowInfo in (__bridge NSArray *)windowList) {
+    for (NSDictionary *windowInfo in (NSArray *)windowList) {
         // Get the window's owner process ID
         pid_t windowPID = [windowInfo[(NSString *)kCGWindowOwnerPID] intValue];
 

@@ -10,21 +10,21 @@
 
 void MtlProcessMisc::initAllProcessors(void* mtlDevice) {
     m_mtlDevice = mtlDevice;
-    auto convertMtlDevice = TO_MTL_DEVICE(CFBridgingRelease(mtlDevice));
-    m_imageCropFilter = (__bridge void*)[[MPSUnaryImageKernel alloc]initWithDevice:convertMtlDevice];
-    m_imageGaussianFilter = (__bridge void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 5.0f];
-    m_imageScaleFilter = (__bridge void*)[[MPSImageScale alloc] initWithDevice: convertMtlDevice];
-    m_imageSubtractFilter = (__bridge void*)[[MPSImageSubtract alloc] initWithDevice: convertMtlDevice];
+    auto convertMtlDevice = TO_MTL_DEVICE(mtlDevice);
+    m_imageCropFilter = (void*)[[MPSUnaryImageKernel alloc]initWithDevice:convertMtlDevice];
+    m_imageGaussianFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 5.0f];
+    m_imageScaleFilter = (void*)[[MPSImageScale alloc] initWithDevice: convertMtlDevice];
+    m_imageSubtractFilter = (void*)[[MPSImageSubtract alloc] initWithDevice: convertMtlDevice];
 }
 
 // Encode Crop Process
 void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int> cropROI, void* input,
                                                    void* output, void* commandBuffer) {
     std::lock_guard<std::mutex> cropLock(m_cropMutex);
-    auto convertInput = (id<MTLTexture>)CFBridgingRelease(input);
-    auto convertOutput = (id<MTLTexture>)CFBridgingRelease(output);
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)CFBridgingRelease(commandBuffer);
-    auto cropFilter = TO_MPS_UNARY_IMAGE_KERNEL(CFBridgingRelease(m_imageCropFilter));
+    auto convertInput = (id<MTLTexture>)input;
+    auto convertOutput = (id<MTLTexture>)output;
+    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
+    auto cropFilter = TO_MPS_UNARY_IMAGE_KERNEL(m_imageCropFilter);
 
     // Extract crop region from the tuple:
     int x, y, width, height;
@@ -33,16 +33,17 @@ void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int
     cropFilter.clipRect.size = MTLSizeMake(width, height, 0);
     // Encode the crop process:
     [cropFilter encodeToCommandBuffer: convertCommandBuffer sourceTexture:convertInput destinationTexture:convertOutput];
+    [convertCommandBuffer commit];
 }
 
 // Encode Scale Process
 void MtlProcessMisc::encodeScaleProcessIntoPipeline(void* input, void* output,
                                                     void* commandBuffer) {
     std::lock_guard<std::mutex> scaleLock(m_scaleMutex);
-    auto convertInput = (id<MTLTexture>)CFBridgingRelease(input);
-    auto convertOutput = (id<MTLTexture>)CFBridgingRelease(output);
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)CFBridgingRelease(commandBuffer);
-    auto imageScale = TO_MPS_IMAGE_BILINEAR_SCALE(CFBridgingRelease(m_imageScaleFilter));
+    auto convertInput = (id<MTLTexture>)input;
+    auto convertOutput = (id<MTLTexture>)output;
+    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
+    auto imageScale = TO_MPS_IMAGE_BILINEAR_SCALE(m_imageScaleFilter);
 
     MPSScaleTransform scaleTransform;
     scaleTransform.scaleX = (double)convertOutput.width / convertInput.width;   // Horizontal scaling factor
@@ -61,12 +62,12 @@ void MtlProcessMisc::encodeScaleProcessIntoPipeline(void* input, void* output,
 void MtlProcessMisc::encodeGaussianProcessIntoPipeline(void* input, void* output, void* commandBuffer) {
     std::lock_guard<std::mutex> gaussianLock(m_GaussianMutex);
 
-    auto convertInput = (id<MTLTexture>)CFBridgingRelease(input);
-    auto convertOutput = (id<MTLTexture>)CFBridgingRelease(output);
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)CFBridgingRelease(commandBuffer);
+    auto convertInput = (id<MTLTexture>)input;
+    auto convertOutput = (id<MTLTexture>)output;
+    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
 
     // Encode the Gaussian blur process
-    [TO_MPS_IMAGE_GAUSSIAN(CFBridgingRelease(m_imageGaussianFilter)) encodeToCommandBuffer:convertCommandBuffer
+    [TO_MPS_IMAGE_GAUSSIAN(m_imageGaussianFilter) encodeToCommandBuffer:convertCommandBuffer
                                                           sourceTexture:convertInput
                                                      destinationTexture:convertOutput];
 }
@@ -75,20 +76,20 @@ void MtlProcessMisc::encodeGaussianProcessIntoPipeline(void* input, void* output
 void MtlProcessMisc::encodeSubtractProcessIntoPipeline(void* input1, void* input2, void* output, void* commandBuffer) {
     std::lock_guard<std::mutex> subtractLock(m_SubtractMutex);
 
-    auto convertInput1 = (id<MTLTexture>)CFBridgingRelease(input1);
-    auto convertInput2 = (id<MTLTexture>)CFBridgingRelease(input2);
-    auto convertOutput = (id<MTLTexture>)CFBridgingRelease(output);
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)CFBridgingRelease(commandBuffer);
+    auto convertInput1 = (id<MTLTexture>)input1;
+    auto convertInput2 = (id<MTLTexture>)input2;
+    auto convertOutput = (id<MTLTexture>)output;
+    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
 
     // Encode the subtract process
-    [TO_MPS_IMAGE_SUBTRACT(CFBridgingRelease(m_imageSubtractFilter)) encodeToCommandBuffer:convertCommandBuffer
+    [TO_MPS_IMAGE_SUBTRACT(m_imageSubtractFilter) encodeToCommandBuffer:convertCommandBuffer
             primaryTexture:convertInput1
                            secondaryTexture:convertInput2
                            destinationTexture:convertOutput];
 }
 
 TextureResource &MtlTextureManager::requestTexture(std::string findId, int width, int height, int format, void* mtlDevice) {
-    auto mtlDeviceOC = TO_MTL_DEVICE(CFBridgingRelease(mtlDevice));
+    auto mtlDeviceOC = TO_MTL_DEVICE(mtlDevice);
     std::lock_guard<std::mutex> textureOpLock(m_textureOpMutex);
 
     auto createOneFunc = [=](){
@@ -101,7 +102,7 @@ TextureResource &MtlTextureManager::requestTexture(std::string findId, int width
 
     auto findResult = m_textureMaps.find(findId);
     if(findResult != m_textureMaps.end()){
-        auto mtlTex = (id<MTLTexture>)CFBridgingRelease(findResult->second.texturePtr);
+        auto mtlTex = (id<MTLTexture>)findResult->second.texturePtr;
         if(mtlTex.width != width || mtlTex.height != height || mtlTex.pixelFormat != format){
             // recreate one:
             createOneFunc();
@@ -111,7 +112,7 @@ TextureResource &MtlTextureManager::requestTexture(std::string findId, int width
 
     // not found suitable, create one:
     TextureResource res;
-    res.texturePtr = (__bridge void*)createOneFunc();
+    res.texturePtr = (void*)createOneFunc();
     auto insertItem = m_textureMaps.insert({findId, res});
 
     return insertItem.first->second;
