@@ -46,8 +46,104 @@
             filePath = "GPUPipeline/macos/MetalPipeline.mm"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
+            landmarkName = "MetalPipeline::throughRenderingPipelineState(pipelineDesc, inputTextures)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9DAFED8A-356C-4A1D-9A64-601310F0A872 - 28e40c511bbd510d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MetalPipeline::throughRenderingPipelineState(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::vector&lt;void*, std::__1::allocator&lt;void*&gt; &gt;&amp;)"
+                  moduleName = "HidingIn"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "812">
+               </Location>
+               <Location
+                  uuid = "9DAFED8A-356C-4A1D-9A64-601310F0A872 - 28e40c511bbd51cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MetalPipeline::throughRenderingPipelineState(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::vector&lt;void*, std::__1::allocator&lt;void*&gt; &gt;&amp;)"
+                  moduleName = "HidingIn"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/binxiaokang/Desktop/HidingIn/GPUPipeline/macos/MetalPipeline.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "231"
+                  endingLineNumber = "231"
+                  offsetFromSymbolStart = "840">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A96DE687-B43A-4F60-B8C9-EB9CFEF90000"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUPipeline/macos/MetalPipeline.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "MetalPipeline::throughRenderingPipelineState(pipelineDesc, inputTextures)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "66F184EA-BAC7-4582-B21C-EC788179D09D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUPipeline/macos/MetalPipeline.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "201"
+            endingLineNumber = "201"
+            landmarkName = "MetalPipeline::throughRenderingPipelineState(pipelineDesc, inputTextures)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "279B1FB3-5C81-4397-98E8-1E3891E6016E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUPipeline/macos/MetalPipeline.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "MetalPipeline::throughRenderingPipelineState(pipelineDesc, inputTextures)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D155BA22-FDBE-4AF3-9912-BC5B3F5198DA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUPipeline/macos/MetalPipeline.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "MetalPipeline::throughRenderingPipelineState(pipelineDesc, inputTextures)"
             landmarkType = "7">
          </BreakpointContent>

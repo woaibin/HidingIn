@@ -12,7 +12,7 @@ MetalPipeline::MetalPipeline() {
     std::vector<std::string> vecRenderThreadPool = { "renderQueue" };
     std::vector<std::string> vecComputeThreadPool = { "computeQueue1", "computeQueue2"};
     std::vector<std::string> vecBlitThreadPool = { "blitQueue1", "blitQueue2" };
-    m_renderingPipelineTasks = std::make_unique<TaskQueue>(1, vecRenderThreadPool, 10, true);
+    m_renderingPipelineTasks = std::make_unique<TaskQueue>(1, vecRenderThreadPool, 10);
     m_computePipelineTasks = std::make_unique<TaskQueue>(2, vecComputeThreadPool, 20);
     m_blitPipelineTasks = std::make_unique<TaskQueue>(1, vecBlitThreadPool, 10);
 }
@@ -54,16 +54,16 @@ std::future<void> MetalPipeline::sendJobToBlitQueue(const GpuBlitTask &blitTask)
 
 void MetalPipeline::prepRenderPipeline(PipelineConfiguration& pipelineInitConfiguration, bool isUpdate) {
     auto mtlDeviceOC = TO_MTL_DEVICE(pipelineInitConfiguration.graphicsDevice);
-
-    // prep basic res
-    {
-        m_mtlRenderPipeline.mtlDeviceRef = (void*)mtlDeviceOC;
-        m_mtlRenderPipeline.mtlCommandQueue = (void*)pipelineInitConfiguration.mtlRenderCommandQueue;
-        m_mtlRenderPipeline.mtlCommandBuffer = (void*)pipelineInitConfiguration.mtlRenderCommandBuffer;
-    }
-
+    m_mtlRenderPipeline.mtlDeviceRef = (void*)mtlDeviceOC;
+    
     if(isUpdate){
         return;
+    }
+    
+    // prep basic res
+    {
+        auto commandQueue =[mtlDeviceOC newCommandQueue];
+        m_mtlRenderPipeline.mtlCommandQueue = (void*) commandQueue;
     }
 
     // prep vertices:
@@ -206,7 +206,9 @@ void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std
     renderPassDesc.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 0.0, 0.0, 1.0);
     renderPassDesc.colorAttachments[0].storeAction = MTLStoreActionStore;
 
-    auto encoder = [(TO_MTL_COMMAND_BUFFER(m_mtlRenderPipeline.mtlCommandBuffer))
+    auto commandQueue =(id<MTLCommandQueue>)m_mtlRenderPipeline.mtlCommandQueue;
+    auto commandBuffer = [commandQueue commandBuffer];
+    auto encoder = [commandBuffer
                     renderCommandEncoderWithDescriptor: (MTLRenderPassDescriptor*)renderPassDesc];
 
     Message msg;
@@ -230,6 +232,10 @@ void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std
     [encoder drawPrimitives: MTLPrimitiveTypeTriangleStrip vertexStart: 0 vertexCount: 4];
 
     [encoder endEncoding];
+    
+    [commandBuffer commit];
+    
+    m_triggerRenderUpdateFunc();
 
     // return output renderTarget:
     return (void*)renderPassDesc.colorAttachments[0].texture;

@@ -79,7 +79,7 @@ void QMetalGraphicsItem::onBeforeRendering() {
 
         MetalPipeline::getGlobalInstance().updateRenderPipelineRes(pipelineConfiguration);
     }
-    mtlPipeline.executeAllRenderTasksInPlace();
+    //mtlPipeline.executeAllRenderTasksInPlace();
 }
 
 void QMetalGraphicsItem::onBeforeRenderPassRecording() {
