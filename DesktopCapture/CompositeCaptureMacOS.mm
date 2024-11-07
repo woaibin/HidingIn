@@ -110,24 +110,29 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
                                                                 WindowPoint(windowInfo->capturedAppX, windowInfo->capturedAppY));
 
                 auto &renderPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
+                void* finalTex = nullptr;
                 // crop out the app area;
                 {
-                    REQUEST_TEXTURE(windowInfo->capturedAppWidth,
-                                    windowInfo->capturedAppHeight,
+                    REQUEST_TEXTURE(windowInfo->capturedAppWidth * windowInfo->scalingFactor,
+                                    windowInfo->capturedAppHeight * windowInfo->scalingFactor,
                                     mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
                     MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
                             std::make_tuple(cropROI.x, cropROI.y, cropROI.width, cropROI.height),
-                            texId, retTexture, renderPipeline.mtlCommandBuffer);
+                            texId, retTexture, renderPipeline.mtlCommandQueue);
+                    finalTex = retTexture;
                 }
 
                 // scale to match window if necessary:
                 if(windowInfo->capturedAppWidth != windowInfo->width || windowInfo->capturedAppHeight != windowInfo->height)
                 {
-                    REQUEST_TEXTURE(windowInfo->width,
-                                    windowInfo->height,
+                    REQUEST_TEXTURE(windowInfo->width * windowInfo->scalingFactor,
+                                    windowInfo->height * windowInfo->scalingFactor,
                                     mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
                     MtlProcessMisc::getGlobalInstance().encodeScaleProcessIntoPipeline(texId, retTexture, renderPipeline.mtlCommandBuffer);
+                    finalTex = retTexture;
                 }
+
+                return finalTex;
             };
             m_framesSetMutex.lock();
             m_captureFrameSet.insert({m_capOrder++, captureFrameDesc});
@@ -170,8 +175,8 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                 auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
 
                 auto &renderPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
-                REQUEST_TEXTURE(windowInfo->width,
-                                windowInfo->height,
+                REQUEST_TEXTURE(windowInfo->width* windowInfo->scalingFactor,
+                                windowInfo->height* windowInfo->scalingFactor,
                                 mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
 
                 auto cropTuple = std::make_tuple(windowInfo->xPos * windowInfo->scalingFactor,
@@ -179,7 +184,9 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                                                  windowInfo->width * windowInfo->scalingFactor,
                                                  windowInfo->height * windowInfo->scalingFactor);
                 MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
-                        cropTuple, texId, retTexture, renderPipeline.mtlCommandBuffer);
+                        cropTuple, texId, retTexture, renderPipeline.mtlCommandQueue);
+
+                return retTexture;
             };
             m_framesSetMutex.lock();
             m_captureFrameSet.insert(std::make_pair(m_capOrder++, captureFrameDesc));
@@ -227,6 +234,9 @@ void CompositeCapture::compositeThreadFunc() {
                 consumeVec.push_back(it.first);
                 // will finally match the result size of the result to the window size:
                 auto texIdMtl = (id<MTLTexture>)it.second.texId;
+                if(it.second.opsToBePerformBeforeComposition){
+                    texIdMtl = (id<MTLTexture>)it.second.opsToBePerformBeforeComposition(texIdMtl);
+                }
                 if(lastTexId){
                     // apply high pass:
                     REQUEST_TEXTURE(texIdMtl.width, texIdMtl.height, texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);

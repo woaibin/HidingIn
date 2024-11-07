@@ -9,31 +9,45 @@
 #include <unordered_map>
 
 void MtlProcessMisc::initAllProcessors(void* mtlDevice) {
+    bool isInit = m_mtlDevice != nullptr;
     m_mtlDevice = mtlDevice;
-    auto convertMtlDevice = TO_MTL_DEVICE(mtlDevice);
-    m_imageCropFilter = (void*)[[MPSUnaryImageKernel alloc]initWithDevice:convertMtlDevice];
-    m_imageGaussianFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 5.0f];
-    m_imageScaleFilter = (void*)[[MPSImageScale alloc] initWithDevice: convertMtlDevice];
-    m_imageSubtractFilter = (void*)[[MPSImageSubtract alloc] initWithDevice: convertMtlDevice];
+    if(!isInit){
+        auto convertMtlDevice = TO_MTL_DEVICE(mtlDevice);
+        m_imageCropFilter = (void*)[[MPSImageLanczosScale alloc]initWithDevice:convertMtlDevice];
+        m_imageGaussianFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 5.0f];
+        m_imageScaleFilter = (void*)[[MPSImageBilinearScale alloc] initWithDevice: convertMtlDevice];
+        m_imageSubtractFilter = (void*)[[MPSImageSubtract alloc] initWithDevice: convertMtlDevice];
+    }
 }
 
 // Encode Crop Process
 void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int> cropROI, void* input,
-                                                   void* output, void* commandBuffer) {
+                                                   void* output, void* commandQueue) {
     std::lock_guard<std::mutex> cropLock(m_cropMutex);
     auto convertInput = (id<MTLTexture>)input;
     auto convertOutput = (id<MTLTexture>)output;
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
-    auto cropFilter = TO_MPS_UNARY_IMAGE_KERNEL(m_imageCropFilter);
+    auto convertCommandQueue = (id<MTLCommandQueue>)commandQueue;
+    auto commandBuffer = [convertCommandQueue commandBuffer];
+    auto cropFilter = TO_MPS_CROP_FILTER(m_imageCropFilter);
 
-    // Extract crop region from the tuple:
     int x, y, width, height;
     std::tie(x, y, width, height) = cropROI;
-    cropFilter.clipRect.origin = MTLOriginMake(x, y, 0);
-    cropFilter.clipRect.size = MTLSizeMake(width, height, 0);
+
+    MPSScaleTransform scaleTransform;
+    scaleTransform.scaleX = 1;   // Horizontal scaling factor
+    scaleTransform.scaleY = 1; // Vertical scaling factor
+    scaleTransform.translateX = -x  * scaleTransform.scaleX ; // No horizontal translation
+    scaleTransform.translateY = -y  * scaleTransform.scaleY; // No vertical translation
+    [cropFilter setScaleTransform:&scaleTransform];
+
+    MTLRegion cropRegion;
+    cropRegion.origin = MTLOriginMake(0, 0, 0);
+    cropRegion.size = MTLSizeMake(width, height, 1);
+    [cropFilter setClipRect:cropRegion];
+
     // Encode the crop process:
-    [cropFilter encodeToCommandBuffer: convertCommandBuffer sourceTexture:convertInput destinationTexture:convertOutput];
-    [convertCommandBuffer commit];
+    [cropFilter encodeToCommandBuffer: commandBuffer sourceTexture:convertInput destinationTexture:convertOutput];
+    [commandBuffer commit];
 }
 
 // Encode Scale Process
@@ -51,7 +65,8 @@ void MtlProcessMisc::encodeScaleProcessIntoPipeline(void* input, void* output,
     scaleTransform.translateX = 0.0; // No horizontal translation
     scaleTransform.translateY = 0.0; // No vertical translation
     [imageScale setScaleTransform:&scaleTransform];
-
+    
+    
     // Encode the scale process
     [imageScale encodeToCommandBuffer:convertCommandBuffer
                         sourceTexture:convertInput

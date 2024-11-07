@@ -20,7 +20,7 @@ MetalPipeline::MetalPipeline() {
 void MetalPipeline::initGlobalMetalPipeline(PipelineConfiguration &pipelineInitConfiguration) {
     auto& inst = getGlobalInstance();
     inst.prepRenderPipeline(pipelineInitConfiguration);
-
+    MtlProcessMisc::getGlobalInstance().initAllProcessors(pipelineInitConfiguration.graphicsDevice);
 
     //getGlobalInstance().prepComputePipeline(pipelineInitConfiguration);
     //getGlobalInstance().prepBlitPipeline(pipelineInitConfiguration);
@@ -217,8 +217,8 @@ void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std
     MTLViewport vp;
     vp.originX = 0;
     vp.originY = 0;
-    vp.width = windowInfo->width;
-    vp.height = windowInfo->height;
+    vp.width = windowInfo->width * windowInfo->scalingFactor;
+    vp.height = windowInfo->height  * windowInfo->scalingFactor;
     vp.znear = 0;
     vp.zfar = 1;
 

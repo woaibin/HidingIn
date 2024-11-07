@@ -22,7 +22,7 @@ using TextureProcessor = MetalProcessor;
 
 struct CaptureFrameDesc{
     void* texId = nullptr;
-    std::function<void(void* texId)> opsToBePerformBeforeComposition;
+    std::function<void*(void* texId)> opsToBePerformBeforeComposition;
 };
 
 struct CompositeOrder{

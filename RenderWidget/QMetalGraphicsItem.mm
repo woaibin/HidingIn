@@ -83,34 +83,6 @@ void QMetalGraphicsItem::onBeforeRendering() {
 }
 
 void QMetalGraphicsItem::onBeforeRenderPassRecording() {
-//    if(!couldRender && MetalPipeline::getGlobalInstance().isRenderingInitDoneBefore()){
-//        return;
-//    }else{
-//        couldRender = false;
-//    }
-//
-////    const QQuickWindow::GraphicsStateInfo &stateInfo(window()->graphicsStateInfo());
-////    QSGRendererInterface *rif = window()->rendererInterface();
-   //window()->beginExternalCommands();
-////
-////    auto encoder = (id<MTLRenderCommandEncoder>) rif->getResource(
-////            window(), QSGRendererInterface::CommandEncoderResource);
-////    assert(encoder);
-////    QSize logicalSize = window()->size();
-////    qreal devicePixelRatioFloat = window()->devicePixelRatio();
-////    QSize physicalSize = logicalSize * devicePixelRatioFloat;
-////    MTLViewport vp;
-////    vp.originX = 0;
-////    vp.originY = 0;
-////    vp.width = physicalSize.width();
-////    vp.height = physicalSize.height();
-////    vp.znear = 0;
-////    vp.zfar = 1;
-////
-////    [encoder setViewport: vp];
-////    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-////    std::cerr << "bxk task to exec: " << mtlPipeline.getRenderingTasksCount() << std::endl;
-    //window()->endExternalCommands();
 }
 
 void QMetalGraphicsItem::handleWindowChanged(QQuickWindow *win) {
@@ -187,8 +159,8 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
         MTLTextureDescriptor *desc = [[MTLTextureDescriptor alloc] init];
         desc.textureType = MTLTextureType2D;
         desc.pixelFormat = MTLPixelFormatBGRA8Unorm;
-        desc.width = windowInfo->width;
-        desc.height = windowInfo->height;
+        desc.width = windowInfo->width * windowInfo->scalingFactor;
+        desc.height = windowInfo->height  * windowInfo->scalingFactor;
         desc.mipmapLevelCount = 1;
         desc.resourceOptions = MTLResourceStorageModePrivate;
         desc.storageMode = MTLStorageModePrivate;
