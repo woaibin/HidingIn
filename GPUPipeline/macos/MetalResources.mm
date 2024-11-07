@@ -52,11 +52,12 @@ void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int
 
 // Encode Scale Process
 void MtlProcessMisc::encodeScaleProcessIntoPipeline(void* input, void* output,
-                                                    void* commandBuffer) {
+                                                    void* commandQueue) {
     std::lock_guard<std::mutex> scaleLock(m_scaleMutex);
     auto convertInput = (id<MTLTexture>)input;
     auto convertOutput = (id<MTLTexture>)output;
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
+    auto convertCommandQueue = (id<MTLCommandQueue>)commandQueue;
+    auto commandBuffer = [convertCommandQueue commandBuffer];
     auto imageScale = TO_MPS_IMAGE_BILINEAR_SCALE(m_imageScaleFilter);
 
     MPSScaleTransform scaleTransform;
@@ -68,36 +69,38 @@ void MtlProcessMisc::encodeScaleProcessIntoPipeline(void* input, void* output,
     
     
     // Encode the scale process
-    [imageScale encodeToCommandBuffer:convertCommandBuffer
+    [imageScale encodeToCommandBuffer:commandBuffer
                         sourceTexture:convertInput
                    destinationTexture:convertOutput];
 }
 
 // Encode Gaussian Blur Process
-void MtlProcessMisc::encodeGaussianProcessIntoPipeline(void* input, void* output, void* commandBuffer) {
+void MtlProcessMisc::encodeGaussianProcessIntoPipeline(void* input, void* output, void* commandQueue) {
     std::lock_guard<std::mutex> gaussianLock(m_GaussianMutex);
 
     auto convertInput = (id<MTLTexture>)input;
     auto convertOutput = (id<MTLTexture>)output;
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
+    auto convertCommandQueue = (id<MTLCommandQueue>)commandQueue;
+    auto commandBuffer = [convertCommandQueue commandBuffer];
 
     // Encode the Gaussian blur process
-    [TO_MPS_IMAGE_GAUSSIAN(m_imageGaussianFilter) encodeToCommandBuffer:convertCommandBuffer
+    [TO_MPS_IMAGE_GAUSSIAN(m_imageGaussianFilter) encodeToCommandBuffer:commandBuffer
                                                           sourceTexture:convertInput
                                                      destinationTexture:convertOutput];
 }
 
 // Encode Subtract Process
-void MtlProcessMisc::encodeSubtractProcessIntoPipeline(void* input1, void* input2, void* output, void* commandBuffer) {
+void MtlProcessMisc::encodeSubtractProcessIntoPipeline(void* input1, void* input2, void* output, void* commandQueue) {
     std::lock_guard<std::mutex> subtractLock(m_SubtractMutex);
 
     auto convertInput1 = (id<MTLTexture>)input1;
     auto convertInput2 = (id<MTLTexture>)input2;
     auto convertOutput = (id<MTLTexture>)output;
-    auto convertCommandBuffer = (id<MTLCommandBuffer>)commandBuffer;
+    auto convertCommandQueue = (id<MTLCommandQueue>)commandQueue;
+    auto commandBuffer = [convertCommandQueue commandBuffer];
 
     // Encode the subtract process
-    [TO_MPS_IMAGE_SUBTRACT(m_imageSubtractFilter) encodeToCommandBuffer:convertCommandBuffer
+    [TO_MPS_IMAGE_SUBTRACT(m_imageSubtractFilter) encodeToCommandBuffer:commandBuffer
             primaryTexture:convertInput1
                            secondaryTexture:convertInput2
                            destinationTexture:convertOutput];

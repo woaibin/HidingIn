@@ -16,7 +16,6 @@ QMetalGraphicsItem::QMetalGraphicsItem() {
     setFlag(ItemHasContents, true);
     connect(this, &QMetalGraphicsItem::triggerRender, this, [this](){
         window()->update();
-        couldRender = true;
     });
 
     setObjectName("metalGraphics");
@@ -82,9 +81,6 @@ void QMetalGraphicsItem::onBeforeRendering() {
     //mtlPipeline.executeAllRenderTasksInPlace();
 }
 
-void QMetalGraphicsItem::onBeforeRenderPassRecording() {
-}
-
 void QMetalGraphicsItem::handleWindowChanged(QQuickWindow *win) {
     if (win) {
         connect(win, &QQuickWindow::beforeSynchronizing, this, &QMetalGraphicsItem::sync, Qt::DirectConnection);
@@ -95,29 +91,12 @@ void QMetalGraphicsItem::handleWindowChanged(QQuickWindow *win) {
 }
 
 void QMetalGraphicsItem::sync() {
-    // Initializing resources is done before starting to encode render
-    // commands, regardless of wanting an underlay or overlay.
     connect(window(), &QQuickWindow::beforeRendering, this, &QMetalGraphicsItem::onBeforeRendering, Qt::DirectConnection);
-    // Here we want an underlay and therefore connect to
-    // beforeRenderPassRecording. Changing to afterRenderPassRecording
-    // would render the squircle on top (overlay).
-    connect(window(), &QQuickWindow::beforeRenderPassRecording, this, &QMetalGraphicsItem::onBeforeRenderPassRecording, Qt::DirectConnection);
     connect(window(), &QQuickWindow::afterRendering, this, &QMetalGraphicsItem::afterRenderingDone, Qt::DirectConnection);
 }
 
 void QMetalGraphicsItem::cleanup() {
 
-}
-
-void QMetalGraphicsItem::readMsgThreadFunc() {
-    while(1){
-        auto msg = NotificationCenter::getInstance().receiveMessage();
-        if(msg.msgType == MessageType::Control && msg.whatHappen == "quit"){
-            break;
-        }else if(msg.msgType == MessageType::Render){
-            requestRender();
-        }
-    }
 }
 
 void QMetalGraphicsItem::initMetalRenderingPipeline(PipelineConfiguration &pipelineInitConfiguration) {
@@ -182,21 +161,4 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
 
     window()->update();
     return node;
-}
-
-void QMetalGraphicsItem::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry){
-    QQuickItem::geometryChange(newGeometry, oldGeometry);
-
-    if (newGeometry.size() != oldGeometry.size())
-        update();
-}
-
-void QMetalGraphicsItem::setT(qreal t){
-    if (t == m_t)
-        return;
-
-    m_t = t;
-    emit tChanged();
-
-    update();
 }
