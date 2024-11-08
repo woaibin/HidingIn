@@ -37,10 +37,10 @@ Item {
             implicitWidth: 200
         }
 
-        // AppListComponent {
-        //     inputWidth: 1000
-        //     inputHeight: 800
-        // }
+        AppListComponent {
+            inputWidth: 1000
+            inputHeight: 800
+        }
     }
 
     Button {

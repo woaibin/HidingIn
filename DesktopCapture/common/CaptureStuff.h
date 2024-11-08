@@ -17,6 +17,5 @@ struct CaptureArgs{
     std::vector<int> excludingWindowIDs; // -1 means itself.
 };
 struct CompositeCaptureArgs{
-    int reqCompositeNum = 0;
 };
 #endif //HIDINGIN_CAPTURESTUFF_H

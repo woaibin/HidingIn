@@ -72,6 +72,7 @@ void MtlProcessMisc::encodeScaleProcessIntoPipeline(void* input, void* output,
     [imageScale encodeToCommandBuffer:commandBuffer
                         sourceTexture:convertInput
                    destinationTexture:convertOutput];
+    [commandBuffer commit];
 }
 
 // Encode Gaussian Blur Process
@@ -87,6 +88,7 @@ void MtlProcessMisc::encodeGaussianProcessIntoPipeline(void* input, void* output
     [TO_MPS_IMAGE_GAUSSIAN(m_imageGaussianFilter) encodeToCommandBuffer:commandBuffer
                                                           sourceTexture:convertInput
                                                      destinationTexture:convertOutput];
+    [commandBuffer commit];
 }
 
 // Encode Subtract Process
@@ -104,6 +106,7 @@ void MtlProcessMisc::encodeSubtractProcessIntoPipeline(void* input1, void* input
             primaryTexture:convertInput1
                            secondaryTexture:convertInput2
                            destinationTexture:convertOutput];
+    [commandBuffer commit];
 }
 
 TextureResource &MtlTextureManager::requestTexture(std::string findId, int width, int height, int format, void* mtlDevice) {
@@ -134,4 +137,44 @@ TextureResource &MtlTextureManager::requestTexture(std::string findId, int width
     auto insertItem = m_textureMaps.insert({findId, res});
 
     return insertItem.first->second;
+}
+
+std::queue<TextureResource>
+MtlTextureManager::requestTextureQueue(std::string findId, int width, int height, int format, void *mtlDevice,
+                                       int initialSize) {
+    auto mtlDeviceOC = TO_MTL_DEVICE(mtlDevice);
+    std::lock_guard<std::mutex> textureOpLock(m_textureOpMutex); // Lock for thread safety
+
+    // Lambda function to create a single texture
+    auto createOneFunc = [=]() {
+        MTLTextureDescriptor *textureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:(MTLPixelFormat)format
+                                                                                                     width:width
+                                                                                                    height:height
+                                                                                                 mipmapped:NO];
+        return [mtlDeviceOC newTextureWithDescriptor:textureDescriptor];
+    };
+
+    // Check if there is already a texture queue with the given ID in the map
+    auto findResult = m_textureQueueMaps.find(findId);
+    if (findResult != m_textureQueueMaps.end()) {
+        // take one on the front, and check its props:
+        auto mtlTex = (id<MTLTexture>)findResult->second.front().texturePtr;
+        if (mtlTex.width != width || mtlTex.height != height || mtlTex.pixelFormat != format) {
+            // clear previous if not match. clear previous:
+            std::queue<TextureResource> empty;
+            std::swap(findResult->second, empty);
+        }
+        return findResult->second;
+    } else {
+        std::queue<TextureResource> textureQueue;
+        // Fill the queue with additional textures up to the specified initial size
+        while (textureQueue.size() < initialSize) {
+            TextureResource res;
+            res.texturePtr = (void*)createOneFunc();
+            textureQueue.push(res);
+        }
+        auto insertItem = m_textureQueueMaps.insert({findId, textureQueue});
+
+        return insertItem.first->second;
+    }
 }

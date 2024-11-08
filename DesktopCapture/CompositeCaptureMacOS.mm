@@ -93,9 +93,9 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
     if(captureSource){
         captureSource->startCaptureWithApplicationName(applicationName, args);
 
-
         // register capture event handler:
-        EventManager::getInstance()->registerListener(args->captureEventName, [this](EventParam& eventParam){
+        int capOrderToSet = m_capOrder++;
+        EventManager::getInstance()->registerListener(args->captureEventName, [this, capOrderToSet](EventParam& eventParam){
             CaptureFrameDesc captureFrameDesc;
             captureFrameDesc.texId = std::get<void*>(eventParam.parameters["textureId"]);
             // for capture app, need to crop out the capture area:
@@ -106,15 +106,16 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
                 auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
                 auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
                 auto cropROI = calculateRectForWindowAtPosition(WindowSize(mtlTexture.width, mtlTexture.height),
-                                                                WindowSize(windowInfo->capturedAppWidth, windowInfo->capturedAppHeight),
-                                                                WindowPoint(windowInfo->capturedAppX, windowInfo->capturedAppY));
+                                                                WindowSize(windowInfo->capturedAppWidth,
+                                                                           windowInfo->capturedAppHeight),
+                                                                WindowPoint(windowInfo->capturedAppX,
+                                                                            windowInfo->capturedAppY));
 
                 auto &renderPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
                 void* finalTex = nullptr;
                 // crop out the app area;
                 {
-                    REQUEST_TEXTURE(windowInfo->capturedAppWidth * windowInfo->scalingFactor,
-                                    windowInfo->capturedAppHeight * windowInfo->scalingFactor,
+                    REQUEST_TEXTURE(windowInfo->capturedAppWidth, windowInfo->capturedAppHeight,
                                     mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
                     MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
                             std::make_tuple(cropROI.x, cropROI.y, cropROI.width, cropROI.height),
@@ -123,19 +124,19 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
                 }
 
                 // scale to match window if necessary:
-                if(windowInfo->capturedAppWidth != windowInfo->width || windowInfo->capturedAppHeight != windowInfo->height)
+                if(windowInfo->capturedAppWidth  != windowInfo->width || windowInfo->capturedAppHeight != windowInfo->height)
                 {
                     REQUEST_TEXTURE(windowInfo->width * windowInfo->scalingFactor,
                                     windowInfo->height * windowInfo->scalingFactor,
                                     mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
-                    MtlProcessMisc::getGlobalInstance().encodeScaleProcessIntoPipeline(texId, retTexture, renderPipeline.mtlCommandBuffer);
+                    MtlProcessMisc::getGlobalInstance().encodeScaleProcessIntoPipeline(finalTex, retTexture, renderPipeline.mtlCommandQueue);
                     finalTex = retTexture;
                 }
 
                 return finalTex;
             };
             m_framesSetMutex.lock();
-            m_captureFrameSet.insert({m_capOrder++, captureFrameDesc});
+            m_captureFrameSet.insert({capOrderToSet, captureFrameDesc});
             m_framesSetMutex.unlock();
         });
 
@@ -143,14 +144,13 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
     }else{
         return false;
     }
+    reqCompositeNum++;
     return true;
 }
 
 void CompositeCapture::stopAllCaptures() {
-    for(auto captureSource : m_captureSources){
-        captureSource->stopCapture();
-    }
     m_captureSources.clear();
+    reqCompositeNum = 0;
 }
 
 void *CompositeCapture::getLatestCompositeFrame() {
@@ -162,8 +162,9 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
     if(captureSource){
         captureSource->startCapture(args);
 
+        int capOrderToSet = m_capOrder++;
         // register capture event handler:
-        EventManager::getInstance()->registerListener(args->captureEventName, [this](EventParam& eventParam){
+        EventManager::getInstance()->registerListener(args->captureEventName, [this, capOrderToSet](EventParam& eventParam){
             CaptureFrameDesc captureFrameDesc;
             captureFrameDesc.texId = std::get<void*>(eventParam.parameters["textureId"]);
             // for capture app, need to crop out the capture area:
@@ -189,13 +190,14 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                 return retTexture;
             };
             m_framesSetMutex.lock();
-            m_captureFrameSet.insert(std::make_pair(m_capOrder++, captureFrameDesc));
+            m_captureFrameSet.insert(std::make_pair(capOrderToSet, captureFrameDesc));
             m_framesSetMutex.unlock();
         });
         m_captureSources.push_back(captureSource);
     }else{
         return false;
     }
+    reqCompositeNum++;
     return true;
 }
 
@@ -218,10 +220,9 @@ CaptureStatus CompositeCapture::queryCaptureStatus() {
 
 void CompositeCapture::compositeThreadFunc() {
     while(!m_stopAllWork){
-        std::vector<int> consumeVec;
         auto execFuture = MetalPipeline::getGlobalInstance().sendJobToRenderQueue(
                 [&](const std::string& threadName, const MtlRenderPipeline& renderPipelineRes){
-            if(m_captureFrameSet.size() < m_compCapArgs.reqCompositeNum){
+            if(m_captureFrameSet.size() < reqCompositeNum){
                 return;
             }
 
@@ -231,7 +232,7 @@ void CompositeCapture::compositeThreadFunc() {
             void* lastTexId = nullptr;
             m_framesSetMutex.lock();
             for(auto& it : m_captureFrameSet){
-                consumeVec.push_back(it.first);
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 // will finally match the result size of the result to the window size:
                 auto texIdMtl = (id<MTLTexture>)it.second.texId;
                 if(it.second.opsToBePerformBeforeComposition){
@@ -239,16 +240,18 @@ void CompositeCapture::compositeThreadFunc() {
                 }
                 if(lastTexId){
                     // apply high pass:
-                    REQUEST_TEXTURE(texIdMtl.width, texIdMtl.height, texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
+                    REQUEST_TEXTURE(windowInfo->width * windowInfo->scalingFactor,
+                                    windowInfo->height * windowInfo->scalingFactor, texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
                     MtlProcessMisc::getGlobalInstance().encodeGaussianProcessIntoPipeline((void*)texIdMtl,
                                                                                           retTexture,
-                                                                                          renderPipelineRes.mtlCommandBuffer);
-                    REQUEST_TEXTURE_ANOTHER(texIdMtl.width, texIdMtl.height,
+                                                                                          renderPipelineRes.mtlCommandQueue);
+                    REQUEST_TEXTURE_ANOTHER(windowInfo->width * windowInfo->scalingFactor,
+                                            windowInfo->height * windowInfo->scalingFactor,
                                             texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
                     MtlProcessMisc::getGlobalInstance().encodeSubtractProcessIntoPipeline((void*)texIdMtl,
                                                                                           retTexture,
                                                                                           retTextureAnother,
-                                                                                          renderPipelineRes.mtlCommandBuffer);
+                                                                                          renderPipelineRes.mtlCommandQueue);
 
                     // apply hiding filter:
                     std::vector<void*> inputTextures;
@@ -258,7 +261,7 @@ void CompositeCapture::compositeThreadFunc() {
                     auto renderTarget = MetalPipeline::getGlobalInstance().
                             throughRenderingPipelineState("hidingShader", inputTextures);
                 }else{
-                    if (m_compCapArgs.reqCompositeNum == 1){
+                    if (reqCompositeNum == 1){
                         // if only there's only one frame, we just render the texture to the scene
                         std::vector<void*> inputTextures;
                         inputTextures.push_back(texIdMtl);

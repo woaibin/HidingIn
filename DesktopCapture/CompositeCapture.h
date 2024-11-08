@@ -64,6 +64,7 @@ private:
     std::atomic_bool m_stopAllWork = false;
     std::mutex m_framesSetMutex;
     int m_capOrder = 0;
+    int reqCompositeNum = 0;
 };
 
 

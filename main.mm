@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
 #ifdef __APPLE__
     //MacOSCaptureSCKit appCapture;
     CompositeCaptureArgs compositeCaptureArgs;
-    compositeCaptureArgs.reqCompositeNum = 1;
     CompositeCapture compositeCapture(compositeCaptureArgs);
 #endif
 
@@ -161,22 +160,25 @@ int main(int argc, char *argv[]) {
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
             auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
-            compositeCapture.stopAllCaptures();
-            CaptureArgs captureArgs;
-            captureArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
-            auto capAppWinVec = getWindowIDsForAppByName(appName.toStdString());
-            captureArgs.excludingWindowIDs.insert(captureArgs.excludingWindowIDs.end(), capAppWinVec.begin(), capAppWinVec.end());
-
-            compositeCapture.addWholeDesktopCapture(captureArgs);
-            compositeCapture.addCaptureByApplicationName(appName.toStdString());
-            //appCapture.startCaptureWithApplicationName(appName.toStdString());
             auto currentWindow = getCurrentWindow();
-
 #ifdef __APPLE__
             void *nativeWindow = (void*)currentWindow->winId();
             stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
 #endif
             ignoreMouseInputForAllWindows();
+
+            compositeCapture.stopAllCaptures();
+            CaptureArgs captureDesktopArgs;
+            captureDesktopArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
+            auto capAppWinVec = getWindowIDsForAppByName(appName.toStdString());
+            captureDesktopArgs.excludingWindowIDs.insert(captureDesktopArgs.excludingWindowIDs.end(), capAppWinVec.begin(), capAppWinVec.end());
+            captureDesktopArgs.captureEventName = "SpecificDesktopCapture";
+            compositeCapture.addWholeDesktopCapture(captureDesktopArgs);
+
+            CaptureArgs captureAppArgs;
+            captureAppArgs.captureEventName = appName.toStdString() + "Capture";
+            compositeCapture.addCaptureByApplicationName(appName.toStdString(), captureAppArgs);
+            //appCapture.startCaptureWithApplicationName(appName.toStdString());
         });
 
     } else {

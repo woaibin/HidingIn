@@ -9,6 +9,7 @@
 #include "vector"
 #include <mutex>
 #include <string>
+#include <queue>
 
 #define TO_MTL_DEVICE(DEVICE_OPAQUE) (id<MTLDevice>)DEVICE_OPAQUE
 #define TO_MTL_COMMAND_QUEUE(QUEUE_OPAQUE) (id<MTLCommandQueue>)QUEUE_OPAQUE
@@ -72,9 +73,23 @@ struct TextureResource{
         retTextureAnother = MtlTextureManager::getGlobalInstance()           \
         .requestTexture(finalFindId, width, height, format, mtlDevice).texturePtr; \
     } while (0)
+
+// texture request helper, it will create a 'retTextureQueue' in place.
+#define REQUEST_TEXTURE_QUEUE(width, height, format, mtlDevice) \
+    void* retTextureQueue = nullptr;                                       \
+    do {                                                   \
+        std::string fileName = __FILE__;                   \
+        std::string funName = __func__;                    \
+        std::string lineName = std::to_string(__LINE__);        \
+        auto finalFindId = fileName + "-" + funName + "-" + lineName; \
+        retTexture = MtlTextureManager::getGlobalInstance()           \
+        .requestTextureQueue(finalFindId, width, height, format, mtlDevice, 15); \
+    } while (0)
+
 class MtlTextureManager{
 private:
     std::unordered_map<std::string, TextureResource> m_textureMaps;
+    std::unordered_map<std::string, std::queue<TextureResource>> m_textureQueueMaps;
     std::mutex m_textureOpMutex;
 
 public:
@@ -84,6 +99,7 @@ public:
     }
 
     TextureResource& requestTexture(std::string findId, int width, int height, int format, void* mtlDevice);
+    std::queue<TextureResource> requestTextureQueue(std::string findId, int width, int height, int format, void* mtlDevice, int initialSize);
 private:
     MtlTextureManager() = default;
 

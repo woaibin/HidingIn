@@ -60,7 +60,6 @@ static void savePNG(CVImageBufferRef imageBuffer){
 @property (nonatomic) CVMetalTextureCacheRef textureCache;
 @property (nonatomic, assign) CVMetalTextureRef metalTextureRef;
 @property (atomic) bool stopCapturing;
-@property (atomic) bool stopped;
 @property bool isDesktopCap;
 @property std::string captureEventName;
 
@@ -85,7 +84,6 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
 - (void)stream:(SCStream *)stream didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer ofType:(SCStreamOutputType)type {
     if(self.stopCapturing){
-        self.stopped = true;
         return;
     }
 
@@ -177,12 +175,6 @@ public:
              config.minimumFrameInterval = CMTimeMake(1, 60);
              config.queueDepth = 5;
              config.showsCursor = false;
-
-             // traverse app info:
-//             for (int i = 0; i < [content.applications count]; i++) {
-//                 auto app = content.applications[i];
-//                 NSLog(@"app name: %@", app.applicationName);  // Use %@ to print NSString objects
-//             }
 
              // Set up the content filter for the display
              SCContentFilter *filter = nullptr;
@@ -316,20 +308,17 @@ public:
     }
 
     void stopCapture() {
+        // Create a dispatch semaphore to wait for the completion handler
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
         [stream stopCaptureWithCompletionHandler:^( NSError *error){
             if(error){
                 NSLog(@"Error: Unable to stop stream capture: %@", error);
             }else{
                 [frameReceiver setStopCapturing:true];
-                while(1){
-                    if([frameReceiver stopped]){
-                        break;
-                    }
-                    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-                }
+                dispatch_semaphore_signal(semaphore);
             }
         }];
-
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     }
 };
 
