@@ -11,7 +11,7 @@ public:
     // Start capturing the screen content
     bool startCapture(std::optional<CaptureArgs> args = std::nullopt);
 
-    bool startCaptureWithApplicationName(std::string applicationName, std::optional<CaptureArgs> args);
+    bool startCaptureWithSpecificWinId(std::optional<CaptureArgs> args);
 
     // Stop capturing the screen content
     void stopCapture();

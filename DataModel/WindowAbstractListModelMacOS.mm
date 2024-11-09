@@ -14,14 +14,15 @@ void WindowAbstractListModel::enum10Apps() {
             break;
         }
         auto appName = std::string([app.localizedName UTF8String]);
-        auto snapShot = getSnapShotFromApp(appName);
+        int retWinId;
+        auto snapShot = getSnapShotFromApp(appName, &retWinId);
         if(snapShot.isNull()){
             continue;
         }
         m_snapShotImageProvider.addImage(QString::fromStdString(appName), snapShot);
         auto constructImgUrl = QString("image://appsnapshotprovider/") + QString::fromStdString(appName);
-        WindowModel model(QString::number((app.processIdentifier)),
-                          QString::fromUtf8([app.localizedName UTF8String]),constructImgUrl);
+        WindowModel model(QString::number((retWinId)),
+                          QString::fromUtf8([app.localizedName UTF8String]),constructImgUrl, QString::number((app.processIdentifier)));
         m_windows.push_back(model);
     }
 }

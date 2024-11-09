@@ -136,13 +136,9 @@ void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
     auto nsApp = findAppPidByPid(targetAppPID);
     [nsApp activateWithOptions:NSApplicationActivateAllWindows];
 
-    // Step 3: Make the overlay window topmost and ignore mouse events
-    [nsWindow setLevel:NSFloatingWindowLevel];   // Keep the window on top
-    [nsWindow setIgnoresMouseEvents:YES];        // Ignore mouse events to let them pass through
-
     // Step 4: Bring the overlay window to the front and make it visible
-    //[nsWindow makeKeyAndOrderFront:nil];
-    //[[NSApplication sharedApplication] activateIgnoringOtherApps : YES];
+    [nsWindow makeKeyAndOrderFront:nil];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps : YES];
 
     // Finally, log for debugging
     std::cout << "Overlay window now sticks to the target window with ID: " << targetAppWinId << std::endl;
@@ -204,4 +200,103 @@ std::vector<int> getWindowIDsForAppByName(const std::string &appName) {
     CFRelease(windowList);
 
     return windowIDs;
+}
+
+bool getWindowGeometry(int windowID, std::tuple<int, int, int, int>& rectGeometry) {
+    // Get the list of windows with the specific window ID
+    CFArrayRef windowList = CGWindowListCreateDescriptionFromArray(CFArrayCreate(nullptr, (const void**)&windowID, 1, nullptr));
+
+    if (windowList == nullptr || CFArrayGetCount(windowList) == 0) {
+        std::cerr << "No window found with the given window ID: " << windowID << std::endl;
+        if (windowList != nullptr) {
+            CFRelease(windowList);
+        }
+        return false;
+    }
+
+    // Get the first (and only) window's dictionary
+    CFDictionaryRef windowInfo = static_cast<CFDictionaryRef>(CFArrayGetValueAtIndex(windowList, 0));
+
+    // Get the bounds of the window
+    CFDictionaryRef boundsDict = static_cast<CFDictionaryRef>(CFDictionaryGetValue(windowInfo, kCGWindowBounds));
+    if (boundsDict == nullptr) {
+        std::cerr << "Failed to get window bounds." << std::endl;
+        CFRelease(windowList);
+        return false;
+    }
+
+    // Convert the bounds dictionary to a CGRect
+    CGRect roiRect;
+    if (!CGRectMakeWithDictionaryRepresentation(boundsDict, &roiRect)) {
+        std::cerr << "Failed to convert bounds dictionary to CGRect." << std::endl;
+        CFRelease(windowList);
+        return false;
+    }
+
+    // Update the tuple with the correct window geometry
+    rectGeometry = std::make_tuple(
+            static_cast<int>(roiRect.origin.x),
+            static_cast<int>(roiRect.origin.y),
+            static_cast<int>(roiRect.size.width),
+            static_cast<int>(roiRect.size.height)
+    );
+
+    // Release the window list
+    CFRelease(windowList);
+
+    return true;
+}
+
+std::tuple<int, int, int, int> resizeAndMoveOverlayWindow(void* nativeWindowHandle, int targetAppWinId) {
+    if (!nativeWindowHandle) {
+        std::cerr << "No valid NSWindow found." << std::endl;
+        return {};
+    }
+
+    auto nsView = (NSView*)nativeWindowHandle;
+    auto nsWindow = [nsView window];
+
+    // Step 1: Find the position and size of the window with the given CGWindowID
+    CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionIncludingWindow, targetAppWinId);
+    if (windowList == nullptr || CFArrayGetCount(windowList) == 0) {
+        std::cerr << "No window found with the given CGWindowID: " << targetAppWinId << std::endl;
+        if (windowList) CFRelease(windowList);
+        return {};
+    }
+
+    // Get window info dictionary
+    NSDictionary *windowInfo = (NSDictionary *)CFArrayGetValueAtIndex(windowList, 0);
+    if (!windowInfo) {
+        std::cerr << "Failed to retrieve window information." << std::endl;
+        CFRelease(windowList);
+        return {};
+    }
+
+    // Extract window position and size
+    CGRect windowRect;
+    NSDictionary *boundsDict = windowInfo[(id)kCGWindowBounds];
+    if (!boundsDict || !CGRectMakeWithDictionaryRepresentation((CFDictionaryRef)boundsDict, &windowRect)) {
+        std::cerr << "Failed to extract window bounds." << std::endl;
+        CFRelease(windowList);
+        return {};
+    }
+
+    // Release the window list as we've extracted the needed information
+    CFRelease(windowList);
+
+    // Step 2: Create an NSRect from the target window's CGRect
+    NSRect frame = NSMakeRect(windowRect.origin.x, windowRect.origin.y, windowRect.size.width, windowRect.size.height);
+
+    // Step 3: Convert the coordinates to screen coordinates if needed
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    if (mainScreen) {
+        CGFloat screenHeight = [mainScreen frame].size.height;
+        // Adjust the y-coordinate to account for macOS's flipped screen origin
+        frame.origin.y = screenHeight - windowRect.origin.y - windowRect.size.height;
+    }
+
+    // Step 4: Update the NSWindow's frame to match the target window
+    [nsWindow setFrame:frame display:YES];
+
+    return std::make_tuple(windowRect.origin.x, windowRect.origin.y, windowRect.size.width, windowRect.size.height);
 }

@@ -219,7 +219,7 @@ public:
         return captureStarted;
     }
 
-    bool startCaptureWithApplicationName(std::string applicationName, std::string captureEventName) {
+    bool startCaptureWithWinId(CaptureArgs args) {
         // Create a dispatch semaphore to wait for the completion handler
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
@@ -243,15 +243,14 @@ public:
                          return;
                      }
 
-                     // traverse app info:
-                     SCRunningApplication* targetApplication = nullptr;
-                     NSString *targetAppName = [NSString stringWithUTF8String:applicationName.c_str()];
-                     for (int i = 0; i < [content.applications count]; i++) {
-                         auto app = content.applications[i];
-                         if ([app.applicationName isEqualToString:targetAppName]) {
-                             targetApplication = app;
-                             NSLog(@"appCapture: capture app name: %@", app.applicationName);  // Use %@ to print NSString objects
-                             break;
+                     // Traverse app info:
+                     NSMutableArray<SCWindow*> *capWindows = [[content.windows mutableCopy] autorelease];
+                     for (int i = (int)[capWindows count] - 1; i >= 0; i--) {  // Start from the end and move backward
+                         auto app = capWindows[i];
+                         auto findResult = std::find(args.includingWindowIDs.begin(),
+                                                     args.includingWindowIDs.end(), app.windowID);
+                         if (findResult == args.includingWindowIDs.end()) {
+                             [capWindows removeObjectAtIndex:i];  // Safely remove the element
                          }
                      }
                      // Create a configuration for the capture stream
@@ -259,31 +258,27 @@ public:
                      Message windowMsg;
                      auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
                      auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
-                     if(capMode == CaptureMode::FullDesktopCapture){
-                         config.width = display.width * windowInfo->scalingFactor;
-                         config.height = display.height * windowInfo->scalingFactor;
-                     }else{
-                         config.width = display.width * windowInfo->scalingFactor;
-                         config.height = display.height * windowInfo->scalingFactor;
-                         auto size = getWindowSizesForPID(targetApplication.processID);
-                         windowInfo->capturedAppX = std::get<0>(size) * windowInfo->scalingFactor;
-                         windowInfo->capturedAppY = std::get<1>(size) * windowInfo->scalingFactor;
-                         windowInfo->capturedAppWidth = std::get<2>(size) * windowInfo->scalingFactor;
-                         windowInfo->capturedAppHeight = std::get<3>(size) * windowInfo->scalingFactor;
-                         windowInfo->capturedWinId = std::get<4>(size);
-                         windowInfo->appPid = targetApplication.processID;
-                     }
+
+                     config.width = display.width * windowInfo->scalingFactor;
+                     config.height = display.height * windowInfo->scalingFactor;
+                     auto retRect = std::make_tuple(0,0,0,0);
+                     getWindowGeometry(args.includingWindowIDs[0], retRect);
+                     windowInfo->capturedAppX = std::get<0>(retRect) * windowInfo->scalingFactor;
+                     windowInfo->capturedAppY = std::get<1>(retRect) * windowInfo->scalingFactor;
+                     windowInfo->capturedAppWidth = std::get<2>(retRect) * windowInfo->scalingFactor;
+                     windowInfo->capturedAppHeight = std::get<3>(retRect) * windowInfo->scalingFactor;
+                     windowInfo->capturedWinId = args.includingWindowIDs[0];
+
                      config.pixelFormat = kCVPixelFormatType_32BGRA;
                      config.minimumFrameInterval = CMTimeMake(1, 60);
                      config.queueDepth = 5;
                      config.showsCursor = false;
 
                      // Set up the content filter for the display
-                     NSArray<SCRunningApplication *> *applicationsArray = [NSArray arrayWithObjects:targetApplication, nil];
-                     SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingApplications:applicationsArray exceptingWindows:@[]];
+                     SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:capWindows];
                      // Set up the stream
                      frameReceiver = [SCFrameReceiver alloc];
-                     [frameReceiver setCaptureEventName:captureEventName];
+                     [frameReceiver setCaptureEventName:args.captureEventName];
                      [frameReceiver init];
                      [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
                      stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
@@ -340,7 +335,11 @@ void MacOSCaptureSCKit::stopCapture() {
     impl->stopCapture();
 }
 
-bool MacOSCaptureSCKit::startCaptureWithApplicationName(std::string applicationName, std::optional<CaptureArgs> args) {
+bool MacOSCaptureSCKit::startCaptureWithSpecificWinId(std::optional<CaptureArgs> args) {
     captureStatus = CaptureStatus::Start;
-    return impl->startCaptureWithApplicationName(applicationName, args->captureEventName);
+    if(!args.has_value()){
+        std::cerr << "cap args cannot be null" << std::endl;
+        return false;
+    }
+    return impl->startCaptureWithWinId(args.value());
 }

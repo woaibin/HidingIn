@@ -66,6 +66,18 @@ public:
         return m_snapShotImageProvider;
     }
 
+    WindowModel& getWindowModelByAppName(const std::string& appName) {
+        auto it = std::find_if(m_windows.begin(), m_windows.end(), [&appName](const WindowModel& window) {
+            return window.appName() == appName;
+        });
+
+        if (it != m_windows.end()) {
+            return *it;
+        }
+
+        throw std::runtime_error("Window with app name '" + appName + "' not found.");
+    }
+
 private:
     QList<WindowModel> m_windows;  // List of WindowModel objects
     SnapShotImageProvider m_snapShotImageProvider;

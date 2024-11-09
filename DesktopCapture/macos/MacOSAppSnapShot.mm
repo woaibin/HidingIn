@@ -70,10 +70,10 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
 }
 
 // Main function to get a snapshot from the app by name
-extern QImage getSnapShotFromApp(std::string appName) {
+extern QImage getSnapShotFromApp(std::string appName, int *retWinId) {
     // Find the window ID of the target application
     CGWindowID windowID = findWindowIDForApp(appName);
-
+    *retWinId = windowID;
     if (windowID != kCGNullWindowID) {
         // Capture the window image
         CGRect windowBounds = CGRectNull; // Capture the full window

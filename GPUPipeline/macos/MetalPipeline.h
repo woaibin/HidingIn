@@ -74,8 +74,18 @@ public:
     int getRenderingTasksCount(){
         return m_renderingPipelineTasks->size();
     }
+
+    void markRenderTargetDirty(){
+        m_mtlRenderPipeline.renderTargetDirty = true;
+    }
+
+    bool isRenderTargetDirty(){
+        return m_mtlRenderPipeline.renderTargetDirty;
+    }
+
     void setRenderingInitDone(){
         m_isRenderPipelineInit = true;
+        m_mtlRenderPipeline.renderTargetDirty = false;
     }
     void registerInitDoneHandler(std::function<void()>);
     bool isRenderingTasksEmpty(){

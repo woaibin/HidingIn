@@ -159,26 +159,35 @@ int main(int argc, char *argv[]) {
         QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
-            auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
             auto currentWindow = getCurrentWindow();
-#ifdef __APPLE__
             void *nativeWindow = (void*)currentWindow->winId();
-            stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
-#endif
+            auto& appModel = windowModel.getWindowModelByAppName(appName.toStdString());
+            auto appWindowId = (int)std::stoi(appModel.windowHandle().toStdString());
+            auto appRect = resizeAndMoveOverlayWindow(nativeWindow, appWindowId);
+            auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
+            // update info:
+            windowInfo->xPos = std::get<0>(appRect);
+            windowInfo->yPos = std::get<1>(appRect);
+            windowInfo->width = std::get<2>(appRect);
+            windowInfo->height = std::get<3>(appRect);
+            windowInfo->appPid = std::stoi(appModel.pid().toStdString());
             ignoreMouseInputForAllWindows();
+            MetalPipeline::getGlobalInstance().markRenderTargetDirty();
 
             compositeCapture.stopAllCaptures();
             CaptureArgs captureDesktopArgs;
             captureDesktopArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
-            auto capAppWinVec = getWindowIDsForAppByName(appName.toStdString());
-            captureDesktopArgs.excludingWindowIDs.insert(captureDesktopArgs.excludingWindowIDs.end(), capAppWinVec.begin(), capAppWinVec.end());
+            captureDesktopArgs.excludingWindowIDs.push_back(appWindowId);
             captureDesktopArgs.captureEventName = "SpecificDesktopCapture";
             compositeCapture.addWholeDesktopCapture(captureDesktopArgs);
 
             CaptureArgs captureAppArgs;
             captureAppArgs.captureEventName = appName.toStdString() + "Capture";
+            captureAppArgs.includingWindowIDs.push_back(appWindowId);
             compositeCapture.addCaptureByApplicationName(appName.toStdString(), captureAppArgs);
-            //appCapture.startCaptureWithApplicationName(appName.toStdString());
+#ifdef __APPLE__
+            stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
+#endif
         });
 
     } else {

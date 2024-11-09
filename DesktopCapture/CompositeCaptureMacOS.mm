@@ -91,7 +91,7 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
     }
     std::shared_ptr<DesktopCapture> captureSource = std::make_shared<DesktopCapture>();
     if(captureSource){
-        captureSource->startCaptureWithApplicationName(applicationName, args);
+        captureSource->startCaptureWithSpecificWinId(args);
 
         // register capture event handler:
         int capOrderToSet = m_capOrder++;
@@ -186,7 +186,6 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                                                  windowInfo->height * windowInfo->scalingFactor);
                 MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
                         cropTuple, texId, retTexture, renderPipeline.mtlCommandQueue);
-
                 return retTexture;
             };
             m_framesSetMutex.lock();
@@ -232,7 +231,6 @@ void CompositeCapture::compositeThreadFunc() {
             void* lastTexId = nullptr;
             m_framesSetMutex.lock();
             for(auto& it : m_captureFrameSet){
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 // will finally match the result size of the result to the window size:
                 auto texIdMtl = (id<MTLTexture>)it.second.texId;
                 if(it.second.opsToBePerformBeforeComposition){

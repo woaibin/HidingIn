@@ -29,6 +29,7 @@ struct MtlRenderPipeline{
     std::unordered_map<std::string, void*> mtlPipelineStates;
     void* vertexBuffer;
     void* renderTarget;
+    bool renderTargetDirty = false;
 };
 
 struct MtlComputePipeline{

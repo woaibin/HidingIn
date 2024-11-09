@@ -44,6 +44,9 @@ public slots:
 
 private:
     std::string idName = "";
+    int lastWidth = -1;
+    int lastHeight = -1;
+    QSGTexture* lastRenderTargetTexture = nullptr;
 };
 
 #endif // QMETALGRAPHICSITEM_H

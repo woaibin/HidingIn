@@ -129,7 +129,7 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
     node->setRect(0, 0, width(), height());
 
     auto metalPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
-    if(!metalPipeline.renderTarget){
+    if(!metalPipeline.renderTarget || MetalPipeline::getGlobalInstance().isRenderTargetDirty()){
         QSGRendererInterface *rif = window()->rendererInterface();
         auto device = (id<MTLDevice>) rif->getResource(window(), QSGRendererInterface::DeviceResource);
         Message msg;

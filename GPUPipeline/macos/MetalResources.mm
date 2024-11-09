@@ -126,7 +126,8 @@ TextureResource &MtlTextureManager::requestTexture(std::string findId, int width
         auto mtlTex = (id<MTLTexture>)findResult->second.texturePtr;
         if(mtlTex.width != width || mtlTex.height != height || mtlTex.pixelFormat != format){
             // recreate one:
-            createOneFunc();
+            [mtlTex release];
+            findResult->second.texturePtr = createOneFunc();
         }
         return findResult->second;
     }

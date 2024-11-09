@@ -28,15 +28,13 @@ void MetalPipeline::initGlobalMetalPipeline(PipelineConfiguration &pipelineInitC
 
 std::future<void> MetalPipeline::sendJobToRenderQueue(const GpuRenderTask& renderTask) {
     // need to trigger update rendering to qt:
-    if(!m_triggerRenderUpdateFunc){
-        std::cerr << "warning, trigger render update function is not valid..." << std::endl;
-        return {};
-    }
     auto retFuture = m_renderingPipelineTasks->enqueueTask([=, this](const std::string& threadName) {
         renderTask(threadName, m_mtlRenderPipeline);
     });
 
-    m_triggerRenderUpdateFunc();
+    if(m_triggerRenderUpdateFunc){
+        m_triggerRenderUpdateFunc();
+    }
     return retFuture;
 }
 
