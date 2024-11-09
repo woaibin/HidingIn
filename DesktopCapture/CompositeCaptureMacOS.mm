@@ -6,7 +6,6 @@
 #include "QFile"
 #ifdef __APPLE__
 #include "macos/MacOSCaptureSCKit.h"
-#include "Graphics/MetalProcessor.h"
 #include "Metal/Metal.h"
 #include <CoreGraphics/CoreGraphics.h>
 #include <ImageIO/ImageIO.h>

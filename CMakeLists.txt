@@ -26,12 +26,8 @@ set(SOURCE "" com/NotificationCenter.h main.mm
         DataModel/SnapShotImageProvider.h
         Handler/AppGeneralEventHandler.cpp
         Handler/AppGeneralEventHandler.h
-        Control/macos/RemoteInputControllerMacOS.h
-        Control/macos/RemoteInputControllerMacOS.mm
         DesktopCapture/CompositeCaptureMacOS.mm
         DesktopCapture/CompositeCapture.h
-        Graphics/MetalProcessor.mm
-        Graphics/MetalProcessor.h
         DesktopCapture/common/CaptureStuff.h
         GPUPipeline/macos/MetalPipeline.h
         GPUPipeline/macos/MetalPipeline.mm

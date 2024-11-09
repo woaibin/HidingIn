@@ -9,11 +9,6 @@
 #include "QEvent"
 #include "QMouseEvent"
 #include "QKeyEvent"
-#ifdef __APPLE__
-#include "../Control/macos/RemoteInputControllerMacOS.h"
-using RemoteInputController = RemoteInputControllerMacOS;
-#endif
-
 using AppItemDBClickHandler = std::function<void(QString appName)>;
 
 class AppGeneralEventHandler : public QObject{
