@@ -201,9 +201,19 @@ int main(int argc, char *argv[]) {
                     Message msg;
                     NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
                     auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
+
+                    // Calculate the real cursor position based on scaling
                     int realX = x * capWinInfo->scalingFactor;
                     int realY = y * capWinInfo->scalingFactor;
-                    if(capWinInfo->capturedAppX != realX || capWinInfo->capturedAppY != realY){
+
+                    // Check if the cursor is within the window bounds
+                    if (isMouseInWindowWithID(nativeWindow)) {
+                        // Call wakeUpAppByPID only if cursor is within the window bounds
+                        wakeUpAppByPID(capWinInfo->appPid);
+                    }
+
+                    // If window position has changed, stick to the app
+                    if (capWinInfo->capturedAppX != realX || capWinInfo->capturedAppY != realY) {
                         stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
                     }
                 }, Qt::QueuedConnection);
@@ -217,6 +227,13 @@ int main(int argc, char *argv[]) {
                     auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
                     int realWidth = width * capWinInfo->scalingFactor;
                     int realHeight = height * capWinInfo->scalingFactor;
+
+                    // Check if the cursor is within the window bounds
+                    if (isMouseInWindowWithID(nativeWindow)) {
+                        // Call wakeUpAppByPID only if cursor is within the window bounds
+                        wakeUpAppByPID(capWinInfo->appPid);
+                    }
+
                     if(capWinInfo->capturedAppWidth != realWidth || capWinInfo->capturedAppHeight != realHeight){
                         stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
                     }

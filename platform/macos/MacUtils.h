@@ -13,4 +13,7 @@ std::vector<int> getCurrentAppWindowIDVec();
 std::vector<int> getWindowIDsForAppByName(const std::string &appName);
 bool getWindowGeometry(int windowID, std::tuple<int, int, int, int>& rectGeometry);
 std::tuple<int, int, int, int> resizeAndMoveOverlayWindow(void* nativeWindowHandle, int targetAppWinId);
+bool isAppInForeground(int pid);
+void wakeUpAppByPID(int pid);
+bool isMouseInWindowWithID(void *viewPtr);
 #endif //HIDINGIN_MACUTILS_H

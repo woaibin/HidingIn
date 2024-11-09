@@ -143,8 +143,10 @@ void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
 
     [nsWindow setFrame:frame display:YES];
 
-    auto nsApp = findAppPidByPid(targetAppPID);
-    [nsApp activateWithOptions:NSApplicationActivateAllWindows];
+    if(!isAppInForeground(targetAppPID)){
+        auto nsApp = findAppPidByPid(targetAppPID);
+        [nsApp activateWithOptions:NSApplicationActivateAllWindows];
+    }
 
     // Step 4: Bring the overlay window to the front and make it visible
     [nsWindow makeKeyAndOrderFront:nil];
@@ -310,3 +312,38 @@ std::tuple<int, int, int, int> resizeAndMoveOverlayWindow(void* nativeWindowHand
 
     return std::make_tuple(windowRect.origin.x, windowRect.origin.y, windowRect.size.width, windowRect.size.height);
 }
+
+bool isAppInForeground(int pid) {
+    ProcessSerialNumber psn;
+    if (GetFrontProcess(&psn) == noErr) {
+        // Get the PID of the frontmost process
+        pid_t frontPid = 0;
+        if (GetProcessPID(&psn, &frontPid) == noErr) {
+            return frontPid == pid;
+        }
+    }
+    return false;
+}
+
+void wakeUpAppByPID(int pid) {
+    if(!isAppInForeground(pid)){
+        auto nsApp = findAppPidByPid(pid);
+        [nsApp activateWithOptions:NSApplicationActivateAllWindows | NSApplicationActivateIgnoringOtherApps];
+    }
+}
+
+bool isMouseInWindowWithID(void *viewPtr) {
+    // Cast the void* back to NSView*
+    NSView *view = (__bridge NSView *)viewPtr;
+
+    // Get the current mouse location in screen coordinates
+    NSPoint mouseLocation = [NSEvent mouseLocation];
+
+    // Convert the view's frame to screen coordinates
+    NSRect viewFrameInWindow = [view convertRect:view.bounds toView:nil];
+    NSRect viewFrameInScreen = [view.window convertRectToScreen:viewFrameInWindow];
+
+    // Check if the mouse location is inside the view's frame in screen coordinates
+    return NSPointInRect(mouseLocation, viewFrameInScreen);
+}
+
