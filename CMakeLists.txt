@@ -38,7 +38,9 @@ set(SOURCE "" com/NotificationCenter.h main.mm
         com/EventListener.h
         GPUPipeline/PipelineInOut.h
         RenderWidget/QCustomRenderNode.h
-        RenderWidget/QCustomRenderNode.mm)
+        RenderWidget/QCustomRenderNode.mm
+        Handler/AppWindowListener.h
+        Handler/AppWindowListener.mm)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)

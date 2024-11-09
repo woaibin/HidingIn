@@ -7,6 +7,7 @@
 #import <ApplicationServices/ApplicationServices.h>
 #import "MacUtils.h"
 #include <iostream>
+#include "../com/NotificationCenter.h"
 float getScalingFactor() {
     NSScreen *mainScreen = [NSScreen mainScreen];
     // Get the screen's backing scale factor (retina or non-retina)
@@ -130,6 +131,15 @@ void stickToApp(int targetAppWinId, int targetAppPID, void *overlayWindow) {
         CGFloat screenHeight = [mainScreen frame].size.height;
         frame.origin.y = screenHeight - windowRect.origin.y - windowRect.size.height;
     }
+
+    // update capture app info:
+    Message msg;
+    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
+    capWinInfo->capturedAppX = windowRect.origin.x * capWinInfo->scalingFactor;
+    capWinInfo->capturedAppY = windowRect.origin.y* capWinInfo->scalingFactor;
+    capWinInfo->capturedAppWidth = windowRect.size.width* capWinInfo->scalingFactor;
+    capWinInfo->capturedAppHeight = windowRect.size.height* capWinInfo->scalingFactor;
 
     [nsWindow setFrame:frame display:YES];
 

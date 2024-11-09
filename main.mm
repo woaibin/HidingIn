@@ -13,6 +13,7 @@
 #include "com/NotificationCenter.h"
 #include "Handler/AppGeneralEventHandler.h"
 #include "DesktopCapture/CompositeCapture.h"
+#include "Handler/AppWindowListener.h"
 
 // Function to make all windows ignore mouse input
 void ignoreMouseInputForAllWindows() {
@@ -154,11 +155,12 @@ int main(int argc, char *argv[]) {
     }
 
     // find out all app items:
+    std::shared_ptr<AppWindowListener> appWinListener = nullptr;
     auto appItem = rootObject->findChild<QObject*>("appItems");
     if (appItem) {
         QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
-        handler.setOnAppItemDBClickHandlerFunc([&](QString appName){
+        handler.setOnAppItemDBClickHandlerFunc([&, appWinListener](QString appName) mutable{
             auto currentWindow = getCurrentWindow();
             void *nativeWindow = (void*)currentWindow->winId();
             auto& appModel = windowModel.getWindowModelByAppName(appName.toStdString());
@@ -185,9 +187,45 @@ int main(int argc, char *argv[]) {
             captureAppArgs.captureEventName = appName.toStdString() + "Capture";
             captureAppArgs.includingWindowIDs.push_back(appWindowId);
             compositeCapture.addCaptureByApplicationName(appName.toStdString(), captureAppArgs);
+
 #ifdef __APPLE__
             stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);
 #endif
+
+            appWinListener = std::make_shared<AppWindowListener>(windowInfo->appPid, appWindowId);
+            // Set the callbacks
+            appWinListener->setOnWindowMovedCallback([nativeWindow](float x, float y) {
+                std::cout << "Window moved to: (" << x << ", " << y << ")" << std::endl;
+                QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, x, y]() {
+                    // Execute some UI-related code here
+                    Message msg;
+                    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+                    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
+                    int realX = x * capWinInfo->scalingFactor;
+                    int realY = y * capWinInfo->scalingFactor;
+                    if(capWinInfo->capturedAppX != realX || capWinInfo->capturedAppY != realY){
+                        stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
+                    }
+                }, Qt::QueuedConnection);
+            });
+
+            appWinListener->setOnWindowResizedCallback([nativeWindow](float width, float height) {
+                std::cout << "Window resized to: (" << width << ", " << height << ")" << std::endl;
+                QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, width, height]() {
+                    Message msg;
+                    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+                    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
+                    int realWidth = width * capWinInfo->scalingFactor;
+                    int realHeight = height * capWinInfo->scalingFactor;
+                    if(capWinInfo->capturedAppWidth != realWidth || capWinInfo->capturedAppHeight != realHeight){
+                        stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
+                    }
+                }, Qt::QueuedConnection);
+
+            });
+
+            // Start monitoring (AX API or CGWindow API)
+            appWinListener->startCGWindowMonitoring();
         });
 
     } else {
