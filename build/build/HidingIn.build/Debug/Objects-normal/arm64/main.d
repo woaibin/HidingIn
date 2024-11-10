@@ -15,6 +15,6 @@ dependencies: /Users/binxiaokang/Desktop/HidingIn/main.mm \
   /Users/binxiaokang/Desktop/HidingIn/platform/macos/MacUtils.h \
   /Users/binxiaokang/Desktop/HidingIn/com/NotificationCenter.h \
   /Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.h \
-  /Users/binxiaokang/Desktop/HidingIn/Handler/../Control/macos/RemoteInputControllerMacOS.h \
   /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/CompositeCapture.h \
-  /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h
+  /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h \
+  /Users/binxiaokang/Desktop/HidingIn/Handler/AppWindowListener.h

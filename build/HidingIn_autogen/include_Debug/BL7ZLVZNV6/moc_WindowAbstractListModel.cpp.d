@@ -631,6 +631,7 @@
   /Users/binxiaokang/QT6/6.8.0/macos/include/QtQmlIntegration/qqmlintegration.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QAbstractListModel \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QList \
+  /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QRegularExpression \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QString \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/q20functional.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/q20iterator.h \
@@ -708,6 +709,7 @@
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qprocessordetection.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qrect.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qrefcount.h \
+  /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qregularexpression.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qscopedpointer.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qscopeguard.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/qset.h \

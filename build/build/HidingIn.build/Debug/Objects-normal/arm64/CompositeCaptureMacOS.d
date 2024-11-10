@@ -4,7 +4,6 @@ dependencies: \
   /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/common/CaptureStuff.h \
   /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/MacOSCaptureSCKit.h \
   /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/macos/../common/CaptureStuff.h \
-  /Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.h \
   /Users/binxiaokang/Desktop/HidingIn/com/NotificationCenter.h \
   /Users/binxiaokang/Desktop/HidingIn/com/EventListener.h \
   /Users/binxiaokang/Desktop/HidingIn/DesktopCapture/../GPUPipeline/macos/MetalPipeline.h \

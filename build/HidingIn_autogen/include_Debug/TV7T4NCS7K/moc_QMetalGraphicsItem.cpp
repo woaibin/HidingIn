@@ -36,11 +36,8 @@ namespace {
 struct qt_meta_stringdata_CLASSQMetalGraphicsItemENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSQMetalGraphicsItemENDCLASS = QtMocHelpers::stringData(
     "QMetalGraphicsItem",
-    "QML.Element",
-    "auto",
     "triggerRender",
     "",
-    "tChanged",
     "sync",
     "cleanup",
     "handleWindowChanged",
@@ -50,9 +47,7 @@ constexpr auto qt_meta_stringdata_CLASSQMetalGraphicsItemENDCLASS = QtMocHelpers
     "setIdName",
     "std::string",
     "name",
-    "onBeforeRenderPassRecording",
-    "afterRenderingDone",
-    "t"
+    "afterRenderingDone"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -64,45 +59,35 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSQMetalGraphicsItemENDCLASS[] = {
  // content:
       12,       // revision
        0,       // classname
-       1,   14, // classinfo
-       9,   16, // methods
-       1,   83, // properties
+       0,    0, // classinfo
+       7,   14, // methods
+       0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       2,       // signalCount
-
- // classinfo: key, value
-       1,    2,
+       1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       3,    0,   70,    4, 0x06,    2 /* Public */,
-       5,    0,   71,    4, 0x06,    3 /* Public */,
+       1,    0,   56,    2, 0x06,    1 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       6,    0,   72,    4, 0x0a,    4 /* Public */,
-       7,    0,   73,    4, 0x0a,    5 /* Public */,
-       8,    1,   74,    4, 0x0a,    6 /* Public */,
-      11,    0,   77,    4, 0x0a,    8 /* Public */,
-      12,    1,   78,    4, 0x0a,    9 /* Public */,
-      15,    0,   81,    4, 0x0a,   11 /* Public */,
-      16,    0,   82,    4, 0x0a,   12 /* Public */,
+       3,    0,   57,    2, 0x0a,    2 /* Public */,
+       4,    0,   58,    2, 0x0a,    3 /* Public */,
+       5,    1,   59,    2, 0x0a,    4 /* Public */,
+       8,    0,   62,    2, 0x0a,    6 /* Public */,
+       9,    1,   63,    2, 0x0a,    7 /* Public */,
+      12,    0,   66,    2, 0x0a,    9 /* Public */,
 
  // signals: parameters
-    QMetaType::Void,
     QMetaType::Void,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 9,   10,
+    QMetaType::Void, 0x80000000 | 6,    7,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 13,   14,
+    QMetaType::Void, 0x80000000 | 10,   11,
     QMetaType::Void,
-    QMetaType::Void,
-
- // properties: name, type, flags, notifyId, revision
-      17, QMetaType::QReal, 0x00015103, uint(1), 0,
 
        0        // eod
 };
@@ -113,31 +98,25 @@ Q_CONSTINIT const QMetaObject QMetalGraphicsItem::staticMetaObject = { {
     qt_meta_data_CLASSQMetalGraphicsItemENDCLASS,
     qt_static_metacall,
     nullptr,
-    qt_metaTypeArray<
-        // property 't'
-        qreal,
+    qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSQMetalGraphicsItemENDCLASS_t,
         // Q_OBJECT / Q_GADGET
-        QMetalGraphicsItem,
+        QtPrivate::TypeAndForceComplete<QMetalGraphicsItem, std::true_type>,
         // method 'triggerRender'
-        void,
-        // method 'tChanged'
-        void,
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'sync'
-        void,
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'cleanup'
-        void,
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'handleWindowChanged'
-        void,
-        QQuickWindow *,
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QQuickWindow *, std::false_type>,
         // method 'onBeforeRendering'
-        void,
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'setIdName'
-        void,
-        std::string,
-        // method 'onBeforeRenderPassRecording'
-        void,
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<std::string, std::false_type>,
         // method 'afterRenderingDone'
-        void
+        QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
 } };
@@ -149,20 +128,18 @@ void QMetalGraphicsItem::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         (void)_t;
         switch (_id) {
         case 0: _t->triggerRender(); break;
-        case 1: _t->tChanged(); break;
-        case 2: _t->sync(); break;
-        case 3: _t->cleanup(); break;
-        case 4: _t->handleWindowChanged((*reinterpret_cast< std::add_pointer_t<QQuickWindow*>>(_a[1]))); break;
-        case 5: _t->onBeforeRendering(); break;
-        case 6: _t->setIdName((*reinterpret_cast< std::add_pointer_t<std::string>>(_a[1]))); break;
-        case 7: _t->onBeforeRenderPassRecording(); break;
-        case 8: _t->afterRenderingDone(); break;
+        case 1: _t->sync(); break;
+        case 2: _t->cleanup(); break;
+        case 3: _t->handleWindowChanged((*reinterpret_cast< std::add_pointer_t<QQuickWindow*>>(_a[1]))); break;
+        case 4: _t->onBeforeRendering(); break;
+        case 5: _t->setIdName((*reinterpret_cast< std::add_pointer_t<std::string>>(_a[1]))); break;
+        case 6: _t->afterRenderingDone(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-        case 4:
+        case 3:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 0:
@@ -179,31 +156,6 @@ void QMetalGraphicsItem::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
                 return;
             }
         }
-        {
-            using _t = void (QMetalGraphicsItem::*)();
-            if (_t _q_method = &QMetalGraphicsItem::tChanged; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
-                *result = 1;
-                return;
-            }
-        }
-    } else if (_c == QMetaObject::ReadProperty) {
-        auto *_t = static_cast<QMetalGraphicsItem *>(_o);
-        (void)_t;
-        void *_v = _a[0];
-        switch (_id) {
-        case 0: *reinterpret_cast< qreal*>(_v) = _t->t(); break;
-        default: break;
-        }
-    } else if (_c == QMetaObject::WriteProperty) {
-        auto *_t = static_cast<QMetalGraphicsItem *>(_o);
-        (void)_t;
-        void *_v = _a[0];
-        switch (_id) {
-        case 0: _t->setT(*reinterpret_cast< qreal*>(_v)); break;
-        default: break;
-        }
-    } else if (_c == QMetaObject::ResetProperty) {
-    } else if (_c == QMetaObject::BindableProperty) {
     }
 }
 
@@ -226,18 +178,13 @@ int QMetalGraphicsItem::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
-    }else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
-            || _c == QMetaObject::ResetProperty || _c == QMetaObject::BindableProperty
-            || _c == QMetaObject::RegisterPropertyMetaType) {
-        qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 7;
     }
     return _id;
 }
@@ -246,11 +193,5 @@ int QMetalGraphicsItem::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 void QMetalGraphicsItem::triggerRender()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
-}
-
-// SIGNAL 1
-void QMetalGraphicsItem::tChanged()
-{
-    QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
 }
 QT_WARNING_POP

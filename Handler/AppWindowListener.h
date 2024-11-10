@@ -22,7 +22,7 @@ public:
     void startAXMonitoring();
 
     // Start polling window position and size changes via CGWindow API
-    void startCGWindowMonitoring(double pollIntervalSeconds = 0.1);
+    void startCGWindowMonitoring(double pollIntervalSeconds = 1.0);
 
     // Stop monitoring (for both AX and CGWindow monitoring)
     void stopMonitoring();

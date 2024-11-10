@@ -118,6 +118,7 @@ TextureResource &MtlTextureManager::requestTexture(std::string findId, int width
                                                                                                      width:width
                                                                                                     height:height
                                                                                                  mipmapped:NO];
+        textureDescriptor.usage = MTLTextureUsageShaderWrite | MTLTextureUsageShaderRead;
         return [mtlDeviceOC newTextureWithDescriptor:textureDescriptor];
     };
 
@@ -152,6 +153,7 @@ MtlTextureManager::requestTextureQueue(std::string findId, int width, int height
                                                                                                      width:width
                                                                                                     height:height
                                                                                                  mipmapped:NO];
+        textureDescriptor.usage = MTLTextureUsageShaderWrite | MTLTextureUsageShaderRead;
         return [mtlDeviceOC newTextureWithDescriptor:textureDescriptor];
     };
 

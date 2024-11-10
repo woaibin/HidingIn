@@ -626,7 +626,6 @@
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/qos.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/time.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.3/include/stdarg.h \
-  /Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.h \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QDebug \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QEvent \
   /Users/binxiaokang/QT6/6.8.0/macos/lib/QtCore.framework/Versions/A/Headers/QList \

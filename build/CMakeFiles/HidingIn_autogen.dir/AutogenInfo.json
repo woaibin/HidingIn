@@ -752,12 +752,6 @@
 	"HEADERS" : 
 	[
 		[
-			"/Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.h",
-			"MU",
-			"3TSUWL743K/moc_RemoteInputControllerMacOS.cpp",
-			null
-		],
-		[
 			"/Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.h",
 			"MU",
 			"BL7ZLVZNV6/moc_SnapShotImageProvider.cpp",
@@ -830,15 +824,15 @@
 			null
 		],
 		[
-			"/Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.h",
-			"MU",
-			"RL6Q3XWYR2/moc_MetalProcessor.cpp",
-			null
-		],
-		[
 			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.h",
 			"MU",
 			"U3NMWMSOQ2/moc_AppGeneralEventHandler.cpp",
+			null
+		],
+		[
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppWindowListener.h",
+			"MU",
+			"U3NMWMSOQ2/moc_AppWindowListener.cpp",
 			null
 		],
 		[
@@ -1187,11 +1181,6 @@
 	"SOURCES" : 
 	[
 		[
-			"/Users/binxiaokang/Desktop/HidingIn/Control/macos/RemoteInputControllerMacOS.mm",
-			"MU",
-			null
-		],
-		[
 			"/Users/binxiaokang/Desktop/HidingIn/DataModel/SnapShotImageProvider.cpp",
 			"MU",
 			null
@@ -1232,12 +1221,12 @@
 			null
 		],
 		[
-			"/Users/binxiaokang/Desktop/HidingIn/Graphics/MetalProcessor.mm",
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp",
 			"MU",
 			null
 		],
 		[
-			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppGeneralEventHandler.cpp",
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppWindowListener.mm",
 			"MU",
 			null
 		],
