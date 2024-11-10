@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     WindowAbstractListModel windowModel;
     auto& imgProvider = windowModel.getImgProvider();
     engine.addImageProvider("appsnapshotprovider", &imgProvider);
-    windowModel.enum10Apps();
+    windowModel.enumAllApps();
 
     // Expose the model to QML
     engine.rootContext()->setContextProperty("windowListModel", &windowModel);

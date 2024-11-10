@@ -6,13 +6,10 @@
 #import <AppKit/AppKit.h>
 #import <ApplicationServices/ApplicationServices.h>
 #include <DesktopCapture/macos/MacOSAppSnapShot.h>
-void WindowAbstractListModel::enum10Apps() {
+void WindowAbstractListModel::enumAllApps() {
     NSArray *runningApps = [[NSWorkspace sharedWorkspace] runningApplications];
 
     for (NSRunningApplication *app in runningApps) {
-        if(m_windows.count() == 10){
-            break;
-        }
         auto appName = std::string([app.localizedName UTF8String]);
         int retWinId;
         auto snapShot = getSnapShotFromApp(appName, &retWinId);
@@ -23,6 +20,14 @@ void WindowAbstractListModel::enum10Apps() {
         auto constructImgUrl = QString("image://appsnapshotprovider/") + QString::fromStdString(appName);
         WindowModel model(QString::number((retWinId)),
                           QString::fromUtf8([app.localizedName UTF8String]),constructImgUrl, QString::number((app.processIdentifier)));
-        m_windows.push_back(model);
+        m_windowsFull.push_back(model);
+    }
+
+    // Copy up to the top 10 windows from m_windowsFull to m_windowsForShow
+    m_windowsForShow.clear();  // Clear the list before copying
+    int windowCount = std::min((float)10, (float)m_windowsFull.size());
+
+    for (int i = 0; i < windowCount; ++i) {
+        m_windowsForShow.push_back(m_windowsFull[i]);
     }
 }

@@ -29,6 +29,7 @@ Item {
                     Layout.fillWidth: true
                     onTextChanged: {
                         appListComponent.searchText = text
+                        windowListModel.searchApp(text)
                     }
                 }
             }
