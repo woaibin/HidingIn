@@ -18,12 +18,12 @@ Item {
         objectName: "appCapture"
     }
 
-    Button {
-        text: "Go Back to First Page"
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: {
-            stackView.pop()  // Go back to the previous page
-        }
-    }
+    // Button {
+    //     text: "Go Back to First Page"
+    //     anchors.bottom: parent.bottom
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    //     onClicked: {
+    //         stackView.pop()  // Go back to the previous page
+    //     }
+    // }
 }

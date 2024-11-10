@@ -43,12 +43,12 @@ Item {
         }
     }
 
-    Button {
-        text: "Go to Second Page"
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: {
-            stackView.push(capturedAppLoader)
-        }
-    }
+    // Button {
+    //     text: "Go to Second Page"
+    //     anchors.bottom: parent.bottom
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    //     onClicked: {
+    //         stackView.push(capturedAppLoader)
+    //     }
+    // }
 }

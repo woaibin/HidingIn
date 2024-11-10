@@ -45,7 +45,6 @@ QImage CGImageToQImage(CGImageRef imageRef) {
     return finalImage;
 }
 
-// Helper function to find the window ID for the app name
 CGWindowID findWindowIDForApp(const std::string& appName) {
     // Convert std::string to NSString
     NSString *nsAppName = [NSString stringWithUTF8String:appName.c_str()];
@@ -58,6 +57,18 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
 
         // Compare the window owner name with the app name
         if ([windowOwnerName isEqualToString:nsAppName]) {
+            // Get the window's bounds (position and size)
+            NSDictionary *boundsDict = windowInfo[(NSString *)kCGWindowBounds];
+            CGRect windowBounds;
+            CGRectMakeWithDictionaryRepresentation((CFDictionaryRef)boundsDict, &windowBounds);
+
+            // Filter out windows that start at (0, 0) and have width or height less than 50
+            if (windowBounds.origin.x == 0 || windowBounds.origin.y == 0 ||
+                (windowBounds.size.width < 50 || windowBounds.size.height < 50)) {
+                continue; // Skip this window
+            }
+
+            // If the window passes the filter, return its ID
             NSNumber *windowID = windowInfo[(NSString *)kCGWindowNumber];
             CFRelease(windowList);
             return [windowID unsignedIntValue];
@@ -68,7 +79,6 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
     CFRelease(windowList);
     return kCGNullWindowID;
 }
-
 // Main function to get a snapshot from the app by name
 extern QImage getSnapShotFromApp(std::string appName, int *retWinId) {
     // Find the window ID of the target application
