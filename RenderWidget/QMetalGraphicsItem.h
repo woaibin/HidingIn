@@ -9,6 +9,7 @@
 #include <QPainter>
 #include "QCustomRenderNode.h"
 #include "../GPUPipeline/macos/MetalPipeline.h"
+#include "QCustomRenderNode.h"
 // Declare the QMetalGraphicsItem class
 class QMetalGraphicsItem : public QQuickItem
 {
@@ -17,6 +18,12 @@ Q_OBJECT
 public:
     // Constructor
     QMetalGraphicsItem();
+
+    void doNotUpdate(){
+        dontUpdate = true;
+    }
+
+    void enableUpdate();
 
 signals:
     void triggerRender();  // Signal to trigger rendering in the main thread
@@ -47,6 +54,8 @@ private:
     int lastWidth = -1;
     int lastHeight = -1;
     QSGTexture* lastRenderTargetTexture = nullptr;
+    bool dontUpdate = false;
+    QCustomRenderNode* m_customRenderNode = nullptr;
 };
 
 #endif // QMETALGRAPHICSITEM_H

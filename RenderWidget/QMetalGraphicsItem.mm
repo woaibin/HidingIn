@@ -121,7 +121,7 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
     QCustomRenderNode* node = static_cast<QCustomRenderNode*>(oldNode);
     if (!node) {
         node = new QCustomRenderNode(this);
-
+        m_customRenderNode = node;
     }
 
     node->setTextureCoordinatesTransform(QSGSimpleTextureNode::NoTransform);
@@ -153,12 +153,22 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
         MetalPipeline::getGlobalInstance().setRenderTarget(texture);
         node->setTexture(wrapper);
     }else{
+//        if(!node->texture()){
+//            auto mtlTexture = (id<MTLTexture>)metalPipeline.renderTarget;
+//            QSGTexture *wrapper = QNativeInterface::QSGMetalTexture::fromNative(
+//                    mtlTexture, window(), QSize(mtlTexture.width, mtlTexture.height));
+//            node->setTexture(wrapper);
+//        }
         auto mtlTexture = (id<MTLTexture>)metalPipeline.renderTarget;
         QSGTexture *wrapper = QNativeInterface::QSGMetalTexture::fromNative(
                 mtlTexture, window(), QSize(mtlTexture.width, mtlTexture.height));
         node->setTexture(wrapper);
+        window()->update();
     }
-
     window()->update();
     return node;
+}
+
+void QMetalGraphicsItem::enableUpdate() {
+    dontUpdate = false;
 }

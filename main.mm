@@ -194,52 +194,52 @@ int main(int argc, char *argv[]) {
 
             appWinListener = std::make_shared<AppWindowListener>(windowInfo->appPid, appWindowId);
             // Set the callbacks
-//            appWinListener->setOnWindowMovedCallback([nativeWindow](float x, float y) {
-//                std::cout << "Window moved to: (" << x << ", " << y << ")" << std::endl;
-//                QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, x, y]() {
-//                    // Execute some UI-related code here
-//                    Message msg;
-//                    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
-//                    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
-//
-//                    // Calculate the real cursor position based on scaling
-//                    int realX = x * capWinInfo->scalingFactor;
-//                    int realY = y * capWinInfo->scalingFactor;
-//
-//                    // Check if the cursor is within the window bounds
-//                    if (isMouseInWindowWithID(nativeWindow)) {
-//                        // Call wakeUpAppByPID only if cursor is within the window bounds
-//                        wakeUpAppByPID(capWinInfo->appPid);
-//                    }
-//
-//                    // If window position has changed, stick to the app
-//                    if (capWinInfo->capturedAppX != realX || capWinInfo->capturedAppY != realY) {
-//                        stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
-//                    }
-//                }, Qt::QueuedConnection);
-//            });
-//
-//            appWinListener->setOnWindowResizedCallback([nativeWindow](float width, float height) {
-//                std::cout << "Window resized to: (" << width << ", " << height << ")" << std::endl;
-//                QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, width, height]() {
-//                    Message msg;
-//                    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
-//                    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
-//                    int realWidth = width * capWinInfo->scalingFactor;
-//                    int realHeight = height * capWinInfo->scalingFactor;
-//
-//                    // Check if the cursor is within the window bounds
-//                    if (isMouseInWindowWithID(nativeWindow)) {
-//                        // Call wakeUpAppByPID only if cursor is within the window bounds
-//                        wakeUpAppByPID(capWinInfo->appPid);
-//                    }
-//
-//                    if(capWinInfo->capturedAppWidth != realWidth || capWinInfo->capturedAppHeight != realHeight){
-//                        stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
-//                    }
-//                }, Qt::QueuedConnection);
-//
-//            });
+            appWinListener->setOnWindowMovedCallback([nativeWindow](float x, float y) {
+                std::cout << "Window moved to: (" << x << ", " << y << ")" << std::endl;
+                QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, x, y]() {
+                    // Execute some UI-related code here
+                    Message msg;
+                    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+                    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
+
+                    // Calculate the real cursor position based on scaling
+                    int realX = x * capWinInfo->scalingFactor;
+                    int realY = y * capWinInfo->scalingFactor;
+
+                    // Check if the cursor is within the window bounds
+                    if (isMouseInWindowWithID(nativeWindow)) {
+                        // Call wakeUpAppByPID only if cursor is within the window bounds
+                        wakeUpAppByPID(capWinInfo->appPid);
+                    }
+
+                    // If window position has changed, stick to the app
+                    if (capWinInfo->capturedAppX != realX || capWinInfo->capturedAppY != realY) {
+                        stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
+                    }
+                }, Qt::QueuedConnection);
+            });
+
+            appWinListener->setOnWindowResizedCallback([nativeWindow](float width, float height) {
+                std::cout << "Window resized to: (" << width << ", " << height << ")" << std::endl;
+                QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, width, height]() {
+                    Message msg;
+                    NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
+                    auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
+                    int realWidth = width * capWinInfo->scalingFactor;
+                    int realHeight = height * capWinInfo->scalingFactor;
+
+                    // Check if the cursor is within the window bounds
+                    if (isMouseInWindowWithID(nativeWindow)) {
+                        // Call wakeUpAppByPID only if cursor is within the window bounds
+                        wakeUpAppByPID(capWinInfo->appPid);
+                    }
+
+                    if(capWinInfo->capturedAppWidth != realWidth || capWinInfo->capturedAppHeight != realHeight){
+                        stickToApp(capWinInfo->capturedWinId, capWinInfo->appPid, nativeWindow);
+                    }
+                }, Qt::QueuedConnection);
+
+            });
 
             // Start monitoring (AX API or CGWindow API)
             appWinListener->startCGWindowMonitoring();

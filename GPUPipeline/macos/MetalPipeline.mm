@@ -32,9 +32,6 @@ std::future<void> MetalPipeline::sendJobToRenderQueue(const GpuRenderTask& rende
         renderTask(threadName, m_mtlRenderPipeline);
     });
 
-    if(m_triggerRenderUpdateFunc){
-        m_triggerRenderUpdateFunc();
-    }
     return retFuture;
 }
 
