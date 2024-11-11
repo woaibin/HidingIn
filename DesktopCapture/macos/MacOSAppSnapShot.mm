@@ -54,9 +54,8 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
 
     for (NSDictionary *windowInfo in (NSArray *)windowList) {
         NSString *windowOwnerName = windowInfo[(NSString *)kCGWindowOwnerName];
-
         // Compare the window owner name with the app name
-        if ([windowOwnerName isEqualToString:nsAppName]) {
+        if ([windowOwnerName containsString:nsAppName]) {
             // Get the window's bounds (position and size)
             NSDictionary *boundsDict = windowInfo[(NSString *)kCGWindowBounds];
             CGRect windowBounds;
