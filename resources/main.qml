@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 250
     y: 250
     title: "HidingIn"
-    flags: Qt.FramelessWindowHint |Qt.WindowStaysOnTopHint
+    flags: Qt.FramelessWindowHint |Qt.WindowStaysOnTopHint | Qt.WA_TranslucentBackground | Qt.NoDropShadowWindowHint
     StackView {
         id: stackView
         anchors.fill: parent

@@ -16,4 +16,5 @@ std::tuple<int, int, int, int> resizeAndMoveOverlayWindow(void* nativeWindowHand
 bool isAppInForeground(int pid);
 void wakeUpAppByPID(int pid);
 bool isMouseInWindowWithID(void *viewPtr);
+void disableShadow(void* winId);
 #endif //HIDINGIN_MACUTILS_H

@@ -347,3 +347,12 @@ bool isMouseInWindowWithID(void *viewPtr) {
     return NSPointInRect(mouseLocation, viewFrameInScreen);
 }
 
+void disableShadow(void *winId) {
+    auto nsView = (NSView*) winId;
+
+    NSWindow *window = [nsView window];
+
+    // Disable shadow for the window
+    [window setHasShadow:NO];
+}
+
