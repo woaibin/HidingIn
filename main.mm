@@ -157,6 +157,7 @@ int main(int argc, char *argv[]) {
 
     // find out all app items:
     std::shared_ptr<AppWindowListener> appWinListener = nullptr;
+    QTimer timer;  // Create a QTimer object
     auto appItem = rootObject->findChild<QObject*>("appItems");
     if (appItem) {
         QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
@@ -244,6 +245,18 @@ int main(int argc, char *argv[]) {
 
             // Start monitoring (AX API or CGWindow API)
             appWinListener->startCGWindowMonitoring();
+
+            QObject::connect(&timer, &QTimer::timeout, [&compositeCapture, &app]() {
+                auto capDevMsg = NotificationCenter::getInstance().receiveMessage(MessageType::Device);
+                if(capDevMsg.has_value() && capDevMsg->msgType == MessageType::Device && capDevMsg->whatHappen == "CaptureDeviceInactive"){
+                    qDebug() << "cap device inactive, will quit";
+                    compositeCapture.stopAllCaptures();
+                    compositeCapture.cleanUp();
+                    app.quit();
+                }
+            });
+
+            timer.start(1500);  // Set the interval to 1000 ms (1 second)
         });
 
     } else {

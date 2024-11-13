@@ -61,11 +61,14 @@ static void savePNG(CVImageBufferRef imageBuffer){
 @property (nonatomic, assign) CVMetalTextureRef metalTextureRef;
 @property (atomic) bool stopCapturing;
 @property bool isDesktopCap;
+@property (atomic) bool alreadyEnd;
 @property std::string captureEventName;
 
 - (void)stream:(SCStream *)stream
 didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
         ofType:(SCStreamOutputType)type;
+- (void)streamDidBecomeInactive:(SCStream *)stream;
+- (void)stream:(SCStream *)stream didStopWithError:(NSError *)error;
 @end
 
 @implementation SCFrameReceiver
@@ -78,8 +81,19 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     eventRegisterParam.type = EventType::General;
     eventRegisterParam.eventName = _captureEventName;
     EventManager::getInstance()->registerEvent(eventRegisterParam);
+    _alreadyEnd = false;
 
     return self;
+}
+
+- (void)stream:(SCStream *)stream
+didStopWithError:(NSError *)error{
+    Message message;
+    message.msgType = MessageType::Device;
+    message.whatHappen = "CaptureDeviceInactive";
+    std::cerr << "send inactive msg" << std::endl;
+    NotificationCenter::getInstance().pushMessage(message);
+    _alreadyEnd = true;
 }
 
 - (void)stream:(SCStream *)stream didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer ofType:(SCStreamOutputType)type {
@@ -304,6 +318,9 @@ public:
 
     void stopCapture() {
         // Create a dispatch semaphore to wait for the completion handler
+        if([frameReceiver alreadyEnd]){
+            return;
+        }
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
         [stream stopCaptureWithCompletionHandler:^( NSError *error){
             if(error){

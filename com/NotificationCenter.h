@@ -68,18 +68,22 @@ public:
             persistentMessages[msg.msgType] = msg;
         } else {
             // Add the message to the regular queue
-            messageQueue.push(msg);
+            messageQueue[msg.msgType].push(msg);
         }
         cv.notify_one();  // Notify a waiting thread that a new message has arrived
     }
 
     // Receive message from the notification center (blocking)
-    Message receiveMessage() {
+    // to-do separate different types:
+    std::optional<Message> receiveMessage(MessageType msgType) {
         std::unique_lock<std::mutex> lock(mutex_);
-        cv.wait(lock, [this] { return !messageQueue.empty(); });  // Wait until there is a message
-        Message msg = messageQueue.front();
-        messageQueue.pop();
-        return msg;
+        if(!messageQueue[msgType].empty()){
+            Message msg = messageQueue[msgType].front();
+            messageQueue[msgType].pop();
+            return msg;
+        }else{
+            return std::nullopt;
+        }
     }
 
     // Retrieve a persistent message by type
@@ -107,7 +111,7 @@ private:
     NotificationCenter(const NotificationCenter&) = delete;
     NotificationCenter& operator=(const NotificationCenter&) = delete;
 
-    std::queue<Message> messageQueue;  // Queue for storing regular messages
+    std::unordered_map<MessageType, std::queue<Message>> messageQueue;  // Queue for storing regular messages
     std::unordered_map<MessageType, Message> persistentMessages;  // Map for storing persistent messages
     std::mutex mutex_;                 // Mutex to protect the queue and the persistent message map
     std::condition_variable cv;        // Condition variable to block the receiver thread if the queue is empty

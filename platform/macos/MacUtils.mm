@@ -8,6 +8,14 @@
 #import "MacUtils.h"
 #include <iostream>
 #include "../com/NotificationCenter.h"
+#include <IOKit/IOMessage.h>
+#include <IOKit/IOCFPlugIn.h>
+#include <IOKit/IOKitLib.h>
+#include <IOKit/pwr_mgt/IOPMLibDefs.h>
+#include <IOKit/pwr_mgt/IOPMLib.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <functional>
+#include <iostream>
 float getScalingFactor() {
     NSScreen *mainScreen = [NSScreen mainScreen];
     // Get the screen's backing scale factor (retina or non-retina)
@@ -356,3 +364,35 @@ void disableShadow(void *winId) {
     [window setHasShadow:NO];
 }
 
+
+static io_connect_t rootPort;  // Global root port for power notifications
+
+void displaySleepCallback(void *refCon, io_service_t service, natural_t messageType, void *messageArgument) {
+    // Cast the user data (refCon) to a lambda function pointer
+    auto callback = static_cast<std::function<void(bool)>*>(refCon);
+
+    switch (messageType) {
+        case kIOMessageSystemWillSleep:
+            std::cout << "System will sleep" << std::endl;
+            (*callback)(true);  // Call the lambda with true, indicating sleep
+            break;
+        case kIOMessageSystemHasPoweredOn:
+            std::cout << "System has powered on (woke up)" << std::endl;
+            (*callback)(false);  // Call the lambda with false, indicating wake
+            break;
+        default:
+            break;
+    }
+}
+
+//void detectScreenSleep(std::function<void(bool)> callback) {
+//    // Register for system power notifications
+//    rootPort = IORegisterForSystemPower(&callback, &kCFRunLoopDefaultMode, displaySleepCallback, nullptr);
+//    if (rootPort == 0) {
+//        std::cerr << "Failed to register for system power notifications" << std::endl;
+//        return;
+//    }
+//
+//    // Run the main run loop to process power events
+//    CFRunLoopRun();
+//}
