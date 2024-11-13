@@ -65,6 +65,8 @@ public:
     MtlComputePipeline& getComputePipeline();
     MtlBlitPipeline& getBlitPipeline();
 
+    void cleanUp();
+
     void* throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures);
     void throughComputePipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures, void* resultTexture);
     void throughBlitPipelineState(void* inputTexture, void* outputTexture); // resource copy method

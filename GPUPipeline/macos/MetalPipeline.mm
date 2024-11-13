@@ -305,3 +305,9 @@ void MetalPipeline::registerInitDoneHandler(std::function<void()> initDoneFunc) 
         initDoneFunc();
     });
 }
+
+void MetalPipeline::cleanUp() {
+    m_renderingPipelineTasks.reset();
+    m_computePipelineTasks.reset();
+    m_blitPipelineTasks.reset();
+}

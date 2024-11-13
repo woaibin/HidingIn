@@ -36,6 +36,8 @@ public:
     CompositeCapture(std::optional<CompositeCaptureArgs> compCapArgs = std::nullopt);  // Constructor
     ~CompositeCapture(); // Destructor
 
+    void cleanUp();
+
     // Add a screen capture by application name
     bool addCaptureByApplicationName(const std::string &applicationName, std::optional<CaptureArgs> args = std::nullopt);
 

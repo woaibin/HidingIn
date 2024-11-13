@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
 project(HidingIn CXX OBJC OBJCXX)
-
+include(localProperties.cmake)
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
@@ -16,6 +16,13 @@ qt_add_resources(QT_RESOURCES resources/resources.qrc)
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 include_directories(${CMAKE_CURRENT_LIST_DIR}/3rdParty)
+
+if(${ENABLE_ASAN})
+    message("enabling asan")
+    add_compile_options(-fsanitize=address)
+    add_compile_options(-fno-omit-frame-pointer)
+    add_link_options   (-fsanitize=address)
+endif()
 
 # Check if the compiler supports ARC and enable it
 set(SOURCE "" com/NotificationCenter.h main.mm

@@ -80,8 +80,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // Set up the QML engine
-    QQmlApplicationEngine engine;
-
+    auto* engine = new QQmlApplicationEngine();
     AppGeneralEventHandler handler;  // Create an instance of the handler
 
     // Register QMetalGraphicsItem with QML under the module name "CustomItems"
@@ -91,20 +90,22 @@ int main(int argc, char *argv[]) {
     // Create the model and add data to it
     WindowAbstractListModel windowModel;
     auto& imgProvider = windowModel.getImgProvider();
-    engine.addImageProvider("appsnapshotprovider", &imgProvider);
+    engine->addImageProvider("appsnapshotprovider", &imgProvider);
     windowModel.enumAllApps();
 
     // Expose the model to QML
-    engine.rootContext()->setContextProperty("windowListModel", &windowModel);
+    engine->rootContext()->setContextProperty("windowListModel", &windowModel);
 
     // Load the main QML file
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 
-    engine.load(url);
+    engine->load(url);
+    static QObject s_instance;
+    QQmlEngine::setObjectOwnership(&s_instance, QQmlEngine::CppOwnership);
 
     // Access the root object
-    auto rootObjects = engine.rootObjects();
-    QObject *rootObject = engine.rootObjects().first();
+    auto rootObjects = engine->rootObjects();
+    QObject *rootObject = engine->rootObjects().first();
     QQuickWindow *window = qobject_cast<QQuickWindow *>(rootObject);
     if (window) {
         // Connect to the widthChanged signal
@@ -249,16 +250,15 @@ int main(int argc, char *argv[]) {
         qWarning() << "Rectangle object not found!";
     }
     // Connect to the engine's object creation signal
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+    QObject::connect(engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
                 if (!obj && url == objUrl)
                     QCoreApplication::exit(-1);
             }, Qt::QueuedConnection);
 
-    // If the main QML file cannot be loaded, terminate the application
-    if (engine.rootObjects().isEmpty())
-        return -1;
     auto finalRet = app.exec();
     compositeCapture.stopAllCaptures();
+    compositeCapture.cleanUp();
+    MetalPipeline::getGlobalInstance().cleanUp();
     return finalRet;
 }

@@ -279,6 +279,10 @@ void CompositeCapture::compositeThreadFunc() {
 }
 
 CompositeCapture::~CompositeCapture() {
+    cleanUp();
+}
+
+void CompositeCapture::cleanUp() {
     m_stopAllWork = true;
     if(m_compositeThread.joinable()){
         m_compositeThread.join();
