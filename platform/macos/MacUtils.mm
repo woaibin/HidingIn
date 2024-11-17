@@ -58,7 +58,7 @@ std::tuple<int, int, int,int, int> getWindowSizesForPID(pid_t targetPID) {
                     CGRect bounds;
                     CGRectMakeWithDictionaryRepresentation(windowBounds, &bounds);
                     // Check if it is a small window (possibly a status bar icon)
-                    if (bounds.size.width < 100 && bounds.size.height < 100 && bounds.origin.y == 0) {
+                    if (bounds.size.width < 100 && bounds.size.height < 100) {
                         NSLog(@"Skipping small window (likely a status bar icon) with size: (%f, %f), Layer: %d", bounds.size.width, bounds.size.height, layer);
                         continue;
                     }
@@ -362,6 +362,39 @@ void disableShadow(void *winId) {
 
     // Disable shadow for the window
     [window setHasShadow:NO];
+}
+
+std::tuple<int, int, int, int>
+getVisibleRect(int winLeft, int winTop, int winWidth, int winHeight, int screenWidth, int screenHeight) {
+    // Calculate the right and bottom of the window
+    int winRight = winLeft + winWidth;
+    int winBottom = winTop + winHeight;
+
+    // Clip the window's coordinates to the screen bounds
+    int visibleLeft = std::max(0, winLeft);
+    int visibleTop = std::max(0, winTop);
+    int visibleRight = std::min(screenWidth, winRight);
+    int visibleBottom = std::min(screenHeight, winBottom);
+
+    // Calculate the width and height of the visible area
+    int visibleWidth = std::max(0, visibleRight - visibleLeft);
+    int visibleHeight = std::max(0, visibleBottom - visibleTop);
+
+    // Return the visible rectangle as a tuple (left, top, width, height)
+    return std::make_tuple(visibleLeft, visibleTop, visibleWidth, visibleHeight);
+}
+
+std::tuple<int, int> getScreenSizeInPixels() {
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    NSRect screenRect = [mainScreen frame];
+    CGFloat scale = [mainScreen backingScaleFactor];
+
+    // Calculate the width and height in pixels
+    CGFloat screenWidthInPixels = screenRect.size.width * scale;
+    CGFloat screenHeightInPixels = screenRect.size.height * scale;
+
+    // Return as an NSArray of NSNumbers
+    return {screenWidthInPixels, screenHeightInPixels};
 }
 
 

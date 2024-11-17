@@ -21,7 +21,7 @@ void MtlProcessMisc::initAllProcessors(void* mtlDevice) {
 }
 
 // Encode Crop Process
-void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int> cropROI, void* input,
+void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int> cropROI, std::tuple<int, int>writeStart, void* input,
                                                    void* output, void* commandQueue) {
     std::lock_guard<std::mutex> cropLock(m_cropMutex);
     auto convertInput = (id<MTLTexture>)input;
@@ -41,7 +41,7 @@ void MtlProcessMisc::encodeCropProcessIntoPipeline(std::tuple<int, int, int, int
     [cropFilter setScaleTransform:&scaleTransform];
 
     MTLRegion cropRegion;
-    cropRegion.origin = MTLOriginMake(0, 0, 0);
+    cropRegion.origin = MTLOriginMake(std::get<0>(writeStart), std::get<1>(writeStart), 0);
     cropRegion.size = MTLSizeMake(width, height, 1);
     [cropFilter setClipRect:cropRegion];
 

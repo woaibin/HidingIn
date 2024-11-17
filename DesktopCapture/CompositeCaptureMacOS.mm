@@ -109,15 +109,16 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
                                                                            windowInfo->capturedAppHeight),
                                                                 WindowPoint(windowInfo->capturedAppX,
                                                                             windowInfo->capturedAppY));
-
                 auto &renderPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
                 void* finalTex = nullptr;
+
                 // crop out the app area;
                 {
                     REQUEST_TEXTURE(windowInfo->capturedAppWidth, windowInfo->capturedAppHeight,
                                     mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
                     MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
                             std::make_tuple(cropROI.x, cropROI.y, cropROI.width, cropROI.height),
+                            std::make_tuple(cropROI.compensateX, cropROI.compensateY),
                             texId, retTexture, renderPipeline.mtlCommandQueue);
                     finalTex = retTexture;
                 }
@@ -184,7 +185,7 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                                                  windowInfo->width * windowInfo->scalingFactor,
                                                  windowInfo->height * windowInfo->scalingFactor);
                 MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
-                        cropTuple, texId, retTexture, renderPipeline.mtlCommandQueue);
+                        cropTuple, std::make_tuple(0,0), texId, retTexture, renderPipeline.mtlCommandQueue);
                 return retTexture;
             };
             m_framesSetMutex.lock();

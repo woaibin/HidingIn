@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
     msg.msgType = MessageType::Render;
     msg.whatHappen = "";
     msg.subMsg = std::make_shared<WindowSubMsg>(250,250, 1200, 800, getScalingFactor());
+    auto windowSubMsg = (WindowSubMsg*) msg.subMsg.get();
+    windowSubMsg->screenSizeInPixels = getScreenSizeInPixels();
     NotificationCenter::getInstance().pushMessage(msg, true);
 
 #ifdef __APPLE__
@@ -197,7 +199,7 @@ int main(int argc, char *argv[]) {
             appWinListener = std::make_shared<AppWindowListener>(windowInfo->appPid, appWindowId);
             // Set the callbacks
             appWinListener->setOnWindowMovedCallback([nativeWindow](float x, float y) {
-                std::cout << "Window moved to: (" << x << ", " << y << ")" << std::endl;
+                //std::cout << "Window moved to: (" << x << ", " << y << ")" << std::endl;
                 QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, x, y]() {
                     // Execute some UI-related code here
                     Message msg;
@@ -207,6 +209,10 @@ int main(int argc, char *argv[]) {
                     // Calculate the real cursor position based on scaling
                     int realX = x * capWinInfo->scalingFactor;
                     int realY = y * capWinInfo->scalingFactor;
+
+                    capWinInfo->visibleRect = getVisibleRect(realX, realY,
+                                                      capWinInfo->width, capWinInfo->height,
+                                                      std::get<0>(capWinInfo->screenSizeInPixels), std::get<1>(capWinInfo->screenSizeInPixels));
 
                     // Check if the cursor is within the window bounds
                     if (isMouseInWindowWithID(nativeWindow)) {
@@ -222,13 +228,17 @@ int main(int argc, char *argv[]) {
             });
 
             appWinListener->setOnWindowResizedCallback([nativeWindow](float width, float height) {
-                std::cout << "Window resized to: (" << width << ", " << height << ")" << std::endl;
+                //std::cout << "Window resized to: (" << width << ", " << height << ")" << std::endl;
                 QMetaObject::invokeMethod(QGuiApplication::instance(), [nativeWindow, width, height]() {
                     Message msg;
                     NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, msg);
                     auto capWinInfo = (WindowSubMsg*)msg.subMsg.get();
                     int realWidth = width * capWinInfo->scalingFactor;
                     int realHeight = height * capWinInfo->scalingFactor;
+
+                    capWinInfo->visibleRect = getVisibleRect(capWinInfo->xPos * capWinInfo->scalingFactor, capWinInfo->yPos * capWinInfo->scalingFactor,
+                                                             capWinInfo->width* capWinInfo->scalingFactor, capWinInfo->height * capWinInfo->scalingFactor,
+                                                             std::get<0>(capWinInfo->screenSizeInPixels), std::get<1>(capWinInfo->screenSizeInPixels));
 
                     // Check if the cursor is within the window bounds
                     if (isMouseInWindowWithID(nativeWindow)) {

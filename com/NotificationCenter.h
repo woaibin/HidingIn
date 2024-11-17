@@ -33,6 +33,8 @@ struct WindowSubMsg : public SubMsg{
     int yPos;
     int width;
     int height;
+    std::tuple<int, int, int, int> visibleRect;
+    std::tuple<int, int> screenSizeInPixels;
     int capturedAppX;
     int capturedAppY;
     int capturedAppWidth;

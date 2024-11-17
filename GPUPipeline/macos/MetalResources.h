@@ -118,7 +118,7 @@ public:
         return processMisc;
     }
     void initAllProcessors(void* mtlDevice);
-    void encodeCropProcessIntoPipeline(std::tuple<int, int, int, int> cropROI, void* input,
+    void encodeCropProcessIntoPipeline(std::tuple<int, int, int, int> cropROI, std::tuple<int, int>writeStart, void* input,
                                        void* output, void* commandBuffer);
     void encodeScaleProcessIntoPipeline(void* input, void* output, void* commandBuffer);
     void encodeGaussianProcessIntoPipeline(void* input, void* output, void* commandBuffer);

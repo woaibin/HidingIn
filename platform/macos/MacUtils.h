@@ -17,4 +17,8 @@ bool isAppInForeground(int pid);
 void wakeUpAppByPID(int pid);
 bool isMouseInWindowWithID(void *viewPtr);
 void disableShadow(void* winId);
+std::tuple<int, int>getScreenSizeInPixels();
+std::tuple<int, int, int, int> getVisibleRect(
+        int winLeft, int winTop, int winWidth, int winHeight,
+        int screenWidth, int screenHeight);
 #endif //HIDINGIN_MACUTILS_H
