@@ -334,7 +334,10 @@ bool isAppInForeground(int pid) {
 }
 
 void wakeUpAppByPID(int pid) {
-    if(!isAppInForeground(pid)){
+    Message msg;
+    NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
+    auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
+    if(!isAppInForeground(pid) && controlMsg->couldControlApp){
         auto nsApp = findAppPidByPid(pid);
         [nsApp activateWithOptions:NSApplicationActivateAllWindows | NSApplicationActivateIgnoringOtherApps];
     }

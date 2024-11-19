@@ -838,6 +838,12 @@
 			null
 		],
 		[
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/GlobalEventHandler.h",
+			"MU",
+			"U3NMWMSOQ2/moc_GlobalEventHandler.cpp",
+			null
+		],
+		[
 			"/Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.h",
 			"MU",
 			"TV7T4NCS7K/moc_QCustomRenderNode.cpp",
@@ -1029,6 +1035,11 @@
 		],
 		[
 			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppWindowListener.mm",
+			"MU",
+			null
+		],
+		[
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/GlobalEventHandler.mm",
 			"MU",
 			null
 		],

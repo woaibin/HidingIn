@@ -14,6 +14,7 @@
 #include "Handler/AppGeneralEventHandler.h"
 #include "DesktopCapture/CompositeCapture.h"
 #include "Handler/AppWindowListener.h"
+#include "Handler/GlobalEventHandler.h"
 
 // Function to make all windows ignore mouse input
 void ignoreMouseInputForAllWindows() {
@@ -60,6 +61,23 @@ int main(int argc, char *argv[]) {
     auto windowSubMsg = (WindowSubMsg*) msg.subMsg.get();
     windowSubMsg->screenSizeInPixels = getScreenSizeInPixels();
     NotificationCenter::getInstance().pushMessage(msg, true);
+
+    Message msg2;
+    msg2.msgType = MessageType::Control;
+    msg2.whatHappen = "";
+    msg2.subMsg = std::make_shared<ControlSubMsg>();
+    auto controlSubMsg = (ControlSubMsg*) msg2.subMsg.get();
+    controlSubMsg->couldControlApp = true;
+    NotificationCenter::getInstance().pushMessage(msg2, true);
+
+    GlobalEventHandler globalEventHandler;
+    globalEventHandler.startListening();
+    globalEventHandler.setCtrlBPressedCB([](int keyCode) {
+        Message msg;
+        NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
+        auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
+        controlMsg->couldControlApp = !controlMsg->couldControlApp;
+    });
 
 #ifdef __APPLE__
     //MacOSCaptureSCKit appCapture;
@@ -280,6 +298,8 @@ int main(int argc, char *argv[]) {
             }, Qt::QueuedConnection);
 
     auto finalRet = app.exec();
+
+    globalEventHandler.stopListening();
     compositeCapture.stopAllCaptures();
     compositeCapture.cleanUp();
     MetalPipeline::getGlobalInstance().cleanUp();

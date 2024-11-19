@@ -26,6 +26,10 @@ struct SubMsg{
 struct DeviceSubMsg: public SubMsg{
 };
 
+struct ControlSubMsg: public SubMsg{
+    bool couldControlApp;
+};
+
 struct WindowSubMsg : public SubMsg{
     WindowSubMsg(int x, int y, int width, int height, float factor):
     xPos(x), yPos(y), width(width),height(height), scalingFactor(factor){}

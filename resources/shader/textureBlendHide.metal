@@ -124,10 +124,10 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
     // Step 3: Adjust environment lightness for contrast
     if (envHSL.z > specularThreshold) {
         // If environment is specular (high light), reduce lightness to low light
-        envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 0.5, 0.0, 100.0);
+        envHSL.z = clamp_val(envHSL.z - lowLightThreshold * 0.4, 0.0, 100.0);
     } else if (envHSL.z < lowLightThreshold) {
         // If environment is in low light, increase it to the high light range
-        envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 0.5, 0.0, 100.0);
+        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.1, 0.0, 100.0);
     } else {
         // If environment is mid light, make a subtle adjustment to increase contrast
         if (envHSL.z > diffuseThreshold) {
@@ -137,13 +137,15 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
         }
     }
 
-    // Step 4: Mix the result with baseColor (baseColor has minor contribution)
-    float mixFactor = 0.2;  // Base color contributes 20% to the final result
-    float3 adjustedEnvColor = hsl_to_rgb(envHSL);  // Convert adjusted HSL back to RGB
-    float3 finalColor = mix(adjustedEnvColor, baseColor, mixFactor);  // Mix with baseColor
+    // Step 4: Slightly adjust the hue
+    const float hueAdjustment = 35.0;  // Adjust hue by 5 degrees (or any small value)
+    envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
 
-    // Step 5: Return the final mixed color
-    return finalColor;
+    // Step 5: Mix the result with baseColor (baseColor has minor contribution)
+    float3 adjustedEnvColor = hsl_to_rgb(envHSL);  // Convert adjusted HSL back to RGB
+
+    // Step 6: Return the final mixed color
+    return adjustedEnvColor;
 }
 
 // Fragment shader: blends two textures and assigns the blended color to the fragment
@@ -165,7 +167,7 @@ float4 color2 = tex2.sample(textureSampler, scaledTexCoord);
 
 float3 shiftedColor1 = adjust_hsl_to_stand_out_in_environment(color1.rgb, color2.rgb);
 
-shiftedColor1 *= color2.rgb;
+//shiftedColor1 = float3(1.0);
 
 if(all(color2.rgb < float3(0.001, 0.001, 0.001))){
     return float4(color1.rgb, 1.0);
