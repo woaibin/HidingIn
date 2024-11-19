@@ -62,8 +62,7 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
             CGRectMakeWithDictionaryRepresentation((CFDictionaryRef)boundsDict, &windowBounds);
 
             // Filter out windows that start at (0, 0) and have width or height less than 50
-            if (windowBounds.origin.x == 0 || windowBounds.origin.y == 0 ||
-                (windowBounds.size.width < 50 || windowBounds.size.height < 50)) {
+            if ((windowBounds.size.width < 50 || windowBounds.size.height < 50)) {
                 continue; // Skip this window
             }
 

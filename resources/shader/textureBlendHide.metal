@@ -110,6 +110,42 @@ float3 adjust_color_hsl(float3 rgb, float hue_shift, float saturation_shift, flo
     return hsl_to_rgb(hsl);  // Convert back to RGB
 }
 
+// Adjust HSL values to stand out in the environment (enhance contrast)
+float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor) {
+    // Step 1: Convert both envColor and baseColor to HSL
+    float3 envHSL = rgb_to_hsl(envColor);
+    float3 baseHSL = rgb_to_hsl(baseColor);
+
+    // Step 2: Define thresholds for lightness categories
+    const float specularThreshold = 75.0;  // High light (specular)
+    const float diffuseThreshold = 45.0;   // Mid light (diffuse)
+    const float lowLightThreshold = 25.0;  // Low light
+
+    // Step 3: Adjust environment lightness for contrast
+    if (envHSL.z > specularThreshold) {
+        // If environment is specular (high light), reduce lightness to low light
+        envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 0.5, 0.0, 100.0);
+    } else if (envHSL.z < lowLightThreshold) {
+        // If environment is in low light, increase it to the high light range
+        envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 0.5, 0.0, 100.0);
+    } else {
+        // If environment is mid light, make a subtle adjustment to increase contrast
+        if (envHSL.z > diffuseThreshold) {
+            envHSL.z = clamp_val(envHSL.z + 10.0, 0.0, 100.0);  // Slightly increase lightness
+        } else {
+            envHSL.z = clamp_val(envHSL.z - 10.0, 0.0, 100.0);  // Slightly decrease lightness
+        }
+    }
+
+    // Step 4: Mix the result with baseColor (baseColor has minor contribution)
+    float mixFactor = 0.2;  // Base color contributes 20% to the final result
+    float3 adjustedEnvColor = hsl_to_rgb(envHSL);  // Convert adjusted HSL back to RGB
+    float3 finalColor = mix(adjustedEnvColor, baseColor, mixFactor);  // Mix with baseColor
+
+    // Step 5: Return the final mixed color
+    return finalColor;
+}
+
 // Fragment shader: blends two textures and assigns the blended color to the fragment
 fragment float4 fragmentFunction(VertexOut in [[stage_in]],
 texture2d<float> tex1 [[texture(0)]],
@@ -127,17 +163,19 @@ float2 texSize2 = float2(tex2.get_width(), tex2.get_height());
 float2 scaledTexCoord = in.texCoord * texSize1 / texSize2;
 float4 color2 = tex2.sample(textureSampler, scaledTexCoord);
 
-// Step 1: Calculate the HSL values of color2
-float3 color2HSL = rgb_to_hsl(color2.rgb);
-
-// Step 2: Shift the HSL of color1 based on color2's HSL values (using color2's HSL as the shift)
-float3 shiftedColor1 = adjust_color_hsl(color1.rgb, 255.0, 45.0, 45.0);
+//
+//// Step 1: Calculate the HSL values of color2
+//float3 color2HSL = rgb_to_hsl(color2.rgb);
+//
+//// Step 2: Shift the HSL of color1 based on color2's HSL values (using color2's HSL as the shift)
+////float3 shiftedColor1 = adjust_color_hsl(color1.rgb, 360.0, 75.0, 75.0);
+float3 shiftedColor1 = adjust_hsl_to_stand_out_in_environment(color1.rgb, color2.rgb);
 
 shiftedColor1 *= color2.rgb;
 
-// Step 3: Mix the shifted color1 with color2
-float3 finalColor = color1.rgb * (1 - color2.a) + shiftedColor1 * color2.a;  // Simple 50/50 mix
-
-// Return the final blended color with full opacity (alpha = 1.0)
-return float4(finalColor, 1.0);
+if(all(color2.rgb < float3(0.001, 0.001, 0.001))){
+    return float4(color1.rgb, 1.0);
+}else{
+    return float4(shiftedColor1, 1.0);
+}
 }
