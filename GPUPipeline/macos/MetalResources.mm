@@ -14,7 +14,7 @@ void MtlProcessMisc::initAllProcessors(void* mtlDevice) {
     if(!isInit){
         auto convertMtlDevice = TO_MTL_DEVICE(mtlDevice);
         m_imageCropFilter = (void*)[[MPSImageLanczosScale alloc]initWithDevice:convertMtlDevice];
-        m_imageGaussianFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 1.0f];
+        m_imageGaussianFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 0.5f];
         m_imageScaleFilter = (void*)[[MPSImageBilinearScale alloc] initWithDevice: convertMtlDevice];
         m_imageSubtractFilter = (void*)[[MPSImageSubtract alloc] initWithDevice: convertMtlDevice];
     }

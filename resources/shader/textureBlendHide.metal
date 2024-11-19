@@ -131,9 +131,9 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
     } else {
         // If environment is mid light, make a subtle adjustment to increase contrast
         if (envHSL.z > diffuseThreshold) {
-            envHSL.z = clamp_val(envHSL.z + 10.0, 0.0, 100.0);  // Slightly increase lightness
+            envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 2.0, 0.0, 100.0);  // Slightly increase lightness
         } else {
-            envHSL.z = clamp_val(envHSL.z - 10.0, 0.0, 100.0);  // Slightly decrease lightness
+            envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 2.0, 0.0, 100.0);  // Slightly decrease lightness
         }
     }
 
@@ -163,12 +163,6 @@ float2 texSize2 = float2(tex2.get_width(), tex2.get_height());
 float2 scaledTexCoord = in.texCoord * texSize1 / texSize2;
 float4 color2 = tex2.sample(textureSampler, scaledTexCoord);
 
-//
-//// Step 1: Calculate the HSL values of color2
-//float3 color2HSL = rgb_to_hsl(color2.rgb);
-//
-//// Step 2: Shift the HSL of color1 based on color2's HSL values (using color2's HSL as the shift)
-////float3 shiftedColor1 = adjust_color_hsl(color1.rgb, 360.0, 75.0, 75.0);
 float3 shiftedColor1 = adjust_hsl_to_stand_out_in_environment(color1.rgb, color2.rgb);
 
 shiftedColor1 *= color2.rgb;
