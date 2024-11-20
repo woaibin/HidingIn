@@ -5,6 +5,7 @@
 #ifndef GLOBALEVENTHANDLER_H
 #define GLOBALEVENTHANDLER_H
 #include <functional>
+#include <utility>
 using KeysPressedCB = std::function<void(int keyCode)>;
 
 class GlobalEventHandler {
@@ -19,10 +20,14 @@ public:
     void stopListening();
 
     // Internal method to handle key events (pure C++)
-    void handleKeyPress(int keycode, bool isCommandPressed);
+    bool handleKeyPress(int keycode, bool isCommandPressed);
 
     void setCtrlBPressedCB(KeysPressedCB cb){
-        ctrlBPressedCB = cb;
+        ctrlBPressedCB = std::move(cb);
+    }
+
+    void setCtrlHPressedCB(KeysPressedCB cb){
+        ctrlHPressedCB = std::move(cb);
     }
 
 private:
@@ -31,6 +36,7 @@ private:
     void* eventTap;  // Placeholder for event tap reference
     void* runLoopSource;  // Placeholder for run loop source
     KeysPressedCB ctrlBPressedCB;
+    KeysPressedCB ctrlHPressedCB;
 };
 
 #endif // GLOBALEVENTHANDLER_H

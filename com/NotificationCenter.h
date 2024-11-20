@@ -28,6 +28,7 @@ struct DeviceSubMsg: public SubMsg{
 
 struct ControlSubMsg: public SubMsg{
     bool couldControlApp;
+    bool showAppContent;
 };
 
 struct WindowSubMsg : public SubMsg{

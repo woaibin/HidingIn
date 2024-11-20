@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
     msg2.subMsg = std::make_shared<ControlSubMsg>();
     auto controlSubMsg = (ControlSubMsg*) msg2.subMsg.get();
     controlSubMsg->couldControlApp = true;
+    controlSubMsg->showAppContent = true;
     NotificationCenter::getInstance().pushMessage(msg2, true);
 
     GlobalEventHandler globalEventHandler;
@@ -77,6 +78,23 @@ int main(int argc, char *argv[]) {
         NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
         auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
         controlMsg->couldControlApp = !controlMsg->couldControlApp;
+        if(controlMsg->couldControlApp){
+            std::cerr << "start controlling app" <<std::endl;
+        }else{
+            std::cerr <<"stop controlling app" << std::endl;
+        }
+    });
+
+    globalEventHandler.setCtrlHPressedCB([](int keyCode){
+        Message msg;
+        NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
+        auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
+        controlMsg->showAppContent = !controlMsg->showAppContent;
+        if(controlMsg->showAppContent){
+            std::cerr << "start show app" <<std::endl;
+        }else{
+            std::cerr <<"stop show app" << std::endl;
+        }
     });
 
 #ifdef __APPLE__

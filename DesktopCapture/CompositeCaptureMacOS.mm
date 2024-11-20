@@ -112,24 +112,34 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
                 auto &renderPipeline = MetalPipeline::getGlobalInstance().getRenderPipeline();
                 void* finalTex = nullptr;
 
-                // crop out the app area;
-                {
+                Message msg;
+                NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
+                auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
+
+                if(controlMsg->showAppContent){
+                    // crop out the app area;
+                    {
+                        REQUEST_TEXTURE(windowInfo->capturedAppWidth, windowInfo->capturedAppHeight,
+                                        mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
+                        MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
+                                std::make_tuple(cropROI.x, cropROI.y, cropROI.width, cropROI.height),
+                                std::make_tuple(cropROI.compensateX, cropROI.compensateY),
+                                texId, retTexture, renderPipeline.mtlCommandQueue);
+                        finalTex = retTexture;
+                    }
+
+                    // scale to match window if necessary:
+                    if(windowInfo->capturedAppWidth  != windowInfo->width || windowInfo->capturedAppHeight != windowInfo->height)
+                    {
+                        REQUEST_TEXTURE(windowInfo->width * windowInfo->scalingFactor,
+                                        windowInfo->height * windowInfo->scalingFactor,
+                                        mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
+                        MtlProcessMisc::getGlobalInstance().encodeScaleProcessIntoPipeline(finalTex, retTexture, renderPipeline.mtlCommandQueue);
+                        finalTex = retTexture;
+                    }
+                } else{
                     REQUEST_TEXTURE(windowInfo->capturedAppWidth, windowInfo->capturedAppHeight,
                                     mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
-                    MtlProcessMisc::getGlobalInstance().encodeCropProcessIntoPipeline(
-                            std::make_tuple(cropROI.x, cropROI.y, cropROI.width, cropROI.height),
-                            std::make_tuple(cropROI.compensateX, cropROI.compensateY),
-                            texId, retTexture, renderPipeline.mtlCommandQueue);
-                    finalTex = retTexture;
-                }
-
-                // scale to match window if necessary:
-                if(windowInfo->capturedAppWidth  != windowInfo->width || windowInfo->capturedAppHeight != windowInfo->height)
-                {
-                    REQUEST_TEXTURE(windowInfo->width * windowInfo->scalingFactor,
-                                    windowInfo->height * windowInfo->scalingFactor,
-                                    mtlTexture.pixelFormat, renderPipeline.mtlDeviceRef);
-                    MtlProcessMisc::getGlobalInstance().encodeScaleProcessIntoPipeline(finalTex, retTexture, renderPipeline.mtlCommandQueue);
                     finalTex = retTexture;
                 }
 
