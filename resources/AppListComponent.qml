@@ -66,8 +66,9 @@ Item {
                         anchors.fill: parent
                         acceptedButtons: Qt.LeftButton
                         onDoubleClicked: {
-                            stackView.push(capturedAppLoader)
                             appListView.appItemDoubleClicked(appName)  // Emit the signal to the C++ side
+                            stackView.clear()
+                            stackView.push(capturedAppLoader)
                         }
                     }
 

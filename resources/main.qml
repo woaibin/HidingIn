@@ -15,8 +15,7 @@ ApplicationWindow {
         id: stackView
         anchors.fill: parent
 
-        initialItem: HomePage{
-        }
+        initialItem: "HomePage.qml"
 
         // Loaders for each page
         Loader {

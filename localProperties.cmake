@@ -1,1 +1,1 @@
-set(ENABLE_ASAN ON)
+set(ENABLE_ASAN OFF)

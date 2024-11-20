@@ -1,5 +1,0 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -DCMAKE_PREFIX_PATH=/Users/binxiaokang/QT6/6.8.0/macos/lib/cmake -G Ninja -S /Users/binxiaokang/Desktop/HidingIn -B /Users/binxiaokang/Desktop/HidingIn/cmake-build-release
-enabling asan
--- Configuring done (0.2s)
--- Generating done (0.0s)
--- Build files have been written to: /Users/binxiaokang/Desktop/HidingIn/cmake-build-release

@@ -166,8 +166,8 @@ void MetalPipeline::executeAllRenderTasksInPlace() {
     m_renderingPipelineTasks->execAllTasksInPlace();
 }
 
-void MetalPipeline::setTriggerRenderUpdateFunc(std::function<void()> func) {
-    m_triggerRenderUpdateFunc = func;
+void MetalPipeline::setTriggerRenderUpdateFunc(const std::string& name, std::function<void()> func) {
+    m_triggerRenderUpdateFuncSet[name] = std::move(func);
 }
 
 void MetalPipeline::updateRenderPipelineRes(PipelineConfiguration & pipelineConfiguration) {
@@ -187,13 +187,12 @@ MtlRenderPipeline &MetalPipeline::getRenderPipeline() {
 }
 
 
-void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures) {
+void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures, std::string triggerRendererName) {
     auto findPipelineState = m_mtlRenderPipeline.mtlPipelineStates.find(pipelineDesc);
     if(findPipelineState == m_mtlRenderPipeline.mtlPipelineStates.end()){
         return {};
     }
     auto pipelineState = (id<MTLRenderPipelineState>)findPipelineState->second;
-
     auto renderPassDesc = [MTLRenderPassDescriptor renderPassDescriptor];
     m_mtlRenderPipeline.mtlRenderPassDesc = renderPassDesc;
     renderPassDesc.colorAttachments[0].texture = (id<MTLTexture>)m_mtlRenderPipeline.renderTarget;
@@ -230,7 +229,9 @@ void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std
     
     [commandBuffer commit];
     
-    m_triggerRenderUpdateFunc();
+    if(m_triggerRenderUpdateFuncSet[triggerRendererName]){
+        m_triggerRenderUpdateFuncSet[triggerRendererName]();
+    }
 
     // return output renderTarget:
     return (void*)renderPassDesc.colorAttachments[0].texture;

@@ -94,8 +94,9 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
 
         // register capture event handler:
         int capOrderToSet = m_capOrder++;
-        EventManager::getInstance()->registerListener(args->captureEventName, [this, capOrderToSet](EventParam& eventParam){
+        EventManager::getInstance()->registerListener(args->captureEventName, [this, capOrderToSet, args](EventParam& eventParam){
             CaptureFrameDesc captureFrameDesc;
+            captureFrameDesc.captureEventName = args->captureEventName;
             captureFrameDesc.texId = std::get<void*>(eventParam.parameters["textureId"]);
             // for capture app, need to crop out the capture area:
             captureFrameDesc.opsToBePerformBeforeComposition = [&](void* texId){
@@ -174,8 +175,9 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
 
         int capOrderToSet = m_capOrder++;
         // register capture event handler:
-        EventManager::getInstance()->registerListener(args->captureEventName, [this, capOrderToSet](EventParam& eventParam){
+        EventManager::getInstance()->registerListener(args->captureEventName, [this, capOrderToSet, args](EventParam& eventParam){
             CaptureFrameDesc captureFrameDesc;
+            captureFrameDesc.captureEventName = args->captureEventName;
             captureFrameDesc.texId = std::get<void*>(eventParam.parameters["textureId"]);
             // for capture app, need to crop out the capture area:
             captureFrameDesc.opsToBePerformBeforeComposition = [&](void* texId){
@@ -267,14 +269,14 @@ void CompositeCapture::compositeThreadFunc() {
                     inputTextures.push_back(retTextureAnother);
                     // since it renders to the final render target, so we need not to do anything then.
                     auto renderTarget = MetalPipeline::getGlobalInstance().
-                            throughRenderingPipelineState("hidingShader", inputTextures);
+                            throughRenderingPipelineState("hidingShader", inputTextures, it.second.captureEventName);
                 }else{
                     if (reqCompositeNum == 1){
                         // if only there's only one frame, we just render the texture to the scene
                         std::vector<void*> inputTextures;
                         inputTextures.push_back(texIdMtl);
                         auto renderTarget = MetalPipeline::getGlobalInstance().
-                                throughRenderingPipelineState("basicRenderShader", inputTextures);
+                                throughRenderingPipelineState("basicRenderShader", inputTextures, it.second.captureEventName);
                     }else{
                         lastTexId = (void*)texIdMtl;
                     }

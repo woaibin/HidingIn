@@ -23,6 +23,8 @@ public:
         dontUpdate = true;
     }
 
+    void stopAllWork();
+
     void enableUpdate();
 
 signals:
@@ -56,6 +58,7 @@ private:
     QSGTexture* lastRenderTargetTexture = nullptr;
     bool dontUpdate = false;
     QCustomRenderNode* m_customRenderNode = nullptr;
+    bool isInit = false;
 };
 
 #endif // QMETALGRAPHICSITEM_H

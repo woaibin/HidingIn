@@ -186,7 +186,7 @@ public:
              config.width = display.width * windowInfo->scalingFactor;
              config.height = display.height * windowInfo->scalingFactor;
              config.pixelFormat = kCVPixelFormatType_32BGRA;
-             config.minimumFrameInterval = CMTimeMake(1, 60);
+             //config.minimumFrameInterval = CMTimeMake(1, 25);
              config.queueDepth = 5;
              config.showsCursor = false;
 
@@ -284,7 +284,7 @@ public:
                      windowInfo->capturedWinId = args.includingWindowIDs[0];
 
                      config.pixelFormat = kCVPixelFormatType_32BGRA;
-                     config.minimumFrameInterval = CMTimeMake(1, 60);
+                     //config.minimumFrameInterval = CMTimeMake(1, 25);
                      config.queueDepth = 5;
                      config.showsCursor = false;
 

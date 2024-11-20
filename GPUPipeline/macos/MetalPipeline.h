@@ -67,7 +67,7 @@ public:
 
     void cleanUp();
 
-    void* throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures);
+    void* throughRenderingPipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures, std::string triggerRendererName);
     void throughComputePipelineState(std::string pipelineDesc, std::vector<void*>& inputTextures, void* resultTexture);
     void throughBlitPipelineState(void* inputTexture, void* outputTexture); // resource copy method
     bool isRenderingInitDoneBefore(){
@@ -100,7 +100,7 @@ public:
 
 public:
     void executeAllRenderTasksInPlace();
-    void setTriggerRenderUpdateFunc(std::function<void()> func);
+    void setTriggerRenderUpdateFunc(const std::string& name, std::function<void()> func);
     void updateRenderPipelineRes(PipelineConfiguration&); // not sure if the inner resources change in qt, update it for every pass
 
 private:
@@ -121,7 +121,7 @@ private:
 
 private:
     bool m_isRenderPipelineInit = false;
-    std::function<void()> m_triggerRenderUpdateFunc;
+    std::map<std::string, std::function<void()>>m_triggerRenderUpdateFuncSet;
     std::unique_ptr<LastRenderingReplayRecord> m_lastRenderingReplayRecord = nullptr;
     void* m_renderTarget;
 };

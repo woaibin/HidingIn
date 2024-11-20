@@ -52,6 +52,7 @@ TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/Desktop/H
 TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/3.27.4/CMakeOBJCCompiler.cmake))
 TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/3.27.4/CMakeOBJCXXCompiler.cmake))
 TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/Desktop/HidingIn/build/CMakeFiles/3.27.4/CMakeSystem.cmake))
+TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/Desktop/HidingIn/localProperties.cmake))
 TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/Desktop/HidingIn/resources/resources.qrc))
 TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/QT6/6.8.0/macos/lib/cmake/Qt6/FindWrapAtomic.cmake))
 TARGETS += $(subst $(space),$(spaceplus),$(wildcard /Users/binxiaokang/QT6/6.8.0/macos/lib/cmake/Qt6/FindWrapOpenGL.cmake))

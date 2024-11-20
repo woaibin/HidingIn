@@ -22,6 +22,7 @@ using TextureProcessor = MetalProcessor;
 
 struct CaptureFrameDesc{
     void* texId = nullptr;
+    std::string captureEventName;
     std::function<void*(void* texId)> opsToBePerformBeforeComposition;
 };
 

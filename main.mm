@@ -182,15 +182,13 @@ int main(int argc, char *argv[]) {
     }
 
     // Find the MetalGraphicsItem instance by object name or hierarchy
-    QObject *transparentBgCaptureItem = rootObject->findChild<QObject*>("transparentBgCapture");
-    if (transparentBgCaptureItem) {
-        QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(transparentBgCaptureItem);
-        metalItem->setIdName("bgCap");
+    QObject *DesktopCaptureItem = rootObject->findChild<QObject*>("DesktopCapture");
+    if (DesktopCaptureItem) {
+        QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(DesktopCaptureItem);
     }
     QObject *appCaptureItem = rootObject->findChild<QObject*>("appCapture");
     if (appCaptureItem) {
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
-        metalItem->setIdName("appCap");
     }
 
     // find out all app items:
@@ -201,6 +199,9 @@ int main(int argc, char *argv[]) {
         QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
         handler.setOnAppItemDBClickHandlerFunc([&, appWinListener](QString appName) mutable{
+            auto desktopMetalGraphicsItem = (QMetalGraphicsItem*)DesktopCaptureItem;
+            desktopMetalGraphicsItem->stopAllWork();
+
             auto currentWindow = getCurrentWindow();
             void *nativeWindow = (void*)currentWindow->winId();
             auto& appModel = windowModel.getWindowModelByAppName(appName.toStdString());
@@ -224,7 +225,7 @@ int main(int argc, char *argv[]) {
             compositeCapture.addWholeDesktopCapture(captureDesktopArgs);
 
             CaptureArgs captureAppArgs;
-            captureAppArgs.captureEventName = appName.toStdString() + "Capture";
+            captureAppArgs.captureEventName = "appCapture";
             captureAppArgs.includingWindowIDs.push_back(appWindowId);
             compositeCapture.addCaptureByApplicationName(appName.toStdString(), captureAppArgs);
 

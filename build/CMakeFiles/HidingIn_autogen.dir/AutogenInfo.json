@@ -47,6 +47,7 @@
 		"/Applications/CMake.app/Contents/share/cmake-3.27/Modules/Platform/Apple-Clang-OBJCXX.cmake",
 		"/Applications/CMake.app/Contents/share/cmake-3.27/Modules/Platform/Apple-Clang.cmake",
 		"/Applications/CMake.app/Contents/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake",
+		"/Users/binxiaokang/Desktop/HidingIn/localProperties.cmake",
 		"/Users/binxiaokang/QT6/6.8.0/macos/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
 		"/Users/binxiaokang/QT6/6.8.0/macos/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
 		"/Users/binxiaokang/QT6/6.8.0/macos/lib/cmake/Qt6/Qt6Config.cmake",
@@ -836,6 +837,12 @@
 			null
 		],
 		[
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/GlobalEventHandler.h",
+			"MU",
+			"U3NMWMSOQ2/moc_GlobalEventHandler.cpp",
+			null
+		],
+		[
 			"/Users/binxiaokang/Desktop/HidingIn/RenderWidget/QCustomRenderNode.h",
 			"MU",
 			"TV7T4NCS7K/moc_QCustomRenderNode.cpp",
@@ -1227,6 +1234,11 @@
 		],
 		[
 			"/Users/binxiaokang/Desktop/HidingIn/Handler/AppWindowListener.mm",
+			"MU",
+			null
+		],
+		[
+			"/Users/binxiaokang/Desktop/HidingIn/Handler/GlobalEventHandler.mm",
 			"MU",
 			null
 		],

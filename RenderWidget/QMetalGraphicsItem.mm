@@ -25,9 +25,7 @@ void QMetalGraphicsItem::onBeforeRendering() {
     QSGRendererInterface *rif = window()->rendererInterface();
     // We are not prepared for anything other than running with the RHI and its Metal backend.
     Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::Metal);
-
     auto& mtlPipeline = MetalPipeline::getGlobalInstance();
-    static bool isInit = false;
     if(!isInit){
         isInit = true;
         // Read the shader from the Qt resource file
@@ -71,10 +69,6 @@ void QMetalGraphicsItem::onBeforeRendering() {
     }else{
         PipelineConfiguration pipelineConfiguration;
         pipelineConfiguration.graphicsDevice = rif->getResource(window(), QSGRendererInterface::DeviceResource);
-        pipelineConfiguration.mtlRenderCommandQueue = rif->getResource(window(), QSGRendererInterface::CommandQueueResource);
-        pipelineConfiguration.mtlRenderCommandEncoder = rif->getResource(window(), QSGRendererInterface::CommandEncoderResource);
-        pipelineConfiguration.mtlRenderPassDesc = rif->getResource(window(), QSGRendererInterface::RenderPassResource);
-        pipelineConfiguration.mtlRenderCommandBuffer = rif->getResource(window(), QSGRendererInterface::CommandListResource);
 
         MetalPipeline::getGlobalInstance().updateRenderPipelineRes(pipelineConfiguration);
     }
@@ -101,7 +95,7 @@ void QMetalGraphicsItem::cleanup() {
 
 void QMetalGraphicsItem::initMetalRenderingPipeline(PipelineConfiguration &pipelineInitConfiguration) {
     // set trigger render update func:
-    MetalPipeline::getGlobalInstance().setTriggerRenderUpdateFunc([this](){
+    MetalPipeline::getGlobalInstance().setTriggerRenderUpdateFunc(this->objectName().toStdString(), [this](){
         requestRender();
     });
 
@@ -153,12 +147,6 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
         MetalPipeline::getGlobalInstance().setRenderTarget(texture);
         node->setTexture(wrapper);
     }else{
-//        if(!node->texture()){
-//            auto mtlTexture = (id<MTLTexture>)metalPipeline.renderTarget;
-//            QSGTexture *wrapper = QNativeInterface::QSGMetalTexture::fromNative(
-//                    mtlTexture, window(), QSize(mtlTexture.width, mtlTexture.height));
-//            node->setTexture(wrapper);
-//        }
         auto mtlTexture = (id<MTLTexture>)metalPipeline.renderTarget;
         QSGTexture *wrapper = QNativeInterface::QSGMetalTexture::fromNative(
                 mtlTexture, window(), QSize(mtlTexture.width, mtlTexture.height));
@@ -171,4 +159,14 @@ QSGNode *QMetalGraphicsItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Updat
 
 void QMetalGraphicsItem::enableUpdate() {
     dontUpdate = false;
+}
+
+void QMetalGraphicsItem::stopAllWork() {
+    // Connecting to the windowChanged signal to handle when the item is associated with a window
+    disconnect(this, &QQuickItem::windowChanged, this, &QMetalGraphicsItem::handleWindowChanged);
+    disconnect(this, &QMetalGraphicsItem::triggerRender, this, nullptr);
+    disconnect(window(), &QQuickWindow::beforeRendering, this, &QMetalGraphicsItem::onBeforeRendering);
+    disconnect(window(), &QQuickWindow::afterRendering, this, &QMetalGraphicsItem::afterRenderingDone);
+    disconnect(window(), &QQuickWindow::beforeSynchronizing, this, &QMetalGraphicsItem::sync);
+    disconnect(window(), &QQuickWindow::sceneGraphInvalidated, this, &QMetalGraphicsItem::cleanup);
 }

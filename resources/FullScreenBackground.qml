@@ -18,6 +18,6 @@ Item {
     MetalGraphicsItem {
         anchors.fill: parent
         id: backgroundCaptureItem
-        objectName: "transparentBgCapture"
+        objectName: "DesktopCapture"
     }
 }

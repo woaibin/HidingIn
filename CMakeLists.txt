@@ -78,6 +78,7 @@ find_library(METALKIT_FRAMEWORK MetalKit)
 find_library(SCREENCAPTUREKIT_FRAMEWORK ScreenCaptureKit)
 find_library(CARBON_FRAMEWORK Carbon)
 find_library(MPS_FRAMEWORK MetalPerformanceShaders)
+find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC
         ${FOUNDATION_FRAMEWORK}
         ${VIDEO_TOOLBOX_FRAMEWORK}
@@ -87,7 +88,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         ${IOSURFACE_LIB}
         ${METAL_FRAMEWORK}
         ${METALKIT_FRAMEWORK}
-        ${COCOA_LIBRARY} ${IOKIT_LIBRARY} ${SCREENCAPTUREKIT_FRAMEWORK} ${CARBON_FRAMEWORK} ${MPS_FRAMEWORK}  "-framework CoreImage")
+        ${COCOA_LIBRARY} ${IOKIT_LIBRARY} ${SCREENCAPTUREKIT_FRAMEWORK} Threads::Threads ${CARBON_FRAMEWORK} ${MPS_FRAMEWORK}  "-framework CoreImage")
+target_compile_options(${PROJECT_NAME} PRIVATE -pthread)
+target_link_libraries(${PROJECT_NAME} PRIVATE -pthread)
 
 # Link the Qt libraries to the project
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Quick Qt6::Gui Qt6::Qml Qt6::GuiPrivate )
