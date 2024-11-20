@@ -22,12 +22,12 @@ public:
     // Internal method to handle key events (pure C++)
     bool handleKeyPress(int keycode, bool isCommandPressed);
 
-    void setCtrlBPressedCB(KeysPressedCB cb){
-        ctrlBPressedCB = std::move(cb);
+    void setCtrlColonPressedCB(KeysPressedCB cb){
+        ctrlColonPressedCB = std::move(cb);
     }
 
-    void setCtrlHPressedCB(KeysPressedCB cb){
-        ctrlHPressedCB = std::move(cb);
+    void setCtrlDoubleQuotePressedCB(KeysPressedCB cb){
+        ctrlDoubleQuotePressedCB = std::move(cb);
     }
 
 private:
@@ -35,8 +35,8 @@ private:
     // macOS-specific implementation
     void* eventTap;  // Placeholder for event tap reference
     void* runLoopSource;  // Placeholder for run loop source
-    KeysPressedCB ctrlBPressedCB;
-    KeysPressedCB ctrlHPressedCB;
+    KeysPressedCB ctrlColonPressedCB;
+    KeysPressedCB ctrlDoubleQuotePressedCB;
 };
 
 #endif // GLOBALEVENTHANDLER_H

@@ -73,27 +73,27 @@ int main(int argc, char *argv[]) {
 
     GlobalEventHandler globalEventHandler;
     globalEventHandler.startListening();
-    globalEventHandler.setCtrlBPressedCB([](int keyCode) {
+    globalEventHandler.setCtrlColonPressedCB([](int keyCode) {
         Message msg;
         NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
-        auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
+        auto controlMsg = (ControlSubMsg *) msg.subMsg.get();
         controlMsg->couldControlApp = !controlMsg->couldControlApp;
-        if(controlMsg->couldControlApp){
-            std::cerr << "start controlling app" <<std::endl;
-        }else{
-            std::cerr <<"stop controlling app" << std::endl;
+        if (controlMsg->couldControlApp) {
+            std::cerr << "start controlling app" << std::endl;
+        } else {
+            std::cerr << "stop controlling app" << std::endl;
         }
     });
 
-    globalEventHandler.setCtrlHPressedCB([](int keyCode){
+    globalEventHandler.setCtrlDoubleQuotePressedCB([](int keyCode) {
         Message msg;
         NotificationCenter::getInstance().getPersistentMessage(MessageType::Control, msg);
-        auto controlMsg = (ControlSubMsg*)msg.subMsg.get();
+        auto controlMsg = (ControlSubMsg *) msg.subMsg.get();
         controlMsg->showAppContent = !controlMsg->showAppContent;
-        if(controlMsg->showAppContent){
-            std::cerr << "start show app" <<std::endl;
-        }else{
-            std::cerr <<"stop show app" << std::endl;
+        if (controlMsg->showAppContent) {
+            std::cerr << "start show app" << std::endl;
+        } else {
+            std::cerr << "stop show app" << std::endl;
         }
     });
 

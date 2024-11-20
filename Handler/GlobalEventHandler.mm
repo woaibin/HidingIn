@@ -64,13 +64,13 @@ void GlobalEventHandler::stopListening() {
 
 bool GlobalEventHandler::handleKeyPress(int keycode, bool isCommandPressed) {
     // We are checking for Command + B (keycode for 'B' is 11 on macOS)
-    if (isCommandPressed && keycode == 11) {
-        if(ctrlBPressedCB){
-            ctrlBPressedCB(keycode);
+    if (isCommandPressed && keycode == 41) {
+        if(ctrlColonPressedCB){
+            ctrlColonPressedCB(keycode);
         }
-    }else if(isCommandPressed && keycode == 4){
-        if(ctrlHPressedCB){
-            ctrlHPressedCB(keycode);
+    }else if(isCommandPressed && keycode == 39){
+        if(ctrlDoubleQuotePressedCB){
+            ctrlDoubleQuotePressedCB(keycode);
         }
         return true; // for ctrl+h, the current focused app will respond and hide itself, need to forbid that.
     }
