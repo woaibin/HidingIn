@@ -146,9 +146,7 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
 
                 return finalTex;
             };
-            m_framesSetMutex.lock();
-            m_captureFrameSet.insert({capOrderToSet, captureFrameDesc});
-            m_framesSetMutex.unlock();
+            putFrameAndCompositeIfMeet(capOrderToSet, captureFrameDesc);
         });
 
         m_captureSources.push_back(captureSource);
@@ -200,9 +198,7 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                         cropTuple, std::make_tuple(0,0), texId, retTexture, renderPipeline.mtlCommandQueue);
                 return retTexture;
             };
-            m_framesSetMutex.lock();
-            m_captureFrameSet.insert(std::make_pair(capOrderToSet, captureFrameDesc));
-            m_framesSetMutex.unlock();
+            putFrameAndCompositeIfMeet(capOrderToSet, captureFrameDesc);
         });
         m_captureSources.push_back(captureSource);
     }else{
@@ -213,7 +209,7 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
 }
 
 CompositeCapture::CompositeCapture(std::optional<CompositeCaptureArgs> compCapArgs)
-        : m_compositeThread(&CompositeCapture::compositeThreadFunc, this)
+//        : m_compositeThread(&CompositeCapture::compositeThreadFunc, this)
 {
     if(compCapArgs.has_value()){
         m_compCapArgs = compCapArgs.value();
@@ -300,4 +296,64 @@ void CompositeCapture::cleanUp() {
     if(m_compositeThread.joinable()){
         m_compositeThread.join();
     }
+}
+
+void CompositeCapture::putFrameAndCompositeIfMeet(int order, const CaptureFrameDesc& captureFrameDesc) {
+    m_framesSetMutex.lock();
+    m_captureFrameSet.insert({order, captureFrameDesc});
+    if(!m_stopAllWork && m_captureFrameSet.size() == reqCompositeNum){
+        auto execFuture = MetalPipeline::getGlobalInstance().sendJobToRenderQueue(
+                [&](const std::string& threadName, const MtlRenderPipeline& renderPipelineRes){
+                    Message windowMsg;
+                    auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
+                    auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
+                    void* lastTexId = nullptr;
+
+                    for(auto& it : m_captureFrameSet){
+                        // will finally match the result size of the result to the window size:
+                        auto texIdMtl = (id<MTLTexture>)it.second.texId;
+                        if(it.second.opsToBePerformBeforeComposition){
+                            texIdMtl = (id<MTLTexture>)it.second.opsToBePerformBeforeComposition(texIdMtl);
+                        }
+                        if(lastTexId){
+                            // apply high pass:
+                            REQUEST_TEXTURE(windowInfo->width * windowInfo->scalingFactor,
+                                            windowInfo->height * windowInfo->scalingFactor, texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
+                            MtlProcessMisc::getGlobalInstance().encodeGaussianProcessIntoPipeline((void*)texIdMtl,
+                                                                                                  retTexture,
+                                                                                                  renderPipelineRes.mtlCommandQueue);
+                            REQUEST_TEXTURE_ANOTHER(windowInfo->width * windowInfo->scalingFactor,
+                                                    windowInfo->height * windowInfo->scalingFactor,
+                                                    texIdMtl.pixelFormat, renderPipelineRes.mtlDeviceRef);
+                            MtlProcessMisc::getGlobalInstance().encodeSubtractProcessIntoPipeline((void*)texIdMtl,
+                                                                                                  retTexture,
+                                                                                                  retTextureAnother,
+                                                                                                  renderPipelineRes.mtlCommandQueue);
+
+                            // apply hiding filter:
+                            std::vector<void*> inputTextures;
+                            inputTextures.push_back(lastTexId);
+                            inputTextures.push_back(retTextureAnother);
+                            // since it renders to the final render target, so we need not to do anything then.
+                            auto renderTarget = MetalPipeline::getGlobalInstance().
+                                    throughRenderingPipelineState("hidingShader", inputTextures, it.second.captureEventName);
+                        }else{
+                            if (reqCompositeNum == 1){
+                                // if only there's only one frame, we just render the texture to the scene
+                                std::vector<void*> inputTextures;
+                                inputTextures.push_back(texIdMtl);
+                                auto renderTarget = MetalPipeline::getGlobalInstance().
+                                        throughRenderingPipelineState("basicRenderShader", inputTextures, it.second.captureEventName);
+                            }else{
+                                lastTexId = (void*)texIdMtl;
+                            }
+                        }
+                    }
+                });
+        if(execFuture.valid()){
+            execFuture.get();
+        }
+        m_captureFrameSet.clear();
+    }
+    m_framesSetMutex.unlock();
 }

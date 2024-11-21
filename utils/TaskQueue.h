@@ -49,6 +49,8 @@ public:
             std::unique_lock<std::mutex> lock(queueMutex);
 
             // Wait if the task queue is full
+            condition.wait(lock, [this] { return taskQueue.size() < maxTaskCount || stopFlag; });
+
             if (stopFlag) return future;  // Check if stop flag is set
 
             // Wrap the task to fulfill the promise upon completion
@@ -61,6 +63,8 @@ public:
                 }
             });
         }
+        condition.notify_one();  // Notify a worker thread to process the task
+
         return future;  // Return the future to the caller
     }
 
@@ -83,6 +87,7 @@ public:
             std::unique_lock<std::mutex> lock(queueMutex);
             stopFlag = true;
         }
+        condition.notify_all();  // Notify all threads to stop
     }
 
 private:
@@ -98,19 +103,24 @@ private:
     // Worker function for threads
     void worker(const std::string& threadName) {
         while (true) {
+            std::function<void(const std::string&)> task;
             {
                 std::unique_lock<std::mutex> lock(queueMutex);
+                condition.wait(lock, [this] { return !taskQueue.empty() || stopFlag; });
 
-                if (stopFlag || taskQueue.empty()) {
+                if (stopFlag && taskQueue.empty()) {
                     return;  // Exit the loop if stop flag is set and no tasks are left
                 }
 
-                auto &task = taskQueue.front();
-                // Execute the task and pass the thread name (ID) to it
-                std::cerr << "bxk exec task" << std::endl;
-                task(threadName);
+                task = taskQueue.front();
                 taskQueue.pop();
             }
+
+            // Execute the task and pass the thread name (ID) to it
+            task(threadName);
+
+            // Notify any waiting threads that space is now available in the queue
+            condition.notify_all();
         }
     }
 };

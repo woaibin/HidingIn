@@ -57,6 +57,7 @@ public:
 
 private:
     void compositeThreadFunc();
+    void putFrameAndCompositeIfMeet(int order, const CaptureFrameDesc& captureFrameDesc);
 
 private:
     std::vector<std::shared_ptr<DesktopCapture>> m_captureSources;
