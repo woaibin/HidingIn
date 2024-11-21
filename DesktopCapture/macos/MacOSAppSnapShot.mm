@@ -4,6 +4,8 @@
 #include <QImage>
 #include <ApplicationServices/ApplicationServices.h>
 #include <string>
+#import <CoreImage/CoreImage.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 // Helper function to convert CGImageRef to QImage
 QImage CGImageToQImage(CGImageRef imageRef) {
@@ -77,6 +79,30 @@ CGWindowID findWindowIDForApp(const std::string& appName) {
     CFRelease(windowList);
     return kCGNullWindowID;
 }
+
+CGImageRef applyHighPassFilter(CGImageRef inputImage, CGFloat blurRadius) {
+    // Step 1: Create CIImage from CGImageRef
+    CIImage *ciInput = [CIImage imageWithCGImage:inputImage];
+
+    // Step 2: Apply Gaussian Blur to Extract Low-Frequency Components
+    CIFilter *gaussianBlur = [CIFilter filterWithName:@"CIGaussianBlur"];
+    [gaussianBlur setValue:ciInput forKey:kCIInputImageKey];
+    [gaussianBlur setValue:@(blurRadius) forKey:kCIInputRadiusKey];
+    CIImage *blurredImage = [gaussianBlur valueForKey:kCIOutputImageKey];
+
+    // Step 3: Subtract Blurred Image from Original Image
+    CIFilter *differenceBlend = [CIFilter filterWithName:@"CISubtractBlendMode"];
+    [differenceBlend setValue:ciInput forKey:kCIInputImageKey];
+    [differenceBlend setValue:blurredImage forKey:kCIInputBackgroundImageKey];
+    CIImage *highPassImage = [differenceBlend valueForKey:kCIOutputImageKey];
+
+    // Step 4: Render the Resulting CIImage Back to CGImageRef
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef outputImage = [context createCGImage:highPassImage fromRect:[ciInput extent]];
+
+    return outputImage; // The caller is responsible for releasing this CGImageRef
+}
+
 // Main function to get a snapshot from the app by name
 extern QImage getSnapShotFromApp(std::string appName, int *retWinId) {
     // Find the window ID of the target application
@@ -86,11 +112,12 @@ extern QImage getSnapShotFromApp(std::string appName, int *retWinId) {
         // Capture the window image
         CGRect windowBounds = CGRectNull; // Capture the full window
         CGImageRef windowImage = CGWindowListCreateImage(windowBounds, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageDefault);
+        auto highPassResult = applyHighPassFilter(windowImage, 5.0);
 
-        if (windowImage != NULL) {
+        if (highPassResult != NULL) {
             // Convert CGImageRef to QImage and return it
-            QImage image = CGImageToQImage(windowImage);
-            CGImageRelease(windowImage); // Release CGImageRef when done
+            QImage image = CGImageToQImage(highPassResult);
+            CGImageRelease(highPassResult); // Release CGImageRef when done
             return image;
         } else {
             // Return an empty QImage if capture failed

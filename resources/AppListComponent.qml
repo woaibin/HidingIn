@@ -17,13 +17,17 @@ Item {
         Rectangle {
             id: searchBar
             height: 50
-            color: "transparent"  // Purple background for the search bar
+            color: "transparent"
             width: inputWidth * 0.5
             Layout.alignment: Qt.AlignHCenter  // Align the search bar horizontally in the parent
 
             RowLayout {
                 anchors.fill: parent
                 TextField {
+                    background: null  // Removes the default background
+                    color: "blue"
+                    placeholderTextColor: "#ADD8E6"
+                    opacity: 0.6
                     id: searchField
                     placeholderText: "Search for app..."
                     Layout.fillWidth: true
@@ -93,19 +97,22 @@ Item {
                                 radius: 5  // Rounded corners for the image container
                                 clip: true  // Clip the image to the rounded corners
                                 anchors.horizontalCenter: parent.horizontalCenter
+                                color: "transparent"  // Make the background completely transparent
+
 
                                 Image {
                                     anchors.fill: parent
                                     source: frameContent  // Placeholder image or actual app frame
                                     fillMode: Image.PreserveAspectCrop
-
+                                    opacity: 0.2
                                 }
                             }
 
                             // App name text
                             Text {
                                 text: appName
-                                color: "yellow"
+                                color: "#FFFFE0"
+                                opacity: 0.6
                                 font.bold: true
                                 font.pixelSize: 12
                                 horizontalAlignment: Text.AlignHCenter  // Center the text horizontally
@@ -115,7 +122,8 @@ Item {
                             // App window handle or other metadata
                             Text {
                                 text: "Handle: " + windowHandle
-                                color: "yellow"
+                                color: "#FFFFE0"
+                                opacity: 0.6
                                 font.pixelSize: 7
                                 horizontalAlignment: Text.AlignHCenter  // Center the text horizontally
                                 anchors.horizontalCenter: parent.horizontalCenter

@@ -16,6 +16,7 @@ void WindowAbstractListModel::enumAllApps() {
         if(snapShot.isNull()){
             continue;
         }
+        // to-do: lazy load images, the high pass result is time-consuming:
         m_snapShotImageProvider.addImage(QString::fromStdString(appName), snapShot);
         auto constructImgUrl = QString("image://appsnapshotprovider/") + QString::fromStdString(appName);
         WindowModel model(QString::number((retWinId)),
