@@ -57,7 +57,8 @@ public:
 
 private:
     void compositeThreadFunc();
-    void putFrameAndCompositeIfMeet(int order, const CaptureFrameDesc& captureFrameDesc);
+    int putFrameAndCompositeIfMeet(int order, const CaptureFrameDesc& captureFrameDesc);
+    void waitForCompositeDone();
 
 private:
     std::vector<std::shared_ptr<DesktopCapture>> m_captureSources;
@@ -67,8 +68,10 @@ private:
     std::thread m_compositeThread;
     std::atomic_bool m_stopAllWork = false;
     std::mutex m_framesSetMutex;
+    std::condition_variable m_compositeCondVar;
     int m_capOrder = 0;
     int reqCompositeNum = 0;
+    int frameIntervalInMilliSeconds = 16;
 };
 
 

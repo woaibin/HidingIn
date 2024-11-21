@@ -125,9 +125,15 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
     if (envHSL.z > specularThreshold) {
         // If environment is specular (high light), reduce lightness to low light
         envHSL.z = clamp_val(envHSL.z - lowLightThreshold * 0.4, 0.0, 100.0);
+        // Step 4: Slightly adjust the hue
+        const float hueAdjustment = 35.0;  // Adjust hue by 5 degrees (or any small value)
+        envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     } else if (envHSL.z < lowLightThreshold) {
         // If environment is in low light, increase it to the high light range
-        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.1, 0.0, 100.0);
+        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.25, 0.0, 100.0);
+        // Step 4: Slightly adjust the hue
+        const float hueAdjustment = 105.0;  // Adjust hue by 5 degrees (or any small value)
+        envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     } else {
         // If environment is mid light, make a subtle adjustment to increase contrast
         if (envHSL.z > diffuseThreshold) {
@@ -135,11 +141,10 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
         } else {
             envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 2.0, 0.0, 100.0);  // Slightly decrease lightness
         }
-    }
 
-    // Step 4: Slightly adjust the hue
-    const float hueAdjustment = 35.0;  // Adjust hue by 5 degrees (or any small value)
-    envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
+        const float hueAdjustment = 65.0;  // Adjust hue by 5 degrees (or any small value)
+        envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
+    }
 
     // Step 5: Mix the result with baseColor (baseColor has minor contribution)
     float3 adjustedEnvColor = hsl_to_rgb(envHSL);  // Convert adjusted HSL back to RGB

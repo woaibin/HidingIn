@@ -15,6 +15,7 @@
 #include <com/EventListener.h>
 #include "../GPUPipeline/macos/MetalPipeline.h"
 #include "../utils/WindowLogic.h"
+#include <chrono>
 #endif
 
 static void saveMTLTextureAsPNG(id<MTLTexture> texture) {
@@ -146,7 +147,10 @@ bool CompositeCapture::addCaptureByApplicationName(const std::string &applicatio
 
                 return finalTex;
             };
-            putFrameAndCompositeIfMeet(capOrderToSet, captureFrameDesc);
+            if(putFrameAndCompositeIfMeet(capOrderToSet, captureFrameDesc) == -1){
+                // need to wait:
+                waitForCompositeDone();
+            }
         });
 
         m_captureSources.push_back(captureSource);
@@ -198,7 +202,10 @@ bool CompositeCapture::addWholeDesktopCapture(std::optional<CaptureArgs> args) {
                         cropTuple, std::make_tuple(0,0), texId, retTexture, renderPipeline.mtlCommandQueue);
                 return retTexture;
             };
-            putFrameAndCompositeIfMeet(capOrderToSet, captureFrameDesc);
+            if(putFrameAndCompositeIfMeet(capOrderToSet, captureFrameDesc) == -1){
+                // need to wait:
+                waitForCompositeDone();
+            }
         });
         m_captureSources.push_back(captureSource);
     }else{
@@ -298,8 +305,8 @@ void CompositeCapture::cleanUp() {
     }
 }
 
-void CompositeCapture::putFrameAndCompositeIfMeet(int order, const CaptureFrameDesc& captureFrameDesc) {
-    m_framesSetMutex.lock();
+int CompositeCapture::putFrameAndCompositeIfMeet(int order, const CaptureFrameDesc& captureFrameDesc) {
+    std::unique_lock<std::mutex> frameSetLock(m_framesSetMutex);
     m_captureFrameSet.insert({order, captureFrameDesc});
     if(!m_stopAllWork && m_captureFrameSet.size() == reqCompositeNum){
         auto execFuture = MetalPipeline::getGlobalInstance().sendJobToRenderQueue(
@@ -354,6 +361,14 @@ void CompositeCapture::putFrameAndCompositeIfMeet(int order, const CaptureFrameD
             execFuture.get();
         }
         m_captureFrameSet.clear();
+        m_compositeCondVar.notify_all();
+        return 0;
+    }else{
+        return -1;
     }
-    m_framesSetMutex.unlock();
+}
+
+void CompositeCapture::waitForCompositeDone() {
+    std::unique_lock<std::mutex> compositeLock(m_framesSetMutex);
+    m_compositeCondVar.wait(compositeLock);
 }

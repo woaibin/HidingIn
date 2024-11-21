@@ -232,7 +232,7 @@ void* MetalPipeline::throughRenderingPipelineState(std::string pipelineDesc, std
     if(m_triggerRenderUpdateFuncSet[triggerRendererName]){
         m_triggerRenderUpdateFuncSet[triggerRendererName]();
     }
-
+    
     // return output renderTarget:
     return (void*)renderPassDesc.colorAttachments[0].texture;
 }
