@@ -221,13 +221,15 @@ int main(int argc, char *argv[]) {
             CaptureArgs captureDesktopArgs;
             captureDesktopArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
             captureDesktopArgs.excludingWindowIDs.push_back(appWindowId);
+            captureDesktopArgs.excludingAppName = appName.toStdString();
             captureDesktopArgs.captureEventName = "SpecificDesktopCapture";
             compositeCapture.addWholeDesktopCapture(captureDesktopArgs);
 
             CaptureArgs captureAppArgs;
             captureAppArgs.captureEventName = "appCapture";
             captureAppArgs.includingWindowIDs.push_back(appWindowId);
-            compositeCapture.addCaptureByApplicationName(appName.toStdString(), captureAppArgs);
+            captureAppArgs.captureAppName = appName.toStdString();
+            compositeCapture.addCaptureByApplicationName(captureAppArgs);
 
 #ifdef __APPLE__
             stickToApp(windowInfo->capturedWinId, windowInfo->appPid, nativeWindow);

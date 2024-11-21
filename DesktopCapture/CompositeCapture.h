@@ -40,7 +40,7 @@ public:
     void cleanUp();
 
     // Add a screen capture by application name
-    bool addCaptureByApplicationName(const std::string &applicationName, std::optional<CaptureArgs> args = std::nullopt);
+    bool addCaptureByApplicationName(std::optional<CaptureArgs> args = std::nullopt);
 
     bool addWholeDesktopCapture(std::optional<CaptureArgs> args = std::nullopt);
 

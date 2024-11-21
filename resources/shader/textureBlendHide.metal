@@ -130,16 +130,16 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
         envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     } else if (envHSL.z < lowLightThreshold) {
         // If environment is in low light, increase it to the high light range
-        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.25, 0.0, 100.0);
+        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.20, 0.0, 100.0);
         // Step 4: Slightly adjust the hue
         const float hueAdjustment = 105.0;  // Adjust hue by 5 degrees (or any small value)
         envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     } else {
         // If environment is mid light, make a subtle adjustment to increase contrast
         if (envHSL.z > diffuseThreshold) {
-            envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 2.0, 0.0, 100.0);  // Slightly increase lightness
+            envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 1.3, 0.0, 100.0);  // Slightly increase lightness
         } else {
-            envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 2.0, 0.0, 100.0);  // Slightly decrease lightness
+            envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 1.3, 0.0, 100.0);  // Slightly decrease lightness
         }
 
         const float hueAdjustment = 65.0;  // Adjust hue by 5 degrees (or any small value)

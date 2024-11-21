@@ -14,7 +14,9 @@ enum class CaptureStatus{
 
 struct CaptureArgs{
     std::string captureEventName;
+    std::string captureAppName;
     std::vector<int> excludingWindowIDs; // -1 means itself.
+    std::string excludingAppName;
     std::vector<int> includingWindowIDs; // for app capture
 };
 struct CompositeCaptureArgs{

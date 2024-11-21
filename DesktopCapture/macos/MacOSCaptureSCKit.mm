@@ -60,7 +60,6 @@ static void savePNG(CVImageBufferRef imageBuffer){
 @property (nonatomic) CVMetalTextureCacheRef textureCache;
 @property (nonatomic, assign) CVMetalTextureRef metalTextureRef;
 @property (atomic) bool stopCapturing;
-@property bool isDesktopCap;
 @property (atomic) bool alreadyEnd;
 @property std::string captureEventName;
 
@@ -192,24 +191,27 @@ public:
 
              // Set up the content filter for the display
              SCContentFilter *filter = nullptr;
-             if(args.has_value() && !args->excludingWindowIDs.empty()){
-                 // Create a mutable copy of the windows array
-                 NSMutableArray<SCWindow *> *mutableWindows = [content.windows mutableCopy];
-                 for (int i = (int)content.windows.count - 1; i >= 0; i--) {
-                     SCWindow *window = content.windows[i];
-                     // Check if windowID is in the vector of excluded IDs
-                     if (std::find(args->excludingWindowIDs.begin(), args->excludingWindowIDs.end(), window.windowID) != args->excludingWindowIDs.end()) {
-                         // Remove the window from the array
-                         [mutableWindows removeObjectAtIndex:i];
-                     }
-                 }
-                 filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:mutableWindows];
+             SCRunningApplication* targetApplication = nullptr;
+             NSString *targetAppName = nullptr;
+             if(args.has_value() && !args->excludingAppName.empty()){
+                 // traverse app info:
+                 targetAppName = [NSString stringWithUTF8String:args->excludingAppName.c_str()];
              }else{
-                 filter = [[SCContentFilter alloc] initWithDisplay:display includingWindows:content.windows];
+                 // traverse app info:
+                 targetAppName = @"HidingIn";
              }
+             for (int i = 0; i < [content.applications count]; i++) {
+                 auto app = content.applications[i];
+                 if ([app.applicationName isEqualToString:targetAppName]) {
+                     targetApplication = app;
+                     NSLog(@"appCapture: capture app name: %@", app.applicationName);  // Use %@ to print NSString objects
+                     break;
+                 }
+             }
+             NSArray<SCRunningApplication *> *applicationsArray = [NSArray arrayWithObjects:targetApplication, nil];
+             filter = [[SCContentFilter alloc] initWithDisplay:display excludingApplications:applicationsArray exceptingWindows:@[]];
              // Set up the stream
              frameReceiver = [SCFrameReceiver alloc];
-             [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
              [frameReceiver setCaptureEventName:args->captureEventName];
              [frameReceiver init];
              stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
@@ -294,7 +296,6 @@ public:
                      frameReceiver = [SCFrameReceiver alloc];
                      [frameReceiver setCaptureEventName:args.captureEventName];
                      [frameReceiver init];
-                     [frameReceiver setIsDesktopCap:capMode == CaptureMode::FullDesktopCapture];
                      stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
                      dispatch_queue_t streamQueue = dispatch_queue_create("com.yourAppName.streamOutputQueue", DISPATCH_QUEUE_SERIAL);
                      [stream addStreamOutput:frameReceiver type:SCStreamOutputTypeScreen sampleHandlerQueue:streamQueue error:&error];
@@ -308,6 +309,92 @@ public:
                      // Signal the semaphore to unblock the waiting thread
                      dispatch_semaphore_signal(semaphore);
                  }];
+
+        // Wait for the semaphore to be signaled (i.e., wait for the completion handler to finish)
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+        // Return whether the capture was successfully started or not
+        return captureStarted;
+    }
+
+    bool startCaptureWithApplicationName(CaptureArgs args) {
+        // Create a dispatch semaphore to wait for the completion handler
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+        __block bool captureStarted = false;  // Use a block variable to capture the result
+
+        // Use the async method to fetch shareable content
+        [SCShareableContent getShareableContentExcludingDesktopWindows:NO
+                                                   onScreenWindowsOnly:NO
+                                                     completionHandler:^(SCShareableContent *content, NSError *error) {
+                                                         if (error) {
+                                                             NSLog(@"Error: Unable to get shareable content: %@", error);
+                                                             dispatch_semaphore_signal(semaphore);  // Signal the semaphore to unblock
+                                                             return;
+                                                         }
+                                                         capMode = CaptureMode::AppCapture;
+                                                         // Select the main display for capture
+                                                         SCDisplay *display = content.displays.firstObject;
+                                                         if (!display) {
+                                                             NSLog(@"Error: No display found.");
+                                                             dispatch_semaphore_signal(semaphore);  // Signal the semaphore to unblock
+                                                             return;
+                                                         }
+
+                                                         // traverse app info:
+                                                         SCRunningApplication* targetApplication = nullptr;
+                                                         NSString *targetAppName = [NSString stringWithUTF8String:args.captureAppName.c_str()];
+                                                         for (int i = 0; i < [content.applications count]; i++) {
+                                                             auto app = content.applications[i];
+                                                             if ([app.applicationName isEqualToString:targetAppName]) {
+                                                                 targetApplication = app;
+                                                                 NSLog(@"appCapture: capture app name: %@", app.applicationName);  // Use %@ to print NSString objects
+                                                                 break;
+                                                             }
+                                                         }
+                                                         // Create a configuration for the capture stream
+                                                         SCStreamConfiguration *config = [[SCStreamConfiguration alloc] init];
+                                                         Message windowMsg;
+                                                         auto windowMsgResult = NotificationCenter::getInstance().getPersistentMessage(MessageType::Render, windowMsg);
+                                                         auto windowInfo = (WindowSubMsg*)windowMsg.subMsg.get();
+                                                         config.width = display.width * windowInfo->scalingFactor;
+                                                         config.height = display.height * windowInfo->scalingFactor;
+                                                         config.pixelFormat = kCVPixelFormatType_32BGRA;
+                                                         config.minimumFrameInterval = CMTimeMake(1, 60);
+                                                         config.queueDepth = 5;
+                                                         config.showsCursor = false;
+
+                                                         config.width = display.width * windowInfo->scalingFactor;
+                                                         config.height = display.height * windowInfo->scalingFactor;
+                                                         auto retRect = std::make_tuple(0,0,0,0);
+                                                         getWindowGeometry(args.includingWindowIDs[0], retRect);
+                                                         windowInfo->capturedAppX = std::get<0>(retRect) * windowInfo->scalingFactor;
+                                                         windowInfo->capturedAppY = std::get<1>(retRect) * windowInfo->scalingFactor;
+                                                         windowInfo->capturedAppWidth = std::get<2>(retRect) * windowInfo->scalingFactor;
+                                                         windowInfo->capturedAppHeight = std::get<3>(retRect) * windowInfo->scalingFactor;
+                                                         windowInfo->capturedWinId = args.includingWindowIDs[0];
+                                                         windowInfo->appPid = targetApplication.processID;
+
+                                                         // Set up the content filter for the display
+                                                         NSArray<SCRunningApplication *> *applicationsArray = [NSArray arrayWithObjects:targetApplication, nil];
+                                                         SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingApplications:applicationsArray exceptingWindows:@[]];
+                                                         // Set up the stream
+                                                         frameReceiver = [SCFrameReceiver alloc];
+                                                         [frameReceiver setCaptureEventName:args.captureEventName];
+                                                         [frameReceiver init];
+                                                         stream = [[SCStream alloc] initWithFilter:filter configuration:config delegate:frameReceiver];
+                                                         dispatch_queue_t streamQueue = dispatch_queue_create("com.yourAppName.streamOutputQueue", DISPATCH_QUEUE_SERIAL);
+                                                         [stream addStreamOutput:frameReceiver type:SCStreamOutputTypeScreen sampleHandlerQueue:streamQueue error:&error];
+                                                         NSError *startError = nil;
+                                                         [stream startCaptureWithCompletionHandler:^( NSError *error){
+                                                             if(error){
+                                                                 NSLog(@"Error: Unable to start stream capture: %@", startError);
+                                                             }
+                                                         }];
+                                                         captureStarted = true;  // Capture succeeded, update the block variable
+                                                         // Signal the semaphore to unblock the waiting thread
+                                                         dispatch_semaphore_signal(semaphore);
+                                                     }];
 
         // Wait for the semaphore to be signaled (i.e., wait for the completion handler to finish)
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -358,5 +445,5 @@ bool MacOSCaptureSCKit::startCaptureWithSpecificWinId(std::optional<CaptureArgs>
         std::cerr << "cap args cannot be null" << std::endl;
         return false;
     }
-    return impl->startCaptureWithWinId(args.value());
+    return impl->startCaptureWithApplicationName(args.value());
 }

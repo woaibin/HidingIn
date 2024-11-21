@@ -84,7 +84,7 @@ static void saveMTLTextureAsPNG(id<MTLTexture> texture) {
     NSLog(@"Saved texture as PNG to %@", filePath);
 }
 
-bool CompositeCapture::addCaptureByApplicationName(const std::string &applicationName, std::optional<CaptureArgs> args) {
+bool CompositeCapture::addCaptureByApplicationName(std::optional<CaptureArgs> args) {
     if(args == std::nullopt){
         std::cerr << "null capture args is not allowed..." << std::endl;
         return false;
