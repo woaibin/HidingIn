@@ -221,7 +221,8 @@ int main(int argc, char *argv[]) {
             CaptureArgs captureDesktopArgs;
             captureDesktopArgs.excludingWindowIDs = getCurrentAppWindowIDVec();
             captureDesktopArgs.excludingWindowIDs.push_back(appWindowId);
-            captureDesktopArgs.excludingAppName = appName.toStdString();
+            captureDesktopArgs.excludingAppNames.push_back(appName.toStdString());
+            captureDesktopArgs.excludingAppNames.emplace_back("HidingIn");
             captureDesktopArgs.captureEventName = "SpecificDesktopCapture";
             compositeCapture.addWholeDesktopCapture(captureDesktopArgs);
 

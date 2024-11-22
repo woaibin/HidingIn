@@ -191,25 +191,32 @@ public:
 
              // Set up the content filter for the display
              SCContentFilter *filter = nullptr;
-             SCRunningApplication* targetApplication = nullptr;
-             NSString *targetAppName = nullptr;
-             if(args.has_value() && !args->excludingAppName.empty()){
-                 // traverse app info:
-                 targetAppName = [NSString stringWithUTF8String:args->excludingAppName.c_str()];
+             NSMutableArray<SCRunningApplication*> *targetApps = [NSMutableArray array];
+             if(args.has_value() && !args->excludingAppNames.empty()){
+                 for (int i = 0; i < [content.applications count]; i++) {
+                     auto app = content.applications[i];
+                     // Convert NSString to std::string
+                     std::string searchStdString = [app.applicationName UTF8String];
+                     if (std::find(args->excludingAppNames.begin(), args->excludingAppNames.end(), searchStdString) != args->excludingAppNames.end()) {
+                         [targetApps addObject:app];
+                     }
+                 }
              }else{
                  // traverse app info:
-                 targetAppName = @"HidingIn";
-             }
-             for (int i = 0; i < [content.applications count]; i++) {
-                 auto app = content.applications[i];
-                 if ([app.applicationName isEqualToString:targetAppName]) {
-                     targetApplication = app;
-                     NSLog(@"appCapture: capture app name: %@", app.applicationName);  // Use %@ to print NSString objects
-                     break;
+                 NSString *targetAppName = @"HidingIn";
+                 SCRunningApplication* targetApplication = nullptr;
+                 for (int i = 0; i < [content.applications count]; i++) {
+                     auto app = content.applications[i];
+                     if ([app.applicationName isEqualToString:targetAppName]) {
+                         targetApplication = app;
+                         NSLog(@"appCapture: capture app name: %@", app.applicationName);  // Use %@ to print NSString objects
+                         break;
+                     }
                  }
+                 targetApps = [NSMutableArray arrayWithObjects:targetApplication, nil];
+
              }
-             NSArray<SCRunningApplication *> *applicationsArray = [NSArray arrayWithObjects:targetApplication, nil];
-             filter = [[SCContentFilter alloc] initWithDisplay:display excludingApplications:applicationsArray exceptingWindows:@[]];
+             filter = [[SCContentFilter alloc] initWithDisplay:display excludingApplications:targetApps exceptingWindows:@[]];
              // Set up the stream
              frameReceiver = [SCFrameReceiver alloc];
              [frameReceiver setCaptureEventName:args->captureEventName];
