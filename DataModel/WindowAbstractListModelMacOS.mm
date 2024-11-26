@@ -10,6 +10,9 @@ void WindowAbstractListModel::enumAllApps() {
     NSArray *runningApps = [[NSWorkspace sharedWorkspace] runningApplications];
 
     for (NSRunningApplication *app in runningApps) {
+        if(!app.localizedName || [app.localizedName length] <= 0){
+            continue;
+        }
         auto appName = std::string([app.localizedName UTF8String]);
         int retWinId;
         auto snapShot = getSnapShotFromApp(appName, &retWinId);
