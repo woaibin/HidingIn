@@ -15,7 +15,9 @@ QMetalGraphicsItem::QMetalGraphicsItem() {
     connect(this, &QQuickItem::windowChanged, this, &QMetalGraphicsItem::handleWindowChanged);
     setFlag(ItemHasContents, true);
     connect(this, &QMetalGraphicsItem::triggerRender, this, [this](){
-        window()->update();
+        if(window()){
+            window()->update();
+        }
     });
 
     setObjectName("metalGraphics");
