@@ -6,4 +6,5 @@
 #define HIDINGIN_MACOSAPPSNAPSHOT_H
 #include "QImage"
 extern QImage getSnapShotFromApp(std::string, int* retWinId = nullptr);
+extern std::vector<QImage> getAllSnapShotsFromApp(const std::string& appName, std::vector<int>& retWinIds);
 #endif //HIDINGIN_MACOSAPPSNAPSHOT_H

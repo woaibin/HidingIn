@@ -128,3 +128,75 @@ extern QImage getSnapShotFromApp(std::string appName, int *retWinId) {
         return QImage();
     }
 }
+
+// Helper function to find all window IDs for a given app name
+std::vector<CGWindowID> findAllWindowIDsForApp(const std::string& appName) {
+    // Convert std::string to NSString
+    NSString *nsAppName = [NSString stringWithUTF8String:appName.c_str()];
+
+    // Get a list of all windows
+    CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+    std::vector<CGWindowID> windowIDs;
+
+    for (NSDictionary *windowInfo in (NSArray *)windowList) {
+        NSString *windowOwnerName = windowInfo[(NSString *)kCGWindowOwnerName];
+        // Compare the window owner name with the app name
+        if ([windowOwnerName containsString:nsAppName]) {
+            // Get the window's bounds (position and size)
+            NSDictionary *boundsDict = windowInfo[(NSString *)kCGWindowBounds];
+            CGRect windowBounds;
+            CGRectMakeWithDictionaryRepresentation((CFDictionaryRef)boundsDict, &windowBounds);
+
+            // Filter out windows that start at (0, 0) and have width or height less than 50
+            if ((windowBounds.size.width < 50 || windowBounds.size.height < 50)) {
+                continue; // Skip this window
+            }
+
+            // If the window passes the filter, add its ID to the list
+            NSNumber *windowID = windowInfo[(NSString *)kCGWindowNumber];
+            windowIDs.push_back([windowID unsignedIntValue]);
+        }
+    }
+
+    // Release the window list
+    CFRelease(windowList);
+    return windowIDs;
+}
+
+// Function to get snapshots of all windows for a given app
+std::vector<QImage> getAllSnapShotsFromApp(const std::string& appName, std::vector<int>& retWinIds) {
+    // Find all window IDs of the target application
+    std::vector<CGWindowID> windowIDs = findAllWindowIDsForApp(appName);
+    std::vector<QImage> snapshots;
+
+    for (CGWindowID windowID : windowIDs) {
+        // Store the window ID in the output parameter
+        retWinIds.push_back(windowID);
+
+        // Capture the window image
+        CGRect windowBounds = CGRectNull; // Capture the full window
+        CGImageRef windowImage = CGWindowListCreateImage(windowBounds, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageDefault);
+
+        if (windowImage) {
+            // Optionally apply a high-pass filter or other transformations
+            auto highPassResult = applyHighPassFilter(windowImage, 5.0);
+            if (highPassResult != NULL) {
+                // Convert CGImageRef to QImage and add it to the snapshots list
+                QImage image = CGImageToQImage(highPassResult);
+                snapshots.push_back(image);
+                CGImageRelease(highPassResult); // Release CGImageRef when done
+            } else {
+                // If filtering fails, add the original image
+                QImage image = CGImageToQImage(windowImage);
+                snapshots.push_back(image);
+            }
+
+            CGImageRelease(windowImage); // Release CGImageRef when done
+        } else {
+            // Add an empty QImage as a placeholder if capture failed
+            snapshots.push_back(QImage());
+        }
+    }
+
+    return snapshots;
+}
