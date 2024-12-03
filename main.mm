@@ -196,16 +196,16 @@ int main(int argc, char *argv[]) {
     QTimer timer;  // Create a QTimer object
     auto appItem = rootObject->findChild<QObject*>("appItems");
     if (appItem) {
-        QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString)), &handler, SLOT(onItemDoubleClicked(QString)));
+        QObject::connect(appItem, SIGNAL(appItemDoubleClicked(QString,QString,QString)), &handler, SLOT(onItemDoubleClicked(QString,QString,QString)));
         QMetalGraphicsItem *metalItem = qobject_cast<QMetalGraphicsItem*>(appCaptureItem);
-        handler.setOnAppItemDBClickHandlerFunc([&, appWinListener](QString appName) mutable{
+        handler.setOnAppItemDBClickHandlerFunc([&, appWinListener](QString appName, QString winId, QString appPid) mutable{
             auto desktopMetalGraphicsItem = (QMetalGraphicsItem*)DesktopCaptureItem;
             desktopMetalGraphicsItem->stopAllWork();
 
             auto currentWindow = getCurrentWindow();
             void *nativeWindow = (void*)currentWindow->winId();
             auto& appModel = windowModel.getWindowModelByAppName(appName.toStdString());
-            auto appWindowId = (int)std::stoi(appModel.windowHandle().toStdString());
+            auto appWindowId = (int)std::stoi(winId.toStdString());
             auto appRect = resizeAndMoveOverlayWindow(nativeWindow, appWindowId);
             auto windowInfo = (WindowSubMsg*)msg.subMsg.get();
             // update info:

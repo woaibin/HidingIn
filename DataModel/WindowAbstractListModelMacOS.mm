@@ -23,6 +23,7 @@ void WindowAbstractListModel::enumAllApps() {
         for(int i = 0 ; i < snapShots.size(); i++){
             auto finalFindName = QString::fromStdString(appName) + QString::number(i);
             m_snapShotImageProvider.addImage(finalFindName, snapShots[i]);
+            //snapShots[i].save("/Users/binxiaokang/Desktop/bxk.png");
             auto constructImgUrl = QString("image://appsnapshotprovider/") + finalFindName;
             WindowModel model(QString::number(retWinId[i]),
                           QString::fromUtf8([app.localizedName UTF8String]), constructImgUrl, QString::number((app.processIdentifier)));

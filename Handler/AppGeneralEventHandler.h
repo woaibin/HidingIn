@@ -9,7 +9,7 @@
 #include "QEvent"
 #include "QMouseEvent"
 #include "QKeyEvent"
-using AppItemDBClickHandler = std::function<void(QString appName)>;
+using AppItemDBClickHandler = std::function<void(QString appName, QString winId, QString appPid)>;
 
 class AppGeneralEventHandler : public QObject{
 Q_OBJECT
@@ -19,9 +19,9 @@ public:
     }
 
 public slots:
-    Q_INVOKABLE void onItemDoubleClicked(QString appName) {
+    Q_INVOKABLE void onItemDoubleClicked(QString appName, QString winId, QString appPid) {
         if(m_appItemDbClickHandler){
-            m_appItemDbClickHandler(appName);
+            m_appItemDbClickHandler(appName, winId, appPid);
         }
     }
 
