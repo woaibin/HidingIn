@@ -14,17 +14,20 @@ void WindowAbstractListModel::enumAllApps() {
             continue;
         }
         auto appName = std::string([app.localizedName UTF8String]);
-        int retWinId;
-        auto snapShot = getSnapShotFromApp(appName, &retWinId);
-        if(snapShot.isNull()){
+        std::vector<int> retWinId;
+        auto snapShots = getAllSnapShotsFromApp(appName, retWinId);
+        if(snapShots.empty()){
             continue;
         }
         // to-do: lazy load images, the high pass result is time-consuming:
-        m_snapShotImageProvider.addImage(QString::fromStdString(appName), snapShot);
-        auto constructImgUrl = QString("image://appsnapshotprovider/") + QString::fromStdString(appName);
-        WindowModel model(QString::number((retWinId)),
-                          QString::fromUtf8([app.localizedName UTF8String]),constructImgUrl, QString::number((app.processIdentifier)));
-        m_windowsFull.push_back(model);
+        for(int i = 0 ; i < snapShots.size(); i++){
+            auto finalFindName = QString::fromStdString(appName) + QString::number(i);
+            m_snapShotImageProvider.addImage(finalFindName, snapShots[i]);
+            auto constructImgUrl = QString("image://appsnapshotprovider/") + finalFindName;
+            WindowModel model(QString::number(retWinId[i]),
+                          QString::fromUtf8([app.localizedName UTF8String]), constructImgUrl, QString::number((app.processIdentifier)));
+            m_windowsFull.push_back(model);
+        }
     }
 
     // Copy up to the top 10 windows from m_windowsFull to m_windowsForShow
