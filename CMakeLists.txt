@@ -49,7 +49,8 @@ set(SOURCE "" com/NotificationCenter.h main.mm
         Handler/AppWindowListener.h
         Handler/AppWindowListener.mm
         Handler/GlobalEventHandler.h
-        Handler/GlobalEventHandler.mm)
+        Handler/GlobalEventHandler.mm
+        utils/WindowLogic.cpp)
 if(APPLE)
     file(GLOB MAC_SOURCE DesktopCapture/macos/*.mm DesktopCapture/macos/*.h platform/macos/*.mm platform/macos/*.h)
 elseif (WIN32)

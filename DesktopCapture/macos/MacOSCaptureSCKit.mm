@@ -9,6 +9,7 @@
 #include "com/EventListener.h"
 #include "platform/macos/MacUtils.h"
 #include "../GPUPipeline/macos/MetalPipeline.h"
+#include "../utils/WindowLogic.h"
 
 static void savePNG(CVImageBufferRef imageBuffer){
     // Lock the base address of the pixel buffer
@@ -54,6 +55,14 @@ static void savePNG(CVImageBufferRef imageBuffer){
     CGColorSpaceRelease(colorSpace);
 
     NSLog(@"Saved frame as PNG to %@", filePath);
+}
+
+NSArray* vectorToNSArray(const std::vector<int>& vec) {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:vec.size()]; // Create a mutable array
+    for (int value : vec) {
+        [array addObject:@(value)]; // Convert `int` to `NSNumber` and add it to the array
+    }
+    return [array copy]; // Return an immutable NSArray
 }
 
 @interface SCFrameReceiver : NSObject <SCStreamOutput,SCStreamDelegate>
@@ -375,6 +384,27 @@ public:
                                                          config.height = display.height * windowInfo->scalingFactor;
                                                          auto retRect = std::make_tuple(0,0,0,0);
                                                          getWindowGeometry(args.includingWindowIDs[0], retRect);
+                                                         auto winIdVecByAnApp = getWindowIDsForAppByName(args.captureAppName);
+                                                         std::vector<int> finalIdVecToExcept;
+                                                         for(auto id : winIdVecByAnApp){
+                                                             auto rectCmp = std::make_tuple(0,0,0,0);
+                                                             getWindowGeometry(id, rectCmp);
+                                                             if(isRectInside(retRect, rectCmp) && id != args.includingWindowIDs[0]){
+                                                                 finalIdVecToExcept.push_back(id);
+                                                             }
+                                                         }
+
+                                                         NSMutableArray<SCWindow*> *exceptCapWindows = [[content.windows mutableCopy] autorelease];
+                                                         for (int i = (int)[exceptCapWindows count] - 1; i >= 0; i--) {  // Start from the end and move backward
+                                                             auto app = exceptCapWindows[i];
+                                                             auto findResult = std::find(finalIdVecToExcept.begin(),
+                                                                                         finalIdVecToExcept.end(), app.windowID);
+                                                             if (findResult == finalIdVecToExcept.end()) {
+                                                                 [exceptCapWindows removeObjectAtIndex:i];  // Safely remove the element
+                                                             }
+                                                         }
+
+
                                                          windowInfo->capturedAppX = std::get<0>(retRect) * windowInfo->scalingFactor;
                                                          windowInfo->capturedAppY = std::get<1>(retRect) * windowInfo->scalingFactor;
                                                          windowInfo->capturedAppWidth = std::get<2>(retRect) * windowInfo->scalingFactor;
@@ -384,7 +414,7 @@ public:
 
                                                          // Set up the content filter for the display
                                                          NSArray<SCRunningApplication *> *applicationsArray = [NSArray arrayWithObjects:targetApplication, nil];
-                                                         SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingApplications:applicationsArray exceptingWindows:@[]];
+                                                         SCContentFilter *filter = [[SCContentFilter alloc] initWithDisplay:display includingApplications:applicationsArray exceptingWindows:exceptCapWindows];
                                                          // Set up the stream
                                                          frameReceiver = [SCFrameReceiver alloc];
                                                          [frameReceiver setCaptureEventName:args.captureEventName];
