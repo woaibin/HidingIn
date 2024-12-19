@@ -15,6 +15,7 @@ void MtlProcessMisc::initAllProcessors(void* mtlDevice) {
         auto convertMtlDevice = TO_MTL_DEVICE(mtlDevice);
         m_imageCropFilter = (void*)[[MPSImageLanczosScale alloc]initWithDevice:convertMtlDevice];
         m_imageGaussianFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 0.5f];
+        m_imageBlurFilter = (void*)[[MPSImageGaussianBlur alloc] initWithDevice:convertMtlDevice sigma: 15.5f];
         m_imageScaleFilter = (void*)[[MPSImageBilinearScale alloc] initWithDevice: convertMtlDevice];
         m_imageSubtractFilter = (void*)[[MPSImageSubtract alloc] initWithDevice: convertMtlDevice];
     }
@@ -86,6 +87,21 @@ void MtlProcessMisc::encodeGaussianProcessIntoPipeline(void* input, void* output
 
     // Encode the Gaussian blur process
     [TO_MPS_IMAGE_GAUSSIAN(m_imageGaussianFilter) encodeToCommandBuffer:commandBuffer
+                                                          sourceTexture:convertInput
+                                                     destinationTexture:convertOutput];
+    [commandBuffer commit];
+}
+
+void MtlProcessMisc::encodeBlurProcessIntoPipeline(void *input, void *output, void *commandQueue) {
+    std::lock_guard<std::mutex> gaussianLock(m_GaussianMutex);
+
+    auto convertInput = (id<MTLTexture>)input;
+    auto convertOutput = (id<MTLTexture>)output;
+    auto convertCommandQueue = (id<MTLCommandQueue>)commandQueue;
+    auto commandBuffer = [convertCommandQueue commandBuffer];
+
+    // Encode the Gaussian blur process
+    [TO_MPS_IMAGE_GAUSSIAN(m_imageBlurFilter) encodeToCommandBuffer:commandBuffer
                                                           sourceTexture:convertInput
                                                      destinationTexture:convertOutput];
     [commandBuffer commit];

@@ -126,23 +126,23 @@ float3 adjust_hsl_to_stand_out_in_environment(float3 envColor, float3 baseColor)
         // If environment is specular (high light), reduce lightness to low light
         envHSL.z = clamp_val(envHSL.z - lowLightThreshold * 0.4, 0.0, 100.0);
         // Step 4: Slightly adjust the hue
-        const float hueAdjustment = 35.0;  // Adjust hue by 5 degrees (or any small value)
+        const float hueAdjustment = 18.0;  // Adjust hue by 5 degrees (or any small value)
         envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     } else if (envHSL.z < lowLightThreshold) {
         // If environment is in low light, increase it to the high light range
-        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.20, 0.0, 100.0);
+        envHSL.z = clamp_val(envHSL.z + specularThreshold * 0.30, 0.0, 100.0);
         // Step 4: Slightly adjust the hue
-        const float hueAdjustment = 105.0;  // Adjust hue by 5 degrees (or any small value)
+        const float hueAdjustment = 25.0;  // Adjust hue by 5 degrees (or any small value)
         envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     } else {
         // If environment is mid light, make a subtle adjustment to increase contrast
         if (envHSL.z > diffuseThreshold) {
-            envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 1.3, 0.0, 100.0);  // Slightly increase lightness
+            envHSL.z = clamp_val(lowLightThreshold + (envHSL.z - specularThreshold) * 0.7, 0.0, 100.0);  // Slightly increase lightness
         } else {
-            envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 1.3, 0.0, 100.0);  // Slightly decrease lightness
+            envHSL.z = clamp_val(specularThreshold - (lowLightThreshold - envHSL.z) * 0.5, 0.0, 100.0);  // Slightly decrease lightness
         }
 
-        const float hueAdjustment = 65.0;  // Adjust hue by 5 degrees (or any small value)
+        const float hueAdjustment = 10.0;  // Adjust hue by 5 degrees (or any small value)
         envHSL.x = fmod(envHSL.x + hueAdjustment, 360.0);  // Ensure the hue wraps around [0, 360]
     }
 
@@ -169,6 +169,7 @@ float2 texSize1 = float2(tex1.get_width(), tex1.get_height());
 float2 texSize2 = float2(tex2.get_width(), tex2.get_height());
 float2 scaledTexCoord = in.texCoord * texSize1 / texSize2;
 float4 color2 = tex2.sample(textureSampler, scaledTexCoord);
+color2 *= 1.2;
 
 float3 shiftedColor1 = adjust_hsl_to_stand_out_in_environment(color1.rgb, color2.rgb);
 

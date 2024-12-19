@@ -122,6 +122,7 @@ public:
                                        void* output, void* commandBuffer);
     void encodeScaleProcessIntoPipeline(void* input, void* output, void* commandBuffer);
     void encodeGaussianProcessIntoPipeline(void* input, void* output, void* commandBuffer);
+    void encodeBlurProcessIntoPipeline(void* input, void* output, void* commandBuffer);
     void encodeSubtractProcessIntoPipeline(void* input1, void* input2, void* output, void* commandBuffer);
 
 private:
@@ -139,6 +140,7 @@ private:
     void* m_imageCropFilter = nullptr;
     void* m_imageScaleFilter = nullptr;
     void* m_imageGaussianFilter = nullptr;
+    void* m_imageBlurFilter = nullptr;
     void* m_imageSubtractFilter = nullptr;
 
     std::mutex m_cropMutex;
